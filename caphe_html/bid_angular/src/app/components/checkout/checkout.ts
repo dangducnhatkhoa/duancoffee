@@ -101,6 +101,8 @@ async onSubmit(form: NgForm) {
         await this.router.navigate(['/vnpay-payment']);
       } else if (this.paymentMethod === 'momo') {
         await this.router.navigate(['/momo-payment']);
+      } else if (this.paymentMethod === 'sepay') {
+        await this.router.navigate(['/sepay-payment']);
       } else {
         await this.router.navigate(['/order-success']);
       }

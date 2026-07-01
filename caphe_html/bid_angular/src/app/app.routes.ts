@@ -21,6 +21,7 @@ import { Profile } from './components/profile/profile';
 import { Activate } from './components/activate/activate';
 import { VnpayPayment } from './components/vnpay-payment/vnpay-payment';
 import { MomoPaymentComponent } from './components/momo-payment/momo-payment';
+import { SepayPayment } from './components/sepay-payment/sepay-payment';
 import { adminRoutes } from './admin/admin.routes';
 
 export const routes: Routes = [
@@ -43,6 +44,7 @@ export const routes: Routes = [
     { path: 'checkout', component: Checkout, title: 'Thanh toán giỏ hàng' },
     { path: 'vnpay-payment', component: VnpayPayment, title: 'Cổng thanh toán VNPAY' },
     { path: 'momo-payment', component: MomoPaymentComponent, title: 'Cổng thanh toán MoMo' },
+    { path: 'sepay-payment', component: SepayPayment, title: 'Cổng thanh toán SePay (VietQR)' },
     { path: 'order-success', component: OrderSucess, title: 'Thanh toán thành công' },
     { path: 'news', component: NewsComponent, title: 'Tin tức & Cộng đồng' },
     { path: 'news/:id', component: NewsDetailComponent, title: 'Chi tiết tin tức' },

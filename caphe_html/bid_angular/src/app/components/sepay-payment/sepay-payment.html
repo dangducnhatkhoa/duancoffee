@@ -1,0 +1,101 @@
+<div class="min-h-screen bg-[#F5EFE6] flex items-center justify-center p-4 sm:p-6 md:p-8 font-sans">
+  <div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden border border-[#E6DEC9] flex flex-col md:flex-row">
+    
+    <!-- LEFT SIDE: VietQR & Scan instruction -->
+    <div class="w-full md:w-1/2 p-6 sm:p-8 bg-[#FAF7F2] border-r border-[#EDE5D9] flex flex-col items-center justify-center">
+      <div class="text-center mb-6">
+        <h2 class="text-xl font-bold text-[#2C1A0E] tracking-tight">Thanh toán chuyển khoản VietQR</h2>
+        <p class="text-[#7A6A5A] text-xs mt-1">Mở ứng dụng Ngân hàng của bạn để quét mã QR bên dưới</p>
+      </div>
+
+      <!-- VietQR Image Wrapper -->
+      <div class="relative p-4 bg-white rounded-xl border border-[#EDE5D9] shadow-sm flex items-center justify-center">
+        <img src="/images/sepay_qr.png" alt="VietQR Payment Code" class="w-64 h-64 sm:w-72 sm:h-72 object-contain">
+        
+        <!-- Successful Overlay -->
+        <div *ngIf="isPaid" class="absolute inset-0 bg-[#A85131]/90 rounded-xl flex flex-col items-center justify-center text-white p-4 animate-fade-in transition-all">
+          <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-3">
+            <i class="fas fa-check text-3xl text-[#A85131]"></i>
+          </div>
+          <h3 class="text-lg font-bold">Thanh toán thành công!</h3>
+          <p class="text-xs text-center text-gray-200 mt-1">Hệ thống đang chuyển tiếp về trang đơn hàng của bạn...</p>
+        </div>
+      </div>
+
+      <div class="mt-6 flex items-center gap-2 text-xs text-[#7A6A5A]">
+        <i class="fas fa-shield-alt text-[#A85131]"></i>
+        <span>Giao dịch an toàn và tự động xử lý qua hệ thống SePay</span>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: Order detail & Bank details -->
+    <div class="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between">
+      
+      <div>
+        <!-- Countdown timer -->
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-[#F0EAE1]">
+          <span class="text-sm text-[#7A6A5A] font-medium">Thời gian thanh toán còn lại:</span>
+          <div class="bg-[#A85131]/10 px-3 py-1.5 rounded-lg border border-[#A85131]/20 font-mono text-sm font-bold text-[#A85131]">
+            {{ minutes | number:'2.0-0' }}:{{ seconds | number:'2.0-0' }}
+          </div>
+        </div>
+
+        <!-- Bank details box -->
+        <h3 class="text-sm font-bold text-[#2C1A0E] uppercase tracking-wider mb-3">Thông tin chuyển khoản</h3>
+        <div class="bg-[#FAF7F2] border border-[#EDE5D9] rounded-xl p-4 space-y-3.5 mb-6">
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-[#7A6A5A]">Ngân hàng:</span>
+            <span class="font-bold text-[#2C1A0E]">VietinBank (Ngân hàng Công thương Việt Nam)</span>
+          </div>
+          
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-[#7A6A5A]">Số tài khoản:</span>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-[#A85131] select-all font-mono">107*****676</span>
+            </div>
+          </div>
+          
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-[#7A6A5A]">Chủ tài khoản:</span>
+            <span class="font-bold text-[#2C1A0E]">DANG DUC NHAT KHOA</span>
+          </div>
+          
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-[#7A6A5A]">Số tiền:</span>
+            <span class="font-bold text-[#e3000f] text-base">{{ totalAmount | number:'1.0-0':'vi' }}đ</span>
+          </div>
+
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-[#7A6A5A]">Nội dung chuyển khoản:</span>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-[#1773B0] select-all font-mono">{{ orderNumber }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alert information -->
+        <div class="bg-[#FAF7F2] border-l-4 border-yellow-500 rounded-r-lg p-3 text-xs text-[#7A6A5A] leading-relaxed mb-6">
+          <i class="fas fa-exclamation-circle text-yellow-600 mr-1.5"></i>
+          <span>Khi quét mã QR, vui lòng sửa hoặc bổ sung nội dung chuyển khoản chính xác là mã đơn hàng: <strong class="text-[#1773B0]">{{ orderNumber }}</strong> để hệ thống SePay tự động ghi nhận thanh toán.</span>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="space-y-3">
+        <!-- Loader / Status indicator -->
+        <div *ngIf="!isPaid" class="flex items-center justify-center gap-2 py-3.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold border border-blue-100">
+          <i class="fas fa-spinner fa-spin text-sm"></i>
+          <span>Hệ thống đang chờ bạn chuyển khoản...</span>
+        </div>
+
+        <div class="flex gap-4">
+          <button (click)="goBack()" class="flex-1 border border-[#C8572C] text-[#C8572C] hover:bg-[#C8572C]/5 font-semibold py-3 px-4 rounded-lg text-sm transition">
+            Hủy thanh toán
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
