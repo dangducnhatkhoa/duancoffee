@@ -1,5 +1,5 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AdminService } from '../services/admin-service';
 
 declare const Chart: any;
@@ -15,7 +15,10 @@ export class AdminDashboard implements OnInit, AfterViewInit {
   loading = true;
   private chart: any = null;
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   async ngOnInit() {
     try {
@@ -25,6 +28,7 @@ export class AdminDashboard implements OnInit, AfterViewInit {
       console.error(e);
     } finally {
       this.loading = false;
+      this.cdr.detectChanges();
       if (this.stats) setTimeout(() => this.renderChart(), 100);
     }
   }

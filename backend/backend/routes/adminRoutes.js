@@ -34,4 +34,12 @@ router.post('/vouchers', voucherController.createVoucher);
 router.put('/vouchers/:id', voucherController.updateVoucher);
 router.delete('/vouchers/:id', voucherController.deleteVoucher);
 
+// Quản lý bài viết admin
+const articleController = require('../controllers/articleController');
+router.get('/articles', articleController.adminGetArticles);
+router.get('/articles/:id', articleController.adminGetArticleById);
+router.post('/articles', uploadProduct.single('hinh'), articleController.adminCreateArticle);
+router.put('/articles/:id', uploadProduct.single('hinh'), articleController.adminUpdateArticle);
+router.delete('/articles/:id', articleController.adminDeleteArticle);
+
 module.exports = router;

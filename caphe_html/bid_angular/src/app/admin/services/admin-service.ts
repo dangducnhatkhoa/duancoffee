@@ -31,4 +31,48 @@ export class AdminService {
   toggleUserStatus(id: number) {
     return firstValueFrom(this.http.patch<any>(`${this.apiUrl}/users/${id}/toggle-status`, {}));
   }
+
+  // Voucher Management
+  getVouchers(page = 1, limit = 10, search = '') {
+    const params = new HttpParams().set('page', page).set('limit', limit).set('search', search);
+    return firstValueFrom(this.http.get<any>(`${this.apiUrl}/vouchers`, { params }));
+  }
+
+  getVoucherById(id: number) {
+    return firstValueFrom(this.http.get<any>(`${this.apiUrl}/vouchers/${id}`));
+  }
+
+  createVoucher(voucher: any) {
+    return firstValueFrom(this.http.post<any>(`${this.apiUrl}/vouchers`, voucher));
+  }
+
+  updateVoucher(id: number, voucher: any) {
+    return firstValueFrom(this.http.put<any>(`${this.apiUrl}/vouchers/${id}`, voucher));
+  }
+
+  deleteVoucher(id: number) {
+    return firstValueFrom(this.http.delete<any>(`${this.apiUrl}/vouchers/${id}`));
+  }
+
+  // Article Management
+  getArticles(page = 1, limit = 10, search = '') {
+    const params = new HttpParams().set('page', page).set('limit', limit).set('search', search);
+    return firstValueFrom(this.http.get<any>(`${this.apiUrl}/articles`, { params }));
+  }
+
+  getArticleById(id: number) {
+    return firstValueFrom(this.http.get<any>(`${this.apiUrl}/articles/${id}`));
+  }
+
+  createArticle(formData: FormData) {
+    return firstValueFrom(this.http.post<any>(`${this.apiUrl}/articles`, formData));
+  }
+
+  updateArticle(id: number, formData: FormData) {
+    return firstValueFrom(this.http.put<any>(`${this.apiUrl}/articles/${id}`, formData));
+  }
+
+  deleteArticle(id: number) {
+    return firstValueFrom(this.http.delete<any>(`${this.apiUrl}/articles/${id}`));
+  }
 }

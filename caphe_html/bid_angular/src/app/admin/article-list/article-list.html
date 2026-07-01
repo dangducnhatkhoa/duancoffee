@@ -1,0 +1,99 @@
+<div class="p-6 space-y-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-bold text-[#3E2723]">Quản lý bài viết</h1>
+      <p class="text-sm text-gray-500">Đăng và quản lý tin tức, thông báo, bài viết chia sẻ</p>
+    </div>
+    <a routerLink="/admin/articles/add" class="flex items-center gap-2 bg-[#8D5B4C] hover:bg-[#6D3E32] text-white font-bold py-2.5 px-5 rounded-lg transition shadow-md text-sm">
+      <i class="fas fa-plus"></i> Thêm bài viết
+    </a>
+  </div>
+
+  <!-- Search & Filter -->
+  <div class="bg-white p-4 rounded-xl border border-[#EDE5D8] flex gap-4">
+    <div class="flex-1 relative">
+      <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+      <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="search()" 
+             class="w-full bg-[#FAF7F3] border border-[#EDE5D8] rounded-lg pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#8D5B4C] text-[#3E2723]" 
+             placeholder="Tìm kiếm bài viết theo tiêu đề...">
+    </div>
+    <button (click)="search()" class="bg-[#8D5B4C] text-white text-sm font-semibold px-6 py-2.5 rounded-lg hover:bg-[#6D3E32] transition">
+      Tìm kiếm
+    </button>
+  </div>
+
+  <!-- Articles Table -->
+  <div class="bg-white rounded-xl border border-[#EDE5D8] shadow-sm overflow-hidden">
+    <table class="w-full text-left border-collapse text-sm">
+      <thead>
+        <tr class="bg-[#FAF7F3] border-b border-[#EDE5D8] text-[#3E2723] uppercase text-[11px] tracking-wider font-bold">
+          <th class="py-4 px-6" style="width: 100px;">Hình ảnh</th>
+          <th class="py-4 px-6">Tiêu đề bài viết</th>
+          <th class="py-4 px-6">Lượt xem</th>
+          <th class="py-4 px-6">Ngày đăng</th>
+          <th class="py-4 px-6">Trạng thái</th>
+          <th class="py-4 px-6 text-right">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-[#F0EAE1]">
+        @if (articles.length === 0) {
+          <tr>
+            <td colspan="6" class="text-center py-10 text-gray-400">
+              <i class="far fa-newspaper text-4xl mb-3 opacity-30"></i>
+              <p>Chưa có bài viết nào được tạo.</p>
+            </td>
+          </tr>
+        } @else {
+          @for (article of articles; track article.id) {
+            <tr class="hover:bg-[#FAF7F3]/50 transition-colors">
+              <td class="py-3 px-6">
+                <div class="w-16 h-12 bg-gray-100 border border-[#EDE5D8] rounded overflow-hidden flex items-center justify-center">
+                  @if (article.hinh) {
+                    <img [src]="'http://localhost:3000/images/products/' + article.hinh" class="w-full h-full object-cover" alt="Image">
+                  } @else {
+                    <i class="far fa-image text-gray-400"></i>
+                  }
+                </div>
+              </td>
+              <td class="py-4 px-6">
+                <div class="font-bold text-gray-800 line-clamp-2">{{ article.tieu_de }}</div>
+                <div class="text-xs text-gray-400 font-mono mt-0.5">{{ article.slug }}</div>
+              </td>
+              <td class="py-4 px-6 font-mono font-medium">{{ article.luot_xem }}</td>
+              <td class="py-4 px-6 text-xs text-gray-500">{{ article.ngay_dang | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="py-4 px-6">
+                <span class="px-2.5 py-1 rounded-full text-xs font-semibold"
+                      [class.bg-green-100]="article.an_hien === 1 || article.an_hien === true" [class.text-green-800]="article.an_hien === 1 || article.an_hien === true"
+                      [class.bg-red-100]="article.an_hien !== 1 && article.an_hien !== true" [class.text-red-800]="article.an_hien !== 1 && article.an_hien !== true">
+                  {{ (article.an_hien === 1 || article.an_hien === true) ? 'Hiển thị' : 'Ẩn' }}
+                </span>
+              </td>
+              <td class="py-4 px-6 text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <a [routerLink]="['/admin/articles/edit', article.id]" class="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition" title="Sửa">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <button (click)="deleteArticle(article.id)" class="text-red-600 hover:bg-red-50 p-2 rounded-lg transition" title="Xóa">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    @if (totalPages > 1) {
+      <div class="bg-[#FAF7F3] border-t border-[#EDE5D8] px-6 py-4 flex justify-between items-center text-sm text-gray-500">
+        <span>Hiển thị trang {{ page }}/{{ totalPages }} (Tổng {{ totalArticles }} bài viết)</span>
+        <div class="flex gap-2">
+          <button (click)="prevPage()" [disabled]="page === 1" class="px-3 py-1.5 border border-[#EDE5D8] rounded bg-white hover:bg-gray-50 disabled:opacity-50 transition">Trước</button>
+          <button (click)="nextPage()" [disabled]="page === totalPages" class="px-3 py-1.5 border border-[#EDE5D8] rounded bg-white hover:bg-gray-50 disabled:opacity-50 transition">Sau</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
