@@ -147,7 +147,6 @@ exports.getOrderHistory = async (req, res) => {
                   include: [
                     {
                       model: ProductImage, as: 'images',
-                      where: { is_primary: true },
                       required: false,
                       limit: 1
                     }
