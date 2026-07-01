@@ -59,7 +59,29 @@ export class Checkout {
     
     const shipping = (subTotal >= 1500000 || subTotal === 0) ? 0 : 30000;
     this.shippingFee.set(shipping);
-    this.totalAmount.set(subTotal + shipping);
+
+    // Apply voucher discount in UI if available
+    let discountVal = 0;
+    const savedVoucher = sessionStorage.getItem('appliedVoucher');
+    if (savedVoucher) {
+      try {
+        const voucher = JSON.parse(savedVoucher);
+        if (subTotal >= Number(voucher.min_order_value)) {
+          if (voucher.discount_type === 'phan_tram') {
+            discountVal = subTotal * (Number(voucher.discount_value) / 100);
+            if (voucher.max_discount_value && discountVal > Number(voucher.max_discount_value)) {
+              discountVal = Number(voucher.max_discount_value);
+            }
+          } else {
+            discountVal = Number(voucher.discount_value);
+          }
+        }
+      } catch (e) {
+        sessionStorage.removeItem('appliedVoucher');
+      }
+    }
+    
+    this.totalAmount.set(Math.max(0, subTotal + shipping - discountVal));
   }
 
 async onSubmit(form: NgForm) {
@@ -70,9 +92,20 @@ async onSubmit(form: NgForm) {
   }
   try {
     this.isSubmitting = true;
+
+    // Get applied voucher ID
+    let id_ma_giam_gia = null;
+    const savedVoucher = sessionStorage.getItem('appliedVoucher');
+    if (savedVoucher) {
+      try {
+        id_ma_giam_gia = JSON.parse(savedVoucher).id;
+      } catch (e) {}
+    }
+
     const response = await this.cart.checkout({
       ...this.data(),
-      payment_method: this.paymentMethod
+      payment_method: this.paymentMethod,
+      id_ma_giam_gia
     });
 
     // Kiểm tra kết quả trả về
@@ -84,6 +117,7 @@ async onSubmit(form: NgForm) {
     // COD / VNPAY / Momo / SePay: tạo đơn xong thì qua trang thành công
     if (this.paymentMethod === 'cod' || this.paymentMethod === 'vnpay' || this.paymentMethod === 'momo' || this.paymentMethod === 'sepay') {
       this.cart.clearCart();
+      sessionStorage.removeItem('appliedVoucher');
       // Lưu thông tin đơn hàng vào sessionStorage để hiển thị ở trang thành công
       sessionStorage.setItem('last_order', JSON.stringify({
         order_id: response.order_id,

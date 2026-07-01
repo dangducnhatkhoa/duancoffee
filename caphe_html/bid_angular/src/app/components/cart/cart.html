@@ -94,6 +94,14 @@
             <span class="text-sm">Tạm tính</span>
             <span class="font-semibold">{{totalPrice() | number:'1.0-0':'vi'}}đ</span>
           </div>
+          @if (appliedVoucher) {
+            <div class="flex justify-between items-center text-green-600 font-medium">
+              <span class="text-sm flex items-center gap-1">
+                <i class="fas fa-tag"></i> Giảm giá ({{appliedVoucher.code}})
+              </span>
+              <span>-{{discountAmount() | number:'1.0-0':'vi'}}đ</span>
+            </div>
+          }
           <div class="flex justify-between items-center text-[#5A4A3A]">
             <span class="text-sm">Phí vận chuyển (ước tính)</span>
             <span class="font-semibold">{{shippingFee() === 0 ? 'Miễn phí' : (shippingFee() | number:'1.0-0':'vi') + 'đ'}}</span>
@@ -113,11 +121,18 @@
         </div>
 
         <!-- Voucher Input -->
-        <div class="flex mb-6 bg-white border border-[#EDE5D8] rounded-md overflow-hidden">
-          <input type="text" placeholder="Mã giảm giá" class="flex-1 px-4 py-3 text-sm focus:outline-none text-[#2C1A0E]">
-          <button class="px-5 font-semibold text-[#C8572C] hover:bg-[#FAF7F3] border-l border-[#EDE5D8] transition text-sm whitespace-nowrap">
-            ÁP DỤNG
-          </button>
+        <div class="flex flex-col gap-2 mb-6">
+          <div class="flex bg-white border border-[#EDE5D8] rounded-md overflow-hidden">
+            <input type="text" [(ngModel)]="voucherCode" placeholder="Mã giảm giá" class="flex-1 px-4 py-3 text-sm focus:outline-none text-[#2C1A0E]">
+            <button (click)="applyVoucher()" class="px-5 font-semibold text-[#C8572C] hover:bg-[#FAF7F3] border-l border-[#EDE5D8] transition text-sm whitespace-nowrap">
+              ÁP DỤNG
+            </button>
+          </div>
+          @if (appliedVoucher) {
+            <p class="text-[11px] text-green-600 font-semibold px-1">
+              <i class="fas fa-check-circle"></i> Đã áp dụng mã "{{appliedVoucher.name}}".
+            </p>
+          }
         </div>
 
         <a routerLink="/checkout" class="w-full bg-[#A85131] hover:bg-[#8D4226] text-white font-bold py-4 rounded-md transition flex justify-center items-center gap-2 mb-6 uppercase tracking-wide cursor-pointer">

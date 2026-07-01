@@ -163,3 +163,52 @@ exports.deleteVoucher = async (req, res) => {
     res.status(500).json({ success: false, message: 'Lỗi xóa voucher', error: error.message });
   }
 };
+
+// Kiểm tra áp dụng voucher
+exports.checkVoucher = async (req, res) => {
+  try {
+    const { code, orderAmount } = req.body;
+    if (!code) {
+      return res.status(400).json({ success: false, message: 'Vui lòng cung cấp mã giảm giá' });
+    }
+
+    const voucher = await Discount.findOne({
+      where: {
+        code: code.toUpperCase(),
+        status: 1
+      }
+    });
+
+    if (!voucher) {
+      return res.status(400).json({ success: false, message: 'Mã giảm giá không tồn tại hoặc đã hết hiệu lực' });
+    }
+
+    // Check expiry
+    const now = new Date();
+    if (new Date(voucher.end_date) < now) {
+      return res.status(400).json({ success: false, message: 'Mã giảm giá đã quá hạn sử dụng' });
+    }
+
+    // Check quantity
+    if (voucher.quantity <= 0) {
+      return res.status(400).json({ success: false, message: 'Mã giảm giá đã được sử dụng hết' });
+    }
+
+    // Check minimum order value
+    if (orderAmount && parseFloat(orderAmount) < parseFloat(voucher.min_order_value)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: `Mã giảm giá này chỉ áp dụng cho đơn hàng từ ${parseFloat(voucher.min_order_value).toLocaleString('vi-VN')}đ trở lên` 
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Áp dụng mã giảm giá thành công',
+      data: voucher
+    });
+  } catch (error) {
+    console.error('Error checking voucher:', error);
+    res.status(500).json({ success: false, message: 'Lỗi kiểm tra mã giảm giá', error: error.message });
+  }
+};

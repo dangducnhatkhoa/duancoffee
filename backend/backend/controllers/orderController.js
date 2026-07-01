@@ -1,4 +1,4 @@
-const { Order, OrderItem, ProductVariant, Product, ProductImage, Payment, db } = require('../models');
+const { Order, OrderItem, ProductVariant, Product, ProductImage, Payment, Discount, db } = require('../models');
 const { Op } = require('sequelize');
 
 const Stripe = require('stripe');
@@ -367,7 +367,8 @@ exports.checkout = async (req, res) => {
       shipping_address,
       buyer_notes = '',
       payment_method = 'cod',
-      items = []
+      items = [],
+      id_ma_giam_gia = null
     } = req.body;
 
     if (!shipping_name || !shipping_phone || !shipping_address) {
@@ -417,10 +418,33 @@ exports.checkout = async (req, res) => {
       });
     }
 
+    // Process discount
+    let final_amount = total_amount;
+    let applied_discount_id = null;
+    if (id_ma_giam_gia) {
+      const discount = await Discount.findByPk(id_ma_giam_gia, { transaction: t });
+      if (discount && discount.status === 1 && discount.quantity > 0) {
+        let discount_val = 0;
+        if (discount.discount_type === 'phan_tram') {
+          discount_val = total_amount * (parseFloat(discount.discount_value) / 100);
+          if (discount.max_discount_value && discount_val > parseFloat(discount.max_discount_value)) {
+            discount_val = parseFloat(discount.max_discount_value);
+          }
+        } else if (discount.discount_type === 'co_dinh') {
+          discount_val = parseFloat(discount.discount_value);
+        }
+        
+        final_amount = Math.max(0, total_amount - discount_val);
+        applied_discount_id = discount.id;
+        // decrement voucher stock
+        await discount.decrement('quantity', { by: 1, transaction: t });
+      }
+    }
+
     const order = await Order.create({
       order_number: `ORD-${Date.now()}-${uuidv4().slice(0, 6)}`,
       buyer_id,
-      total_amount,
+      total_amount: final_amount,
       shipping_fee: 0,
       shipping_name,
       shipping_phone,
@@ -428,7 +452,8 @@ exports.checkout = async (req, res) => {
       buyer_notes,
       payment_method,
       payment_status: 'unpaid',
-      status: 'pending'
+      status: 'pending',
+      id_ma_giam_gia: applied_discount_id
     }, { transaction: t });
 
     await OrderItem.bulkCreate(
