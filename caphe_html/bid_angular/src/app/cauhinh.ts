@@ -1,1 +1,1 @@
-export const BASE_API = 'http://localhost:3000/api/';
+export const BASE_API = 'https://duancoffee-bcu2.vercel.app/api/';

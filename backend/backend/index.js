@@ -33,7 +33,11 @@ db.authenticate()
   .then(() => console.log("Database connected."))
   .catch(err => console.error("Database connection error:", err));
 
-// Chạy server
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+// Chạy server nếu không chạy ở môi trường serverless (Vercel)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
