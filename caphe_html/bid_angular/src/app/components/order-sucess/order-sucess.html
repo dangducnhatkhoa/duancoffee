@@ -116,7 +116,7 @@
           <div class="flex items-center gap-4">
             <!-- Hình ảnh sp (có số lượng nhỏ) -->
             <div class="relative w-16 h-16 border border-gray-200 rounded-lg bg-white p-1 flex-shrink-0">
-              <img [src]="'http://localhost:3000/images/' + item.image" alt="Product" class="w-full h-full object-cover rounded-md">
+              <img [src]="site.formatImageUrl(item.image_url || item.image)" alt="Product" class="w-full h-full object-cover rounded-md">
               <span class="absolute -top-2 -right-2 bg-gray-500 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold shadow">
                 {{item.quantity}}
               </span>
@@ -125,14 +125,18 @@
             <!-- Tên & variant -->
             <div class="flex-grow">
               <p class="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">{{item.product_name}}</p>
-              @if(item.size || item.color) {
-                <p class="text-xs text-gray-500 mt-1">{{item.color}} / {{item.size}}</p>
+              @if(item.size || item.color || item.strap_color || item.case_size) {
+                <p class="text-xs text-gray-500 mt-1">
+                  {{item.strap_color || item.color || ''}} 
+                  {{(item.strap_color || item.color) && (item.case_size || item.size) ? '/' : ''}} 
+                  {{item.case_size || item.size || ''}}
+                </p>
               }
             </div>
             
             <!-- Giá tiền -->
             <div class="text-sm font-medium text-gray-700 flex-shrink-0">
-              {{(item.unit_price * item.quantity) | number:'1.0-0':'vi'}}đ
+              {{((item.variant_price || item.unit_price || 0) * item.quantity) | number:'1.0-0':'vi'}}đ
             </div>
           </div>
         }

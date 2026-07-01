@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CartService } from '../../services/cart-service';
 import { CommonModule } from '@angular/common';
+import { SiteService } from '../../services/site-service';
 
 @Component({
   selector: 'app-order-sucess',
@@ -28,7 +29,8 @@ export class OrderSucess {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private cart: CartService
+    private cart: CartService,
+    public site: SiteService
   ) {}
 
   async ngOnInit() {
