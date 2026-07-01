@@ -1,0 +1,47 @@
+<div class="p-8">
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold text-[#3E2723]">Dashboard</h2>
+    <p class="text-gray-500">Tổng quan cửa hàng cà phê</p>
+  </div>
+
+  @if (loading) {
+    <div class="text-center py-20 text-gray-400">
+      <i class="fas fa-spinner fa-spin text-2xl"></i>
+      <p class="mt-2">Đang tải...</p>
+    </div>
+  } @else if (stats) {
+    <!-- Latest orders -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+      <div class="flex justify-between items-center p-6 border-b">
+        <h3 class="font-semibold text-[#3E2723]"><i class="fas fa-clock mr-2"></i>Đơn hàng mới nhất</h3>
+        <a routerLink="/orders" class="text-sm text-[#6F4E37] hover:underline">Xem tất cả</a>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+            <tr>
+              <th class="px-6 py-3 text-left">Mã đơn</th>
+              <th class="px-6 py-3 text-left">Khách hàng</th>
+              <th class="px-6 py-3 text-left">Tổng tiền</th>
+              <th class="px-6 py-3 text-left">Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y">
+            @for (order of stats.latestOrders; track order.id) {
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 font-medium text-[#6F4E37]">{{ order.order_number }}</td>
+                <td class="px-6 py-4">{{ order.shipping_name }}</td>
+                <td class="px-6 py-4 font-semibold">{{ order.total_amount | number:'1.0-0' }}₫</td>
+                <td class="px-6 py-4">
+                  <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="statusClass(order.status)">
+                    {{ statusLabel(order.status) }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

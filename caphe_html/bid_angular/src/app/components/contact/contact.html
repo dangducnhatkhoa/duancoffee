@@ -1,0 +1,207 @@
+<!-- Main Content -->
+<main class="container mx-auto px-4 py-0 md:py-12">
+<div class="max-w-6xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+    <!-- Cột trái - Thông tin liên hệ (2/5) -->
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+            <h2 class="font-heading text-2xl md:text-3xl font-bold text-neutral-text mb-6 flex items-center">
+                <i class="fas fa-comments text-accent mr-3"></i>
+                Liên Hệ Với Chúng Tôi
+            </h2>
+
+            <!-- Contact Info -->
+            <div class="space-y-6">
+                <!-- Phone -->
+                <div class="flex items-start gap-4 p-4 bg-neutral-bg rounded-lg hover:bg-accent/10 transition">
+                    <div class="flex-shrink-0 w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                        <i class="fas fa-phone text-xl text-primary"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-neutral-text mb-1">Điện thoại</h4>
+                        <p class="text-accent font-bold text-lg">0987 654 321</p>
+                        <p class="text-xs text-neutral-text-light mt-1">Thứ 2 - Chủ nhật: 8:00 - 22:00</p>
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="flex items-start gap-4 p-4 bg-neutral-bg rounded-lg hover:bg-accent/10 transition">
+                    <div class="flex-shrink-0 w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-xl text-primary"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-neutral-text mb-1">Địa chỉ</h4>
+                        <p class="text-neutral-text-light text-sm">
+                            123 Đường Nguyễn Huệ, Phường Bến Nghé,<br>
+                            Quận 1, Thành phố Hồ Chí Minh
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="flex items-start gap-4 p-4 bg-neutral-bg rounded-lg hover:bg-accent/10 transition">
+                    <div class="flex-shrink-0 w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                        <i class="fas fa-envelope text-xl text-primary"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-neutral-text mb-1">Email</h4>
+                        <p class="text-accent font-semibold">info@kingcoffee.com</p>
+                        <p class="text-neutral-text-light text-sm mt-1">support@kingcoffee.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Working Hours -->
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <h4 class="font-semibold text-neutral-text mb-4 flex items-center">
+                    <i class="fas fa-clock text-accent mr-2"></i>
+                    Giờ làm việc
+                </h4>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-neutral-text-light">Thứ 2 - Thứ 6:</span>
+                        <span class="font-semibold text-neutral-text">8:00 - 22:00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-neutral-text-light">Thứ 7 - Chủ nhật:</span>
+                        <span class="font-semibold text-neutral-text">9:00 - 21:00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-neutral-text-light">Ngày lễ:</span>
+                        <span class="font-semibold text-neutral-text">9:00 - 18:00</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Cột phải - Form liên hệ (3/5) -->
+    <div class="lg:col-span-3">
+        <div class="bg-white rounded-lg shadow-lg px-6 py-4 md:px-8 md:py-4">
+            <h3 class="font-heading text-2xl font-bold text-neutral-text mb-3">Gửi Tin Nhắn Cho Chúng Tôi</h3>
+            <p class="text-neutral-text-light mb-6">
+                Vui lòng điền thông tin vào form bên dưới. Chúng tôi sẽ phản hồi trong vòng 24 giờ.
+            </p>
+
+            <!-- Alert for server messages -->
+            <div id="serverAlert" class="hidden mb-6 p-4 rounded-lg border-l-4">
+                <div class="flex items-start">
+                    <i id="alertIcon" class="text-xl mr-3 mt-0.5"></i>
+                    <div class="flex-1">
+                        <h4 id="alertTitle" class="font-semibold mb-1"></h4>
+                        <p id="alertMessage" class="text-sm"></p>
+                    </div>
+                    <button onclick="closeAlert()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <form  (ngSubmit)="onSubmit()" #contactForm="ngForm" id="contactForm"   novalidate>
+                <!-- Họ và tên -->
+                <div class="mb-5">
+                    <label for="fullName" class="block text-sm font-semibold text-neutral-text mb-2">
+                        Họ và tên <span class="text-urgent">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-text-light">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <input 
+                            type="text" [(ngModel)]="formData.fullName" 
+                            id="fullName" 
+                            name="fullName"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                            placeholder="Nhập họ và tên của bạn"
+                            required
+                        >
+                    </div>
+                    <div id="fullNameError" class="error-message"></div>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-5">
+                    <label for="email" class="block text-sm font-semibold text-neutral-text mb-2">
+                        Email <span class="text-urgent">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-text-light">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                        <input 
+                            type="email"  [(ngModel)]="formData.email" 
+                            id="email" 
+                            name="email"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                            placeholder="example@email.com"
+                            required
+                        >
+                    </div>
+                    <div id="emailError" class="error-message"></div>
+                </div>
+
+                <!-- Số điện thoại -->
+                <div class="mb-5">
+                    <label for="phone" class="block text-sm font-semibold text-neutral-text mb-2">
+                        Số điện thoại <span class="text-urgent">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-text-light">
+                            <i class="fas fa-phone"></i>
+                        </span>
+                        <input 
+                            type="tel"  [(ngModel)]="formData.phone" 
+                            id="phone" 
+                            name="phone"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                            placeholder="0987654321"
+                            required
+                        >
+                    </div>
+                    <div id="phoneError" class="error-message"></div>
+                </div>
+
+                <!-- Nội dung liên hệ -->
+                <div class="mb-5">
+                    <label for="message" class="block text-sm font-semibold text-neutral-text mb-2">
+                        Nội dung liên hệ <span class="text-urgent">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-3 text-neutral-text-light">
+                            <i class="fas fa-comment-dots"></i>
+                        </span>
+                        <textarea 
+                            id="message"  [(ngModel)]="formData.message" 
+                            name="message"
+                            rows="4"
+                            maxlength="300"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
+                            placeholder="Nhập nội dung bạn muốn liên hệ với chúng tôi..."
+                            required
+                        ></textarea>
+                    </div>
+                    <div class="flex justify-between items-center mt-1">
+                        <div id="messageError" class="error-message flex-1"></div>
+                        <div class="text-sm">
+                            <span id="charCount" class="font-semibold text-accent">300</span>
+                            <span class="text-neutral-text-light">/ 300 ký tự</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    type="submit" 
+                    class="w-full bg-accent hover:bg-accent-dark text-primary font-bold py-3 rounded-lg transition transform hover:scale-105 shadow-lg text-lg"
+                >
+                    <i class="fas fa-paper-plane mr-2"></i>Gửi Liên Hệ
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+</div>
+</main>
+

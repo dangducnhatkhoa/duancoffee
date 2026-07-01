@@ -1,0 +1,72 @@
+<!-- Top promo bar -->
+<div style="background:#C8572C; color:white; text-align:center; font-size:0.75rem; padding:6px 0; letter-spacing:0.05em;">
+  🚚 MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TRÊN 500.000Đ &nbsp;|&nbsp; ĐẶT HÀNG NGAY: 1800 599 9999 (MIỄN PHÍ)
+</div>
+
+<!-- Main header -->
+<header style="background:#FAF7F3; border-bottom:1px solid #EDE5D8; position:sticky; top:0; z-index:100;">
+  <div class="container mx-auto px-6" style="max-width:1200px;">
+    <div class="flex items-center justify-between" style="height:72px;">
+
+      <!-- Logo -->
+      <a href="/" style="text-decoration:none; flex-shrink:0;">
+        <span style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:#C8572C; letter-spacing:0.02em;">King Coffee</span>
+      </a>
+
+      <!-- Nav links -->
+      <nav class="hidden lg:flex items-center gap-8">
+        <a href="/" class="nav-link">TRANG CHỦ</a>
+        <a href="/category/1" class="nav-link">SẢN PHẨM</a>
+        <a href="/introduce" class="nav-link">GIỚI THIỆU</a>
+        <a href="/news" class="nav-link">TIN TỨC</a>
+        <a href="/contact" class="nav-link">LIÊN HỆ</a>
+      </nav>
+
+      <!-- Right: search + icons -->
+      <div class="flex items-center gap-4">
+        <form class="hidden md:flex items-center" style="border:1px solid #D1C4B0; border-radius:4px; overflow:hidden; background:white;" (ngSubmit)="onSearch()">
+          <input name="keyword" [(ngModel)]="keyword" type="text" placeholder="Tìm kiếm..."
+            style="border:none; outline:none; padding:8px 14px; font-size:0.85rem; width:160px; background:transparent; color:#2C1A0E;">
+          <button type="submit" style="background:none; border:none; padding:8px 12px; cursor:pointer; color:#C8572C;">
+            <i class="fas fa-search" style="font-size:0.9rem;"></i>
+          </button>
+        </form>
+
+        <!-- User -->
+        <div class="relative group">
+          <a [href]="isLoggedIn ? '/users/info' : '/users/login'" style="color:#2C1A0E; text-decoration:none; font-size:1.2rem;">
+            <i class="fas fa-user-circle"></i>
+          </a>
+          <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-[#EDE5D8] rounded-lg shadow-lg hidden group-hover:block z-50">
+            <div class="p-3 border-b border-[#EDE5D8]">
+              <p class="text-xs text-[#7A6A5A]">Xin chào,</p>
+              <p class="font-semibold text-sm text-[#2C1A0E] truncate">{{full_name}}</p>
+            </div>
+            <div class="p-2 flex flex-col gap-1">
+              @if (isLoggedIn) {
+                <a href="/users/info" class="block px-3 py-2 text-sm text-[#2C1A0E] hover:bg-[#FAF7F3] rounded" style="text-decoration:none;">Thông tin tài khoản</a>
+                <a href="/users/changepassword" class="block px-3 py-2 text-sm text-[#2C1A0E] hover:bg-[#FAF7F3] rounded" style="text-decoration:none;">Đổi mật khẩu</a>
+                <a href="/users/logout" class="block px-3 py-2 text-sm text-[#C8572C] hover:bg-[#FAF7F3] rounded" style="text-decoration:none;">Đăng xuất</a>
+              } @else {
+                <a href="/users/login" class="block px-3 py-2 text-sm text-[#2C1A0E] hover:bg-[#FAF7F3] rounded" style="text-decoration:none;">Đăng nhập</a>
+                <a href="/users/register" class="block px-3 py-2 text-sm text-[#2C1A0E] hover:bg-[#FAF7F3] rounded" style="text-decoration:none;">Đăng ký</a>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Cart -->
+        <a href="/cart" class="relative" style="color:#2C1A0E; text-decoration:none; font-size:1.2rem;">
+          <i class="fas fa-shopping-bag"></i>
+          @if (cartCount > 0) {
+            <span style="position:absolute; top:-8px; right:-8px; background:#C8572C; color:white; font-size:0.65rem; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+              {{cartCount}}
+            </span>
+          }
+        </a>
+      </div>
+
+    </div>
+  </div>
+</header>
+

@@ -1,0 +1,169 @@
+<!-- Main Layout Container -->
+<div class="container mx-auto px-6 py-10" style="max-width:1200px;">
+
+  <!-- Hero Banner (Optional, placeholder for now) -->
+  <div class="mb-16 w-full" style="height:350px; border-radius:12px; overflow:hidden;">
+    <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1600&q=80" alt="Coffee beans" style="width:100%; height:100%; object-fit:cover;">
+  </div>
+
+  <!-- Sản phẩm nổi bật -->
+  <section class="mb-16">
+    <div class="text-center mb-10">
+      <h2 class="section-title">Sản phẩm nổi bật</h2>
+      <p style="color:#7A6A5A; font-size:0.9rem;">Hương vị cà phê tinh hoa</p>
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      @for (sp of featured_arr(); track sp.id) {
+        <div class="product-card flex flex-col h-full border border-[#EDE5D8]">
+          <!-- Image (clickable) -->
+          <a [routerLink]="['/product', sp.id]" class="relative bg-white block cursor-pointer" style="padding:20px; text-align:center; height:240px; display:flex; align-items:center; justify-content:center;">
+            @if (sp.images?.length == 0) {
+              <div style="width:100%; height:100%; background:#F5F0EA; display:flex; align-items:center; justify-content:center; border-radius:4px;">
+                <i class="fas fa-coffee text-5xl text-[#C8572C] opacity-50"></i>
+              </div>
+            } @else {
+              <img [src]="site.getPrimaryImage(sp)" [alt]="sp.name" style="max-height:100%; max-width:100%; object-fit:contain;" />
+            }
+          </a>
+          
+          <!-- Content -->
+          <div class="p-5 flex flex-col flex-1" style="background:#FAF7F3; border-top:1px solid #EDE5D8;">
+            <p style="font-size:0.7rem; color:#A89070; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;">
+              {{sp.brand?.name || 'KING COFFEE'}}
+            </p>
+            <a [routerLink]="['/product', sp.id]" style="font-size:0.95rem; font-weight:600; color:#2C1A0E; line-height:1.4; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-decoration:none;" class="hover:text-[#C8572C] transition">
+              {{sp.name}}
+            </a>
+            
+            <div class="mt-auto">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="price-new">{{sp.fixed_price | number:'1.0-0':'vi'}} VNĐ</span>
+                <span class="price-old">{{((sp.fixed_price || 0) * 1.2) | number:'1.0-0':'vi'}} VNĐ</span>
+              </div>
+              
+              <div class="flex flex-col gap-2">
+                <a [routerLink]="['/product', sp.id]" class="btn-outline w-full justify-center" style="font-size:0.75rem; padding:8px; text-decoration:none;">
+                  <i class="fas fa-eye"></i> XEM CHI TIẾT
+                </a>
+                <button (click)="addToCart(sp)" class="btn-primary w-full justify-center" style="font-size:0.75rem; padding:8px;">
+                  THÊM VÀO GIỎ HÀNG
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Sản phẩm bán chạy nhất (Mock layout) -->
+  <section class="mb-16 bg-white p-8" style="border-radius:12px; border:1px solid #EDE5D8;">
+    <h2 class="section-title mb-8">Sản phẩm bán chạy nhất</h2>
+    <div class="flex flex-col lg:flex-row gap-8">
+      
+      <!-- Highlight item -->
+      <div class="lg:w-1/3 p-8" style="background:#F2ECE4; border-radius:8px;">
+        <span style="background:#C8572C; color:white; font-size:0.7rem; padding:3px 8px; border-radius:2px; font-weight:700; text-transform:uppercase;">Bán chạy nhất tuần</span>
+        <h3 class="font-heading mt-4 mb-2 text-2xl font-bold" style="color:#2C1A0E;">Cà phê nguyên chất Arabica</h3>
+        <p style="color:#7A6A5A; font-size:0.9rem; margin-bottom:20px;">Hương thơm nồng nàn, vị chua thanh thoát và ngọt nhẹ hậu vị.</p>
+        <div style="text-align:center;">
+          <img src="https://product.hstatic.net/1000300445/product/ca_phe_hat_rang_arabica_2_dd7f21f1d1994645af522f7b8b26116c_master.jpg" alt="Arabica" style="max-height:200px; display:inline-block;" onerror="this.src='https://placehold.co/200x300/F5F0EA/C8572C?text=Coffee'">
+        </div>
+      </div>
+
+      <!-- Grid items -->
+      <div class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Mock item 1 -->
+        <div class="flex items-center gap-4 p-4 border border-[#EDE5D8] rounded-lg hover:border-[#C8572C] transition cursor-pointer">
+          <div style="width:80px; height:80px; background:#F5F0EA; display:flex; align-items:center; justify-content:center; border-radius:4px;">
+            <i class="fas fa-coffee text-2xl text-[#C8572C]"></i>
+          </div>
+          <div>
+            <h4 style="font-weight:600; font-size:0.9rem; color:#2C1A0E; margin-bottom:4px;">Expert Blend 1 Cà phê hạt xay</h4>
+            <p class="price-new" style="font-size:0.9rem;">255.000 VNĐ</p>
+          </div>
+        </div>
+        <!-- Mock item 2 -->
+        <div class="flex items-center gap-4 p-4 border border-[#EDE5D8] rounded-lg hover:border-[#C8572C] transition cursor-pointer">
+          <div style="width:80px; height:80px; background:#F5F0EA; display:flex; align-items:center; justify-content:center; border-radius:4px;">
+            <i class="fas fa-coffee text-2xl text-[#C8572C]"></i>
+          </div>
+          <div>
+            <h4 style="font-weight:600; font-size:0.9rem; color:#2C1A0E; margin-bottom:4px;">Golden Blend Phin Truyền Thống</h4>
+            <p class="price-new" style="font-size:0.9rem;">185.000 VNĐ</p>
+          </div>
+        </div>
+        <!-- Mock item 3 -->
+        <div class="flex items-center gap-4 p-4 border border-[#EDE5D8] rounded-lg hover:border-[#C8572C] transition cursor-pointer">
+          <div style="width:80px; height:80px; background:#F5F0EA; display:flex; align-items:center; justify-content:center; border-radius:4px;">
+            <i class="fas fa-coffee text-2xl text-[#C8572C]"></i>
+          </div>
+          <div>
+            <h4 style="font-weight:600; font-size:0.9rem; color:#2C1A0E; margin-bottom:4px;">Cà Phê Hòa Tan Đen Đá</h4>
+            <p class="price-new" style="font-size:0.9rem;">95.000 VNĐ</p>
+          </div>
+        </div>
+        <!-- Mock item 4 -->
+        <div class="flex items-center gap-4 p-4 border border-[#EDE5D8] rounded-lg hover:border-[#C8572C] transition cursor-pointer">
+          <div style="width:80px; height:80px; background:#F5F0EA; display:flex; align-items:center; justify-content:center; border-radius:4px;">
+            <i class="fas fa-coffee text-2xl text-[#C8572C]"></i>
+          </div>
+          <div>
+            <h4 style="font-weight:600; font-size:0.9rem; color:#2C1A0E; margin-bottom:4px;">Cà Phê Sữa Đá Hòa Tan</h4>
+            <p class="price-new" style="font-size:0.9rem;">110.000 VNĐ</p>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- Tin tức & Cộng đồng -->
+  <section class="mb-12">
+    <div class="flex justify-between items-end mb-8">
+      <div>
+        <h2 class="section-title">Tin tức & Cộng đồng</h2>
+      </div>
+      <a href="/news" style="color:#C8572C; font-weight:600; font-size:0.85rem; text-decoration:none;">XEM TẤT CẢ <i class="fas fa-angle-right ml-1"></i></a>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Article 1 -->
+      <div class="bg-white rounded-lg overflow-hidden border border-[#EDE5D8] hover:shadow-lg transition">
+        <div style="height:200px; overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1495474472202-4affb9442b08?auto=format&fit=crop&w=600&q=80" alt="News" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" class="hover:scale-105">
+        </div>
+        <div class="p-5">
+          <span style="color:#C8572C; font-size:0.75rem; font-weight:700; text-transform:uppercase;">Kiến thức</span>
+          <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:600; color:#2C1A0E; margin:10px 0; line-height:1.4;">Bí quyết pha cà phê phin ngon chuẩn vị truyền thống</h3>
+          <p style="color:#7A6A5A; font-size:0.85rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">Nước pha cà phê phải sôi ở 95-100 độ C. Tráng phin bằng nước nóng trước khi pha sẽ giúp cà phê nở đều và chiết xuất tốt hơn...</p>
+        </div>
+      </div>
+      <!-- Article 2 -->
+      <div class="bg-white rounded-lg overflow-hidden border border-[#EDE5D8] hover:shadow-lg transition">
+        <div style="height:200px; overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?auto=format&fit=crop&w=600&q=80" alt="News" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" class="hover:scale-105">
+        </div>
+        <div class="p-5">
+          <span style="color:#C8572C; font-size:0.75rem; font-weight:700; text-transform:uppercase;">Sức khỏe</span>
+          <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:600; color:#2C1A0E; margin:10px 0; line-height:1.4;">Uống 1 ly cà phê mỗi ngày mang lại lợi ích gì?</h3>
+          <p style="color:#7A6A5A; font-size:0.85rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">Cà phê không chỉ giúp tỉnh táo mà còn chứa nhiều chất chống oxy hóa, hỗ trợ quá trình trao đổi chất và bảo vệ sức khỏe tim mạch...</p>
+        </div>
+      </div>
+      <!-- Article 3 -->
+      <div class="bg-white rounded-lg overflow-hidden border border-[#EDE5D8] hover:shadow-lg transition">
+        <div style="height:200px; overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=600&q=80" alt="News" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" class="hover:scale-105">
+        </div>
+        <div class="p-5">
+          <span style="color:#C8572C; font-size:0.75rem; font-weight:700; text-transform:uppercase;">Cộng đồng</span>
+          <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:600; color:#2C1A0E; margin:10px 0; line-height:1.4;">King Coffee đồng hành cùng người nông dân Buôn Ma Thuột</h3>
+          <p style="color:#7A6A5A; font-size:0.85rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">Dự án hỗ trợ phát triển nông nghiệp bền vững, mang lại sinh kế ổn định cho các hộ gia đình trồng cà phê tại vùng Tây Nguyên...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+

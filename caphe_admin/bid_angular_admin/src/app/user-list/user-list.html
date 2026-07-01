@@ -1,0 +1,67 @@
+<div class="p-8">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-[#3E2723]">Quản lý người dùng</h2>
+    <p class="text-gray-500">Danh sách tài khoản khách hàng</p>
+  </div>
+
+  <div class="bg-white rounded-xl p-4 mb-6 flex gap-3 shadow-sm border">
+    <input type="text" [(ngModel)]="search" placeholder="Tìm tên, email, SĐT..."
+           class="flex-1 px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-[#6F4E37]">
+    <button (click)="loadUsers()" class="px-4 py-2 bg-[#6F4E37] text-white rounded-lg">
+      <i class="fas fa-search mr-1"></i>Tìm
+    </button>
+  </div>
+
+  @if (loading()) {
+    <p class="text-center py-10 text-gray-400"><i class="fas fa-spinner fa-spin"></i></p>
+  } @else {
+    <div class="bg-white rounded-xl shadow-sm border overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+          <tr>
+            <th class="px-4 py-3 text-left">ID</th>
+            <th class="px-4 py-3 text-left">Họ tên</th>
+            <th class="px-4 py-3 text-left">Email</th>
+            <th class="px-4 py-3 text-left">SĐT</th>
+            <th class="px-4 py-3 text-left">Vai trò</th>
+            <th class="px-4 py-3 text-left">Ngày đăng ký</th>
+            <th class="px-4 py-3 text-left">Trạng thái</th>
+            <th class="px-4 py-3 text-right">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          @for (u of users(); track u.id) {
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-3">#{{ u.id }}</td>
+              <td class="px-4 py-3 font-medium">{{ u.full_name }}</td>
+              <td class="px-4 py-3">{{ u.email }}</td>
+              <td class="px-4 py-3">{{ u.phone || '-' }}</td>
+              <td class="px-4 py-3">
+                <span class="px-2 py-1 text-xs rounded-full"
+                      [class]="u.user_type === 'admin' ? 'bg-[#6F4E37] text-white' : 'bg-gray-100'">
+                  {{ roleLabel(u.user_type) }}
+                </span>
+              </td>
+              <td class="px-4 py-3">{{ u.created_at | date:'dd/MM/yyyy' }}</td>
+              <td class="px-4 py-3">
+                <span class="px-2 py-1 text-xs rounded-full"
+                      [class]="u.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                  {{ u.status === 'active' ? 'Hoạt động' : 'Đã khóa' }}
+                </span>
+              </td>
+              <td class="px-4 py-3 text-right">
+                @if (u.user_type !== 'admin') {
+                  <button (click)="toggleStatus(u.id)" class="text-sm text-orange-600 hover:underline">
+                    {{ u.status === 'active' ? 'Khóa' : 'Mở khóa' }}
+                  </button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="8" class="text-center py-10 text-gray-400">Chưa có người dùng</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

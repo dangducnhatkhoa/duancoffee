@@ -1,0 +1,115 @@
+@if (loading) {
+  <div class="text-center py-20 text-gray-400">
+    <i class="fas fa-spinner fa-spin text-2xl"></i>
+    <p class="mt-2">Đang tải...</p>
+  </div>
+} @else if (stats) {
+
+  <!-- Hàng giữa: biểu đồ + đơn hàng mới -->
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-5 mb-5">
+    <div class="xl:col-span-2 dash-card">
+      <div class="dash-card-header">
+        <h3>Doanh thu theo ngày</h3>
+        <select class="dash-select">
+          <option>7 ngày qua</option>
+        </select>
+      </div>
+      <div class="dash-card-body" style="height: 280px;">
+        <canvas id="revenueChart"></canvas>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <h3>Đơn hàng mới nhất</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Mã đơn hàng</th>
+              <th>Khách hàng</th>
+              <th>Tổng tiền</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of stats.latestOrders; track order.id) {
+              <tr>
+                <td class="font-medium">{{ order.order_number }}</td>
+                <td>{{ order.shipping_name }}</td>
+                <td>{{ order.total_amount | number:'1.0-0' }} đ</td>
+                <td><span class="badge" [ngClass]="statusBadge(order.status)">{{ statusLabel(order.status) }}</span></td>
+              </tr>
+            } @empty {
+              <tr><td colspan="4" class="text-center text-gray-400 py-6">Chưa có đơn hàng</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hàng dưới: bán chạy, danh mục, tồn kho thấp -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div class="dash-card">
+      <div class="dash-card-header"><h3>Sản phẩm bán chạy</h3></div>
+      <div class="dash-card-body">
+        @for (p of stats.topProducts; track p.name) {
+          <div class="dash-list-item">
+            <div class="dash-list-thumb"><i class="fas fa-coffee"></i></div>
+            <div class="dash-list-info">
+              <div class="name">{{ p.name }}</div>
+              <div class="meta">{{ p.sold }} sản phẩm</div>
+            </div>
+          </div>
+        } @empty {
+          <p class="text-gray-400 text-sm text-center py-4">Chưa có dữ liệu</p>
+        }
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-header"><h3>Danh mục sản phẩm</h3></div>
+      <div class="dash-card-body">
+        @for (c of stats.categoriesWithCount; track c.name) {
+          <div class="dash-list-item">
+            <div class="dash-list-thumb"><i class="fas fa-folder"></i></div>
+            <div class="dash-list-info">
+              <div class="name">{{ c.name }}</div>
+              <div class="meta">{{ c.product_count }} sản phẩm</div>
+            </div>
+          </div>
+        } @empty {
+          <p class="text-gray-400 text-sm text-center py-4">Chưa có danh mục</p>
+        }
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-header"><h3>Sản phẩm tồn kho thấp</h3></div>
+      <div class="overflow-x-auto">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Tồn kho</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of stats.lowStockProducts; track p.id) {
+              <tr>
+                <td>{{ p.name }}</td>
+                <td class="font-semibold">{{ p.stock }}</td>
+                <td><span class="badge" [ngClass]="stockBadge(p.stock)">{{ stockLabel(p.stock) }}</span></td>
+              </tr>
+            } @empty {
+              <tr><td colspan="3" class="text-center text-gray-400 py-6">Tồn kho ổn định</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,86 @@
+<div class="admin-shell">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar" [class.collapsed]="sidebarCollapsed">
+    <div class="admin-brand">
+      <div class="admin-brand-icon"><i class="fas fa-mug-hot"></i></div>
+      @if (!sidebarCollapsed) {
+        <div class="admin-brand-text">
+          <h1>KING COFFEE</h1>
+          <span>ADMIN</span>
+        </div>
+      }
+    </div>
+
+    <nav class="admin-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-nav-item">
+        <i class="fas fa-th-large"></i>
+        @if (!sidebarCollapsed) { <span>Dashboard</span> }
+      </a>
+
+      <!-- Quản lý sản phẩm -->
+      @if (!sidebarCollapsed) {
+        <div class="admin-nav-group-title" (click)="toggleGroup('products')">
+          <span><i class="fas fa-coffee mr-2 text-gray-400"></i> Quản lý sản phẩm</span>
+          <i class="fas fa-chevron-right admin-nav-chevron" [class.open]="expandedMenus['products']"></i>
+        </div>
+        @if (expandedMenus['products']) {
+          <div class="admin-nav-sub">
+            <a routerLink="/admin/category" routerLinkActive="active" class="admin-nav-item">Danh mục</a>
+            <a routerLink="/admin/product" routerLinkActive="active" class="admin-nav-item">Sản phẩm</a>
+          </div>
+        }
+
+        <!-- Quản lý đơn hàng -->
+        <div class="admin-nav-group-title" (click)="toggleGroup('orders')">
+          <span><i class="fas fa-shopping-bag mr-2 text-gray-400"></i> Quản lý đơn hàng</span>
+          <i class="fas fa-chevron-right admin-nav-chevron" [class.open]="expandedMenus['orders']"></i>
+        </div>
+        @if (expandedMenus['orders']) {
+          <div class="admin-nav-sub">
+            <a routerLink="/admin/orders" routerLinkActive="active" class="admin-nav-item">Tất cả đơn hàng</a>
+          </div>
+        }
+
+        <a routerLink="/admin/users" routerLinkActive="active" class="admin-nav-item">
+          <i class="fas fa-users"></i> Quản lý tài khoản
+        </a>
+        <a routerLink="/" class="admin-nav-item">
+          <i class="fas fa-store"></i> Về trang chủ
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="admin-main">
+    <!-- Top bar -->
+    <header class="admin-topbar">
+      <div class="admin-topbar-left">
+        <button class="admin-hamburger" (click)="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h2 class="admin-page-title">{{ pageTitle }}</h2>
+      </div>
+      <div class="admin-topbar-right">
+        <button class="admin-bell">
+          <i class="far fa-bell"></i>
+          <span class="admin-bell-dot"></span>
+        </button>
+        <div class="admin-user-info">
+          <div class="admin-user-avatar">{{ getInitials() }}</div>
+          <div class="admin-user-text">
+            <strong>{{ currentUser?.full_name || 'Admin' }}</strong>
+            <small>Quản trị viên</small>
+          </div>
+        </div>
+        <button class="admin-hamburger" (click)="logout()" title="Đăng xuất">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

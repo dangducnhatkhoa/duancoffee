@@ -1,0 +1,158 @@
+<!-- ===== Breadcrumb ===== -->
+<div class="bg-[#FAF7F3] border-b border-[#EDE5D8]">
+  <div class="container mx-auto px-6 py-3" style="max-width:1200px;">
+    <nav class="flex text-sm" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <a routerLink="/" class="text-[#7A6A5A] hover:text-[#C8572C] transition font-medium">Trang chủ</a>
+        </li>
+        <li aria-current="page">
+          <div class="flex items-center">
+            <i class="fas fa-chevron-right text-[#D1C4B0] mx-2 text-[10px]"></i>
+            <span class="text-[#2C1A0E] font-semibold">Giỏ hàng</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<main class="container mx-auto px-6 py-12" style="max-width:1200px; background-color: #FAF7F3;">
+  
+  @if (cartItems().length > 0) {
+  <div class="flex flex-col lg:flex-row gap-8 items-start">
+    
+    <!-- LEFT: Cart Items -->
+    <div class="w-full lg:w-[65%]">
+      <div class="flex items-center justify-between mb-6 pb-4 border-b border-[#EDE5D8]">
+        <h2 class="font-heading" style="font-size:1.75rem; font-weight:700; color:#2C1A0E;">
+          Giỏ hàng của bạn
+        </h2>
+        <span class="text-[#7A6A5A] font-medium text-sm">({{cartItems().length}} sản phẩm)</span>
+      </div>
+
+      <div class="space-y-4">
+        @for(item of cartItems(); track item.variant_id) {
+          <div class="bg-white rounded-lg p-5 flex flex-col sm:flex-row items-start sm:items-center gap-5 border border-[#EDE5D8] shadow-sm">
+            <!-- Image -->
+            <div class="w-24 h-24 flex-shrink-0 bg-[#FAF7F3] rounded border border-[#EDE5D8] flex justify-center items-center overflow-hidden relative group">
+              <img [src]="item.image_url" [alt]="item.product_name" class="max-w-full max-h-full object-contain">
+              <!-- Delete Button -->
+              <button (click)="removeItem(item.variant_id)" class="absolute top-1 right-1 text-gray-400 hover:text-red-500 bg-white rounded-full w-6 h-6 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition" title="Xóa">
+                <i class="fas fa-times text-[10px]"></i>
+              </button>
+            </div>
+
+            <!-- Info -->
+            <div class="flex-1 min-w-0 w-full sm:w-auto">
+              <h3 class="font-heading text-lg font-bold text-[#2C1A0E] mb-1 truncate">{{item.product_name}}</h3>
+              <p class="text-sm text-[#7A6A5A] mb-3">Phân loại: <span class="font-medium text-[#2C1A0E]">{{item.strap_color || item.case_size || 'Mặc định'}}</span></p>
+              
+              <div class="flex items-center w-28 h-9 border border-[#EDE5D8] rounded-md overflow-hidden bg-[#FAF7F3]">
+                <button (click)="changeQuantity(item, -1)" class="w-8 h-full flex items-center justify-center text-[#A09383] hover:text-[#C8572C] hover:bg-[#F0EBE1] transition">
+                  <i class="fas fa-minus text-xs"></i>
+                </button>
+                <input type="number" [value]="item.quantity" (change)="updateQuantity(item, $event)" (keyup)="updateQuantity(item, $event)" class="flex-1 w-full h-full text-center bg-transparent text-sm font-semibold text-[#2C1A0E] focus:outline-none" min="1">
+                <button (click)="changeQuantity(item, 1)" class="w-8 h-full flex items-center justify-center text-[#A09383] hover:text-[#C8572C] hover:bg-[#F0EBE1] transition">
+                  <i class="fas fa-plus text-xs"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="sm:text-right mt-1 sm:mt-0 font-bold text-[#e3000f] text-lg">
+              {{item.variant_price | number:'1.0-0':'vi'}}đ
+            </div>
+            
+            <!-- Mobile delete -->
+            <button (click)="removeItem(item.variant_id)" class="sm:hidden absolute top-4 right-4 text-gray-400 hover:text-red-500">
+                <i class="fas fa-times"></i>
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="mt-6 flex items-center justify-between">
+        <a routerLink="/" class="text-[#C8572C] hover:text-[#9c3e1b] font-medium flex items-center gap-2 transition text-sm">
+          <i class="fas fa-arrow-left"></i> Tiếp tục mua sắm
+        </a>
+        <button (click)="clearCart()" class="text-[#A09383] hover:text-red-500 text-sm font-medium transition underline">
+          Xóa toàn bộ giỏ hàng
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Order Summary -->
+    <div class="w-full lg:w-[35%]">
+      <div class="bg-[#Fdfaf6] rounded-xl p-6 border border-[#EDE5D8] sticky top-24 shadow-sm">
+        <h3 class="font-heading text-xl font-bold text-[#2C1A0E] mb-6">
+          Tóm tắt đơn hàng
+        </h3>
+
+        <div class="space-y-4 mb-6">
+          <div class="flex justify-between items-center text-[#5A4A3A]">
+            <span class="text-sm">Tạm tính</span>
+            <span class="font-semibold">{{totalPrice() | number:'1.0-0':'vi'}}đ</span>
+          </div>
+          <div class="flex justify-between items-center text-[#5A4A3A]">
+            <span class="text-sm">Phí vận chuyển (ước tính)</span>
+            <span class="font-semibold">{{shippingFee() === 0 ? 'Miễn phí' : (shippingFee() | number:'1.0-0':'vi') + 'đ'}}</span>
+          </div>
+        </div>
+
+        <div class="border-t border-[#EDE5D8] pt-4 mb-6">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="block font-heading text-xl font-bold text-[#2C1A0E]">Tổng cộng</span>
+              <span class="text-[10px] text-[#A09383] italic">(Đã bao gồm VAT nếu có)</span>
+            </div>
+            <span class="font-heading text-2xl font-bold text-[#e3000f]">
+              {{totalAmount() | number:'1.0-0':'vi'}}đ
+            </span>
+          </div>
+        </div>
+
+        <!-- Voucher Input -->
+        <div class="flex mb-6 bg-white border border-[#EDE5D8] rounded-md overflow-hidden">
+          <input type="text" placeholder="Mã giảm giá" class="flex-1 px-4 py-3 text-sm focus:outline-none text-[#2C1A0E]">
+          <button class="px-5 font-semibold text-[#C8572C] hover:bg-[#FAF7F3] border-l border-[#EDE5D8] transition text-sm whitespace-nowrap">
+            ÁP DỤNG
+          </button>
+        </div>
+
+        <a routerLink="/checkout" class="w-full bg-[#A85131] hover:bg-[#8D4226] text-white font-bold py-4 rounded-md transition flex justify-center items-center gap-2 mb-6 uppercase tracking-wide cursor-pointer">
+          THANH TOÁN NGAY <i class="fas fa-arrow-right"></i>
+        </a>
+
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 text-[#7A6A5A] text-xs">
+            <i class="fas fa-shield-alt text-[#C8572C]"></i>
+            <span>Thanh toán an toàn bảo mật 100%</span>
+          </div>
+          <div class="flex items-center gap-3 text-[#7A6A5A] text-xs">
+            <i class="fas fa-truck text-[#C8572C]"></i>
+            <span>Miễn phí vận chuyển cho đơn trên 1.5tr</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  }
+
+  @if (cartItems().length === 0) {
+  <!-- Empty Cart -->
+  <div class="bg-white rounded-lg p-12 text-center border border-[#EDE5D8] max-w-2xl mx-auto shadow-sm">
+    <div class="w-24 h-24 mx-auto bg-[#FAF7F3] rounded-full flex items-center justify-center mb-6">
+      <i class="fas fa-shopping-basket text-4xl text-[#C8572C] opacity-50"></i>
+    </div>
+    <h3 class="font-heading text-2xl font-bold text-[#2C1A0E] mb-3">Giỏ hàng trống</h3>
+    <p class="text-[#7A6A5A] mb-8">Bạn chưa chọn sản phẩm nào. Hãy khám phá những hương vị cà phê tuyệt hảo của King Coffee!</p>
+    <a routerLink="/" class="inline-block bg-[#C8572C] hover:bg-[#A85131] text-white font-semibold py-3 px-8 rounded transition">
+      Bắt đầu mua sắm
+    </a>
+  </div>
+  }
+
+</main>

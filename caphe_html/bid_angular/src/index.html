@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Coffee - Cà phê cao cấp Việt Nam</title>
+  <base href="/">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Chart.js (Admin dashboard) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+      tailwind.config = {
+          theme: {
+              extend: {
+                  colors: {
+                      primary: {
+                          DEFAULT: '#2C1A0E',
+                          light: '#3D2512',
+                          dark: '#1A0F08'
+                      },
+                      accent: {
+                          DEFAULT: '#C8572C',
+                          light: '#E06030',
+                          dark: '#A8451E'
+                      },
+                      cream: {
+                          DEFAULT: '#F5F0EA',
+                          light: '#FAF7F3',
+                          dark: '#EDE5D8'
+                      },
+                      neutral: {
+                          bg: '#F5F0EA',
+                          text: '#2C1A0E',
+                          'text-light': '#7A6A5A'
+                      },
+                      urgent: '#DC2626'
+                  },
+                  fontFamily: {
+                      'heading': ['Playfair Display', 'serif'],
+                      'body': ['Inter', 'sans-serif']
+                  }
+              }
+          }
+      }
+  </script>
+  <style>
+      * { box-sizing: border-box; }
+      body {
+          font-family: 'Inter', sans-serif;
+          background-color: #F5F0EA;
+          color: #2C1A0E;
+      }
+      .font-heading { font-family: 'Playfair Display', serif; }
+      
+      /* King Coffee brand accent color */
+      .text-kc-accent { color: #C8572C; }
+      .bg-kc-accent { background-color: #C8572C; }
+      .border-kc-accent { border-color: #C8572C; }
+
+      /* Header nav hover */
+      .nav-link {
+          font-size: 0.85rem;
+          font-weight: 500;
+          letter-spacing: 0.05em;
+          color: #2C1A0E;
+          text-decoration: none;
+          padding: 4px 0;
+          border-bottom: 2px solid transparent;
+          transition: all 0.2s;
+      }
+      .nav-link:hover, .nav-link.active {
+          color: #C8572C;
+          border-bottom-color: #C8572C;
+      }
+
+      /* Product card */
+      .product-card {
+          background: white;
+          border-radius: 8px;
+          overflow: hidden;
+          transition: box-shadow 0.3s;
+      }
+      .product-card:hover { box-shadow: 0 8px 24px rgba(44,26,14,0.15); }
+
+      /* Btn primary */
+      .btn-primary {
+          background-color: #C8572C;
+          color: white;
+          font-weight: 600;
+          font-size: 0.8rem;
+          letter-spacing: 0.05em;
+          padding: 10px 20px;
+          border-radius: 4px;
+          border: none;
+          cursor: pointer;
+          transition: background 0.2s;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+      }
+      .btn-primary:hover { background-color: #A8451E; }
+
+      /* Btn outline */
+      .btn-outline {
+          background-color: transparent;
+          color: #C8572C;
+          font-weight: 600;
+          font-size: 0.8rem;
+          letter-spacing: 0.05em;
+          padding: 9px 20px;
+          border-radius: 4px;
+          border: 1.5px solid #C8572C;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+      }
+      .btn-outline:hover { background-color: #C8572C; color: white; }
+
+      /* Section title */
+      .section-title {
+          font-family: 'Playfair Display', serif;
+          font-size: 1.6rem;
+          font-weight: 600;
+          color: #2C1A0E;
+          margin-bottom: 4px;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #F5F0EA; }
+      ::-webkit-scrollbar-thumb { background: #C8572C; border-radius: 3px; }
+
+      /* Price styling */
+      .price-old { text-decoration: line-through; color: #9CA3AF; font-size: 0.85rem; }
+      .price-new { color: #C8572C; font-weight: 700; font-size: 1rem; }
+
+      /* Tag badge */
+      .badge-new { background:#C8572C; color:white; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:2px; }
+      .badge-hot { background:#D97706; color:white; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:2px; }
+
+      /* Star rating */
+      .stars { color: #F59E0B; }
+
+      /* Footer dark */
+      footer { background-color: #2C1A0E !important; }
+
+      /* Sidebar filter */
+      .filter-group { border-bottom: 1px solid #EDE5D8; padding-bottom: 16px; margin-bottom: 16px; }
+      .filter-title { font-weight: 600; font-size: 0.9rem; color: #2C1A0E; margin-bottom: 10px; }
+      .filter-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #7A6A5A; cursor: pointer; padding: 3px 0; }
+      .filter-item:hover { color: #C8572C; }
+      .filter-item input[type=radio]:checked + span { color: #C8572C; font-weight: 600; }
+
+      /* Banner */
+      .banner-dark {
+          background: linear-gradient(135deg, #2C1A0E 0%, #4A2E1A 60%, #6B3F1E 100%);
+          color: white;
+      }
+
+      /* Quantity controls */
+      .qty-btn {
+          width: 32px; height: 32px;
+          border: 1px solid #D1C4B0;
+          background: white;
+          cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 1rem;
+          color: #2C1A0E;
+          transition: background 0.2s;
+      }
+      .qty-btn:hover { background: #F5F0EA; }
+      .qty-input {
+          width: 48px; height: 32px;
+          border-top: 1px solid #D1C4B0;
+          border-bottom: 1px solid #D1C4B0;
+          text-align: center;
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #2C1A0E;
+          background: white;
+      }
+  </style>
+</head>
+<body>
+    <app-root></app-root>
+</body> 
+</html>
+

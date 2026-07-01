@@ -1,0 +1,60 @@
+<nav class="bg-primary-light text-white shadow-md sticky top-0 z-50">
+<div class="container mx-auto px-4">
+    <ul id="mainMenu" class="hidden lg:flex items-center justify-center space-x-1">
+        <li><a href="#" class="block px-4 py-3 hover:bg-accent hover:text-primary transition">
+           <i class="fas fa-home mr-2"></i>Trang chủ</a>
+        </li>
+        <!-- Sản phẩm Dropdown -->
+        <li class="dropdown relative">
+            <a href="#" class="block px-4 py-3 hover:bg-accent hover:text-primary transition">
+                <i class="fas fa-clock mr-2"></i>Sản phẩm <i class="fas fa-chevron-down ml-1 text-xs"></i>
+            </a>
+            <ul class="dropdown-menu hidden absolute top-full left-0 bg-white text-neutral-text shadow-lg rounded-b-lg min-w-[200px]">
+                @for ( category of category_arr(); track category.id) {
+                    <li>
+                        <a href="/category/{{category.id}}" class="block px-4 py-2 hover:bg-accent hover:text-primary transition">
+                        <img src="{{category.icon}}" class="w-5 h-5 inline-block mr-2 mb-1"/>
+                        {{category.name}}
+                        </a>
+                    </li>
+                }
+
+            </ul>
+        </li>
+      
+        <li><a href="#" class="block px-4 py-3 hover:bg-accent hover:text-primary transition"><i class="fas fa-gavel mr-2"></i>Đấu giá</a></li>
+        <li><a href="/introduce" class="block px-4 py-3 hover:bg-accent hover:text-primary transition"><i class="fas fa-info-circle mr-2"></i>Giới thiệu</a></li>
+        <li><a href="#" class="block px-4 py-3 hover:bg-accent hover:text-primary transition"><i class="fas fa-phone mr-2"></i>Liên hệ</a></li>
+        
+        <!-- Tài khoản Dropdown -->
+        <li class="dropdown relative">
+            <a href="#" class="block px-4 py-3 hover:bg-accent hover:text-primary transition">
+                <i class="fas fa-user mr-2"></i>Tài khoản <i class="fas fa-chevron-down ml-1 text-xs"></i>
+            </a>
+            <ul class="dropdown-menu hidden absolute top-full right-0 bg-white text-neutral-text shadow-lg rounded-b-lg min-w-[180px]">
+                @if (!user) {
+                <li><a href="/users/register" class="block px-4 py-2 hover:bg-accent hover:text-primary transition"><i class="fas fa-user-plus mr-2"></i>Đăng ký</a></li>
+                <li><a href="/users/login" class="block px-4 py-2 hover:bg-accent hover:text-primary transition"><i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập</a></li>
+                <li><a href="/users/forgotpassword" class="block px-4 py-2 hover:bg-accent hover:text-primary transition"><i class="fas fa-question-circle mr-2"></i>Quên mật khẩu</a></li>
+                }
+                @if(user) {
+                <li><a href="/users/changepassword" class="block px-4 py-2 hover:bg-accent hover:text-primary transition"><i class="fas fa-key mr-2"></i>Đổi mật khẩu</a></li>
+                <li><a href="/users/logout" class="block px-4 py-2 hover:bg-urgent hover:text-white transition"><i class="fas fa-sign-out-alt mr-2"></i>Thoát</a></li>
+                }
+            </ul>
+        </li>
+    </ul>
+    
+    <!-- Mobile Menu -->
+    <div id="mobileMenuContent" class="lg:hidden hidden">
+        <ul class="py-2">
+            <li><a href="#" class="block px-4 py-2 hover:bg-accent hover:text-primary transition"><i class="fas fa-home mr-2"></i>Trang chủ</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-accent hover:text-primary transition"><i class="fas fa-clock mr-2"></i>Sản phẩm</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-accent hover:text-primary transition"><i class="fas fa-gavel mr-2"></i>Đấu giá</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-accent hover:text-primary transition"><i class="fas fa-info-circle mr-2"></i>Giới thiệu</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-accent hover:text-primary transition"><i class="fas fa-phone mr-2"></i>Liên hệ</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-accent hover:text-primary transition"><i class="fas fa-user mr-2"></i>Tài khoản</a></li>
+        </ul>
+    </div>
+</div>
+</nav>

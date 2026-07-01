@@ -1,0 +1,160 @@
+<!-- Breadcrumb -->
+<div class="bg-white border-b border-[#EDE5D8]">
+  <div class="container mx-auto px-6 py-3" style="max-width:1200px;">
+    <nav class="flex text-sm" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <a routerLink="/" class="text-[#7A6A5A] hover:text-[#C8572C] transition font-medium">Trang chủ</a>
+        </li>
+        <li aria-current="page">
+          <div class="flex items-center">
+            <i class="fas fa-chevron-right text-[#D1C4B0] mx-2 text-[10px]"></i>
+            <span class="text-[#2C1A0E] font-semibold">Tài khoản VIP</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<section style="background:#FAF7F3; min-height:80vh; padding:60px 0; position:relative; overflow:hidden;">
+  <!-- Premium background decor -->
+  <div style="position:absolute; top:-100px; right:-100px; width:400px; height:400px; background:radial-gradient(circle, rgba(200,87,44,0.1) 0%, rgba(250,247,243,0) 70%); border-radius:50%; z-index:0;"></div>
+  <div style="position:absolute; bottom:-100px; left:-100px; width:500px; height:500px; background:radial-gradient(circle, rgba(168,144,112,0.15) 0%, rgba(250,247,243,0) 70%); border-radius:50%; z-index:0;"></div>
+
+  <div class="container mx-auto px-6 relative z-10" style="max-width:900px;">
+    
+    <!-- Premium VIP Card -->
+    <div class="mb-10 rounded-2xl shadow-2xl relative overflow-hidden group transition-transform duration-500 hover:scale-[1.01]" 
+         style="background: linear-gradient(135deg, #1A120B 0%, #3C2A21 100%); border: 1px solid #C9B99A;">
+      
+      <!-- Card shine effect -->
+      <div style="position:absolute; top:0; left:-100%; width:50%; height:100%; background:linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent); transform:skewX(-20deg); transition:0.7s; animation: shine 6s infinite;"></div>
+      
+      <!-- Card background pattern -->
+      <div style="position:absolute; inset:0; opacity:0.05; background-image:url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'3\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'3\'/%3E%3C/g%3E%3C/svg%3E');"></div>
+
+      <div class="p-8 md:p-10 relative z-10 flex flex-col md:flex-row items-center gap-8">
+        
+        <!-- Avatar with glowing border -->
+        <div class="relative">
+          <div class="absolute inset-0 rounded-full animate-pulse" style="background:#C9B99A; filter:blur(10px); opacity:0.5;"></div>
+          <div class="relative flex items-center justify-center bg-[#2C1A0E]" 
+               style="width:130px; height:130px; border-radius:50%; border:3px solid #C9B99A; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
+            @if (user?.avatar_url) {
+              <img [src]="user.avatar_url" alt="Avatar" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            } @else {
+              <span style="font-family:'Playfair Display',serif; color:#C9B99A; font-size:3.5rem; font-weight:700;">
+                {{user?.full_name?.charAt(0) || 'K'}}
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- User Core Info -->
+        <div class="flex-1 text-center md:text-left text-white">
+          <div class="inline-block mb-3 px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase" 
+               style="background:rgba(201,185,154,0.15); color:#C9B99A; border:1px solid rgba(201,185,154,0.3);">
+            Thành viên King Coffee
+          </div>
+          <h1 style="font-family:'Playfair Display',serif; font-size:2.5rem; font-weight:700; color:#FFFFFF; margin-bottom:5px; text-shadow:0 2px 4px rgba(0,0,0,0.5);">
+            {{user?.full_name || 'Khách hàng VIP'}}
+          </h1>
+          <p style="color:#C9B99A; font-size:1.05rem; opacity:0.9; margin-bottom:15px; letter-spacing:0.5px;">
+            {{user?.email}}
+          </p>
+          <div class="flex justify-center md:justify-start gap-4 mt-6">
+            <a routerLink="/users/changepassword" class="rounded-full px-5 py-2.5 text-sm font-semibold transition-all hover:-translate-y-1" 
+               style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); backdrop-filter:blur(5px); text-decoration:none;">
+              <i class="fas fa-lock mr-2"></i> Bảo mật
+            </a>
+            <button (click)="logout()" class="rounded-full px-5 py-2.5 text-sm font-semibold transition-all hover:-translate-y-1 shadow-lg" 
+               style="background:linear-gradient(90deg, #e3000f, #c0000c); color:white; border:none;">
+              Đăng xuất <i class="fas fa-sign-out-alt ml-2"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Premium Badge -->
+        <div class="hidden lg:block absolute top-10 right-10 opacity-20">
+          <i class="fas fa-crown" style="font-size:6rem; color:#C9B99A;"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Cards Grid (Glassmorphism + Hover FX) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Card 1 -->
+      <div class="group bg-white rounded-xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(200,87,44,0.2)]" 
+           style="border:1px solid #EDE5D8; position:relative; overflow:hidden;">
+        <div class="absolute top-0 left-0 w-1 h-full transition-all duration-300 group-hover:w-full opacity-10" style="background:#C8572C; z-index:0;"></div>
+        <div class="relative z-10 flex items-center gap-5">
+          <div class="flex items-center justify-center w-12 h-12 rounded-full bg-[#FAF7F3] text-[#C8572C] text-xl transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#C8572C] group-hover:text-white shadow-sm">
+            <i class="fas fa-id-card"></i>
+          </div>
+          <div>
+            <p style="color:#A89070; font-size:0.75rem; text-transform:uppercase; font-weight:700; letter-spacing:1px; margin-bottom:4px;">Tên hiển thị</p>
+            <p style="color:#2C1A0E; font-size:1.15rem; font-weight:600;">{{user?.full_name || 'Chưa cập nhật'}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="group bg-white rounded-xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(200,87,44,0.2)]" 
+           style="border:1px solid #EDE5D8; position:relative; overflow:hidden;">
+        <div class="absolute top-0 left-0 w-1 h-full transition-all duration-300 group-hover:w-full opacity-10" style="background:#C8572C; z-index:0;"></div>
+        <div class="relative z-10 flex items-center gap-5">
+          <div class="flex items-center justify-center w-12 h-12 rounded-full bg-[#FAF7F3] text-[#C8572C] text-xl transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#C8572C] group-hover:text-white shadow-sm">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div>
+            <p style="color:#A89070; font-size:0.75rem; text-transform:uppercase; font-weight:700; letter-spacing:1px; margin-bottom:4px;">Tài khoản đăng nhập</p>
+            <p style="color:#2C1A0E; font-size:1.15rem; font-weight:600;">{{user?.username || 'Chưa cập nhật'}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="group bg-white rounded-xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(200,87,44,0.2)]" 
+           style="border:1px solid #EDE5D8; position:relative; overflow:hidden;">
+        <div class="absolute top-0 left-0 w-1 h-full transition-all duration-300 group-hover:w-full opacity-10" style="background:#C8572C; z-index:0;"></div>
+        <div class="relative z-10 flex items-center gap-5">
+          <div class="flex items-center justify-center w-12 h-12 rounded-full bg-[#FAF7F3] text-[#C8572C] text-xl transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#C8572C] group-hover:text-white shadow-sm">
+            <i class="fas fa-phone-alt"></i>
+          </div>
+          <div>
+            <p style="color:#A89070; font-size:0.75rem; text-transform:uppercase; font-weight:700; letter-spacing:1px; margin-bottom:4px;">Số điện thoại</p>
+            <p style="color:#2C1A0E; font-size:1.15rem; font-weight:600;">{{user?.phone || 'Chưa cập nhật'}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="group bg-white rounded-xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(200,87,44,0.2)]" 
+           style="border:1px solid #EDE5D8; position:relative; overflow:hidden;">
+        <div class="absolute top-0 left-0 w-1 h-full transition-all duration-300 group-hover:w-full opacity-10" style="background:#C8572C; z-index:0;"></div>
+        <div class="relative z-10 flex items-center gap-5">
+          <div class="flex items-center justify-center w-12 h-12 rounded-full bg-[#FAF7F3] text-[#C8572C] text-xl transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#C8572C] group-hover:text-white shadow-sm">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <div>
+            <p style="color:#A89070; font-size:0.75rem; text-transform:uppercase; font-weight:700; letter-spacing:1px; margin-bottom:4px;">Ngày tham gia</p>
+            <p style="color:#2C1A0E; font-size:1.15rem; font-weight:600;">{{user?.created_at ? (user.created_at | date:'dd/MM/yyyy') : 'Thành viên mới'}}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Shine animation for VIP card -->
+<style>
+  @keyframes shine {
+    0% { left: -100%; opacity: 0; }
+    20% { opacity: 0.5; }
+    40% { left: 100%; opacity: 0; }
+    100% { left: 100%; opacity: 0; }
+  }
+</style>

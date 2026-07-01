@@ -1,0 +1,166 @@
+<!-- Breadcrumb -->
+<div class="bg-white border-b">
+<div class="container mx-auto px-4 py-3">
+    <nav class="flex text-sm" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="/" class="text-neutral-text-light hover:text-accent transition">
+                    <i class="fas fa-home mr-1"></i>Trang chủ
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <i class="fas fa-chevron-right text-neutral-text-light mx-2 text-xs"></i>
+                    <a href="#" class="text-neutral-text-light hover:text-accent transition">Sản phẩm</a>
+                </div>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <i class="fas fa-chevron-right text-neutral-text-light mx-2 text-xs"></i>
+                    <span class="text-accent font-medium">Tìm theo từ khóa: {{keyword}}</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+</div>
+</div>
+
+<!-- Main Content -->
+<main class="container mx-auto px-4 py-8">
+<!-- Dòng 1: Tên loại + Sort Options -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+    <div>
+        <h2 class="font-heading text-3xl md:text-4xl font-bold text-neutral-text mb-2">
+            <i class="fas fa-male text-accent mr-3"></i>Kết quả tìm theo từ khóa:  {{keyword}}
+        </h2>
+        <p class="text-neutral-text-light text-sm md:text-base">Có  <span class="font-semibold text-accent">{{ total() }}</span> sản phẩm</p>
+    </div>
+    
+    <div class="flex items-center gap-3">
+        <label for="sortSelect" class="text-sm font-medium text-neutral-text whitespace-nowrap">
+            <i class="fas fa-sort-amount-down mr-2 text-accent"></i>Sắp xếp:
+        </label>
+        <select 
+            id="sortSelect" 
+            class="px-4 py-2 border border-neutral-text-light rounded-lg focus:outline-none focus:ring-2 focus:ring-accent bg-white text-neutral-text min-w-[200px]"
+        >
+            <option value="default">Mặc định</option>
+            <option value="name-asc">Tên: A-Z</option>
+            <option value="name-desc">Tên: Z-A</option>
+            <option value="price-asc">Giá: Thấp đến cao</option>
+            <option value="price-desc">Giá: Cao đến thấp</option>
+            <option value="newest">Mới nhất</option>
+            <option value="popular">Phổ biến nhất</option>
+        </select>
+    </div>
+</div>
+
+<!-- Dòng 2: Product Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+<!-- Product 1 -->
+@for ( product of product_arr(); track product.id) {
+    <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition overflow-hidden group">
+        <div class="h-64 bg-gray-200 flex items-center justify-center relative overflow-hidden">
+            @if (product.images?.length==0) {
+                <i class="fas fa-clock text-8xl text-neutral-text-light group-hover:scale-110 transition duration-300"></i>
+            } @else {                        
+                <img [src]="site.getPrimaryImage(product)" [alt]="product.name" class="h-full w-full object-cover" />
+            }  
+            <span class="absolute top-3 left-3 bg-accent text-primary px-3 py-1 rounded-full text-xs font-bold">
+                <i class="fas fa-star mr-1"></i>BÁN CHẠY
+            </span>
+        </div>
+        <div class="p-4">
+            <h3 class="font-heading text-lg md:text-xl font-semibold mb-2 text-neutral-text line-clamp-2">
+                {{product.name}}
+            </h3>
+            <p class="text-accent text-xl md:text-2xl font-bold mb-2">{{product.fixed_price | number: '1.0-0':'vi'}} VNĐ</p>
+            <p class="text-neutral-text-light text-sm mb-4 line-clamp-2">{{product.description}}</p>
+            <button (click)="addToCart(product)" class="w-full bg-accent hover:bg-accent-dark text-primary font-semibold py-2 rounded-lg transition">
+                <i class="fas fa-cart-plus mr-2"></i>Thêm vào giỏ
+            </button>
+        </div>
+    </div>
+}
+</div>
+
+<!-- Dòng 3: Pagination -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+    <p class="text-sm text-neutral-text-light">
+        Hiển thị trang <span class="font-semibold text-accent">{{page()}}</span> trong số <span class="font-semibold text-accent">{{totalPages()}}</span> trang
+    </p>
+    
+    <nav aria-label="Pagination">
+        <ul class="flex items-center space-x-1">
+            <!-- First Page -->
+            <li>
+                <a 
+                [routerLink]="['/search']"  [queryParams]="{ keyword:keyword, page: 1 }"
+                [class.text-neutral-text-light]="page() === 1"
+                [class.text-neutral-text]="page() !== 1"
+                class="px-3 py-2 text-sm font-medium rounded-lg hover:bg-accent hover:text-primary transition"
+                [class.pointer-events-none]="page() === 1"
+                title="Trang đầu">
+                <i class="fas fa-angle-double-left"></i>
+                </a>
+            </li>
+            
+            <!-- Previous Page -->
+            <li>
+                    <a 
+                    [routerLink]="['/keyword']"
+                    [queryParams]="{ keyword:keyword, page: page()  - 1 }"
+                    [class.text-neutral-text-light]="page() === 1"
+                    [class.text-neutral-text]="page() !== 1"
+                    class="px-3 py-2 text-sm font-medium rounded-lg hover:bg-accent hover:text-primary transition"
+                    [class.pointer-events-none]="page() === 1"
+                    title="Trang trước">
+                    <i class="fas fa-angle-left"></i>
+                    </a>
+                
+            </li>
+            
+            <!-- Page Numbers -->
+                @for (p of pagesToShow(); track p) {
+                <li>
+                <a 
+                    [routerLink]="['/search']"
+                    [queryParams]="{ keyword:keyword, page: p }"
+                    class="px-4 py-2 text-sm font-medium rounded-lg transition"
+                    [ngClass]="p === page() ? 'bg-accent text-primary' : 'text-neutral-text hover:bg-accent hover:text-primary'">
+                    {{p}}
+                </a>
+                </li>
+            }
+            
+            <!-- Next Page -->
+            <li>
+                <a 
+                    [routerLink]="['/search']"
+                    [queryParams]="{ keyword:keyword, page: page() + 1 }"
+                    [class.text-neutral-text-light]="page() === totalPages()"
+                    [class.text-neutral-text]="page() !== totalPages()"
+                    class="px-3 py-2 text-sm font-medium rounded-lg hover:bg-accent hover:text-primary transition"
+                    [class.pointer-events-none]="page() === totalPages()"
+                    title="Trang kế">
+                    <i class="fas fa-angle-right"></i>
+                    </a>
+            </li>
+            
+            <!-- Last Page -->
+            <li>
+                    <a 
+                    [routerLink]="'/search'"
+                    [queryParams]="{ keyword:keyword, page: totalPages }"
+                    [class.text-neutral-text-light]="page === totalPages"
+                    [class.text-neutral-text]="page !==totalPages"
+                    class="px-3 py-2 text-sm font-medium rounded-lg hover:bg-accent hover:text-primary transition"
+                    [class.pointer-events-none]="page === totalPages"
+                    title="Trang cuối">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</main>

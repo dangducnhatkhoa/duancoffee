@@ -1,0 +1,107 @@
+<div class="min-h-screen bg-gray-50 font-sans selection:bg-pink-100">
+  <!-- Header -->
+  <div class="bg-white border-b shadow-sm py-4">
+    <div class="max-w-5xl mx-auto px-4 flex items-center gap-3">
+      <div class="bg-[#a50064] text-white p-2 rounded-lg font-bold text-xl leading-none">
+        mo<br>mo
+      </div>
+      <h1 class="text-xl font-medium text-gray-800">Cổng thanh toán MoMo</h1>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-5xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden border border-gray-100 min-h-[500px]">
+      
+      <!-- Left Column: Order Info -->
+      <div class="w-full md:w-5/12 p-8 lg:p-12 flex flex-col">
+        <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-4">Thông tin đơn hàng</h2>
+        
+        <div class="space-y-6 flex-grow">
+          <div>
+            <p class="text-sm text-gray-500 mb-1">Nhà cung cấp</p>
+            <p class="font-medium text-gray-800 uppercase">KING COFFEE STORE</p>
+          </div>
+          
+          <div>
+            <p class="text-sm text-gray-500 mb-1">Mã đơn hàng</p>
+            <p class="font-bold text-gray-800">{{orderNumber}}</p>
+          </div>
+          
+          <div>
+            <p class="text-sm text-gray-500 mb-1">Mô tả</p>
+            <p class="font-medium text-gray-800">Thanh toán đơn hàng {{orderNumber}}</p>
+          </div>
+          
+          <div>
+            <p class="text-sm text-gray-500 mb-1">Số tiền</p>
+            <p class="text-2xl font-bold text-gray-800">{{totalAmount | number:'1.0-0':'vi'}}đ</p>
+          </div>
+        </div>
+
+        <!-- Countdown -->
+        <div class="mt-8 bg-pink-50 rounded-lg p-4 text-center border border-pink-100">
+          <p class="text-sm text-gray-600 mb-2">Đơn hàng sẽ hết hạn sau:</p>
+          <div class="flex justify-center gap-4 text-[#a50064] font-bold">
+            <div class="flex flex-col items-center bg-white w-14 h-14 justify-center rounded shadow-sm">
+              <span class="text-xl">{{minutes | number:'2.0-0'}}</span>
+              <span class="text-xs font-normal">Phút</span>
+            </div>
+            <div class="flex flex-col items-center bg-white w-14 h-14 justify-center rounded shadow-sm">
+              <span class="text-xl">{{seconds | number:'2.0-0'}}</span>
+              <span class="text-xs font-normal">Giây</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-col gap-3">
+          <button (click)="goBack()" class="bg-[#a50064] hover:bg-[#850050] text-white font-bold py-3 px-4 rounded-lg shadow-md transition-colors w-full text-center">
+            Tôi đã thanh toán
+          </button>
+          
+          <a href="/" class="text-gray-500 hover:text-gray-700 text-sm font-medium text-center w-full transition-colors underline">
+            Hủy thanh toán & Quay về trang chủ
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: QR Code -->
+      <div class="w-full md:w-7/12 p-8 lg:p-12 text-white flex flex-col items-center justify-center relative overflow-hidden" style="background-color: #c3006d;">
+        <!-- decorative patterns -->
+        <div class="absolute top-0 left-0 w-32 h-32 opacity-10 bg-white" style="clip-path: polygon(0 0, 0% 100%, 100% 0);"></div>
+        <div class="absolute bottom-0 right-0 w-32 h-32 opacity-10 bg-white" style="clip-path: polygon(100% 100%, 100% 0, 0 100%);"></div>
+
+        <!-- Banner -->
+        <div class="bg-white text-[#c3006d] px-6 py-2 rounded-full font-bold text-sm shadow-md mb-8 flex items-center gap-2 relative z-10">
+          <i class="fas fa-gift text-lg"></i>
+          Tích xu đổi quà cho mọi giao dịch
+        </div>
+
+        <!-- QR Box -->
+        <div class="bg-white p-5 rounded-xl shadow-2xl relative z-10 inline-block">
+          <div class="border-4 border-dashed border-gray-200 p-3 rounded-lg relative">
+             <!-- 4 corners decor -->
+             <div class="absolute -top-1.5 -left-1.5 w-5 h-5 border-t-4 border-l-4 border-[#c3006d]"></div>
+             <div class="absolute -top-1.5 -right-1.5 w-5 h-5 border-t-4 border-r-4 border-[#c3006d]"></div>
+             <div class="absolute -bottom-1.5 -left-1.5 w-5 h-5 border-b-4 border-l-4 border-[#c3006d]"></div>
+             <div class="absolute -bottom-1.5 -right-1.5 w-5 h-5 border-b-4 border-r-4 border-[#c3006d]"></div>
+
+             <img [src]="getDynamicQR()" alt="MoMo QR Code" class="w-[320px] h-auto object-contain">
+          </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="mt-8 text-center relative z-10 max-w-sm">
+          <p class="text-sm font-medium mb-3 flex items-center justify-center gap-2">
+            <i class="fas fa-qrcode text-xl"></i>
+            Sử dụng App MoMo hoặc ứng dụng camera hỗ trợ QR code để quét mã
+          </p>
+          <p class="text-xs opacity-80">
+            * Số tiền và mã đơn hàng sẽ được tự động điền khi quét.
+          </p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>

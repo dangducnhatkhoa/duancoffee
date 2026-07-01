@@ -1,0 +1,197 @@
+<div class="min-h-screen bg-[#f8f9fa] flex flex-col items-center py-4 font-sans">
+  
+  <!-- Header -->
+  <div class="w-full max-w-4xl bg-[#f8f9fa] flex items-center justify-between p-4 mb-2">
+    <button (click)="goBack()" class="flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium">
+      <i class="fas fa-chevron-left bg-gray-700 text-white rounded-full p-1 text-xs"></i> Quay lại
+    </button>
+    <div class="flex items-center gap-2">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Vietnam.svg" alt="VN" class="h-4">
+      <span class="text-sm font-medium">Vi</span>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="w-full max-w-4xl bg-white shadow-sm border border-gray-200">
+    
+    <!-- VNPAY Header -->
+    <div class="border-b border-gray-200 flex justify-between items-center p-4">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 bg-[#005a9e] text-white text-sm font-bold px-3 py-1.5 rounded">
+          <i class="fas fa-shield-alt"></i> VNPAY
+        </span>
+        <span class="text-xs text-gray-400 font-medium tracking-wider">CỔNG THANH TOÁN</span>
+      </div>
+      <div class="text-sm text-gray-500 flex items-center gap-2">
+        Giao dịch hết hạn sau
+        <span class="bg-[#1f2937] text-white px-2 py-1 rounded text-xs font-mono font-bold">{{timerDisplay.split(':')[0]}}</span>
+        <span class="text-gray-800 font-bold">:</span>
+        <span class="bg-[#1f2937] text-white px-2 py-1 rounded text-xs font-mono font-bold">{{timerDisplay.split(':')[1]}}</span>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="flex flex-col md:flex-row">
+      
+      <!-- Order Info Sidebar -->
+      @if(currentState === 'bank_form') {
+      <div class="w-full md:w-[320px] border-r border-gray-200 p-6 text-sm text-gray-700">
+        <h3 class="text-xl text-gray-800 mb-4 pb-3" style="border-bottom: 3px solid #005a9e; display: inline-block;">Thông tin đơn hàng</h3>
+        
+        <div class="mb-5 mt-4">
+          <p class="text-gray-400 text-xs mb-1">Số tiền thanh toán</p>
+          <p class="text-2xl font-bold text-[#005a9e]">{{totalAmount | number:'1.0-0':'vi'}}<sub class="text-xs font-normal">VND</sub></p>
+        </div>
+        
+        <div class="mb-5">
+          <p class="text-gray-400 text-xs mb-1">Giá trị đơn hàng</p>
+          <p class="text-base text-gray-800">{{totalAmount | number:'1.0-0':'vi'}}<sub class="text-xs font-normal">VND</sub></p>
+        </div>
+
+        <div class="mb-5">
+          <p class="text-gray-400 text-xs mb-1">Phí giao dịch</p>
+          <p class="text-base text-gray-800">0<sub class="text-xs font-normal">VND</sub></p>
+        </div>
+
+        <div class="mb-5">
+          <p class="text-gray-400 text-xs mb-1">Mã đơn hàng</p>
+          <p class="text-gray-800 break-all text-xs">{{orderNumber}}</p>
+        </div>
+
+        <div>
+          <p class="text-gray-400 text-xs mb-1">Nhà cung cấp</p>
+          <p class="text-gray-800 uppercase font-medium text-sm">CỬA HÀNG ĐỒNG HỒ CAO CẤP</p>
+        </div>
+      </div>
+      }
+
+      <!-- Right Panel -->
+      <div class="flex-1 p-6">
+        
+        <!-- STATE 1: Select Bank -->
+        @if(currentState === 'select_bank') {
+        <div class="animate-fade-in">
+          <h2 class="text-xl text-center text-gray-700 mb-6 italic">Chọn phương thức thanh toán</h2>
+          
+          <!-- Domestic Banks Section -->
+          <div class="border border-gray-200 rounded-lg overflow-hidden mb-4">
+            <div class="flex items-center justify-between p-5 border-b border-gray-100">
+              <span class="text-gray-700 font-medium">Thẻ nội địa và tài khoản ngân hàng</span>
+              <i class="fas fa-university text-3xl text-blue-200"></i>
+            </div>
+
+            <!-- Search bar -->
+            <div class="px-5 pt-4 pb-2">
+              <div class="relative">
+                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                <input type="text" [(ngModel)]="searchQuery" placeholder="Tìm kiếm..." 
+                       class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200">
+              </div>
+            </div>
+
+            <!-- Bank Grid -->
+            <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 p-5">
+              @for(bank of filteredBanks; track bank.id) {
+              <div (click)="selectBank(bank)" 
+                   class="border border-gray-200 rounded-md p-2 flex items-center justify-center cursor-pointer hover:border-blue-500 hover:shadow-md transition-all duration-200 h-14 bg-white">
+                <img [src]="bank.logo" [alt]="bank.name" class="max-h-full max-w-full object-contain"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                <span class="text-xs font-bold text-gray-600 hidden">{{bank.name}}</span>
+              </div>
+              }
+            </div>
+          </div>
+          
+          <!-- International Cards Section -->
+          <div class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex items-center justify-between p-5 border-b border-gray-100">
+              <span class="text-gray-700 font-medium">Thẻ thanh toán quốc tế</span>
+              <i class="fas fa-credit-card text-3xl text-blue-200"></i>
+            </div>
+            <div class="flex gap-4 p-5 items-center">
+              <div class="border border-gray-200 rounded px-4 py-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/200px-Visa_Inc._logo.svg.png" class="h-5" alt="Visa">
+              </div>
+              <div class="border border-gray-200 rounded px-4 py-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/200px-Mastercard-logo.svg.png" class="h-5" alt="Mastercard">
+              </div>
+              <div class="border border-gray-200 rounded px-4 py-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/JCB_logo.svg/200px-JCB_logo.svg.png" class="h-5" alt="JCB">
+              </div>
+              <div class="border border-gray-200 rounded px-4 py-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/200px-American_Express_logo_%282018%29.svg.png" class="h-5" alt="Amex">
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- STATE 2: Bank Form -->
+        @if(currentState === 'bank_form' && selectedBank) {
+        <div class="animate-fade-in">
+          <h2 class="text-xl text-center text-gray-800 mb-1 italic">Thanh toán qua Ngân hàng</h2>
+          <h2 class="text-xl text-center text-gray-800 mb-6 font-bold">{{selectedBank.name}}</h2>
+
+          <div class="border-t-2 border-[#005a9e] pt-6 max-w-md mx-auto">
+            <h3 class="text-center text-gray-600 mb-6 text-sm tracking-wider">Thẻ nội địa</h3>
+            
+            <form (submit)="continuePayment(); $event.preventDefault()">
+              <div class="mb-5">
+                <label class="block text-xs text-gray-500 mb-1">Số thẻ</label>
+                <div class="relative">
+                  <input type="text" [(ngModel)]="cardNumber" name="cardNumber" placeholder="Nhập số thẻ" required
+                         class="w-full border-b-2 border-gray-200 px-1 py-2 text-sm focus:outline-none focus:border-[#005a9e] transition-colors">
+                  <img [src]="selectedBank.logo" class="absolute right-1 top-1 h-6 opacity-60">
+                </div>
+              </div>
+
+              <div class="mb-5">
+                <label class="block text-xs text-gray-500 mb-1">Tên chủ thẻ (không dấu)</label>
+                <input type="text" [(ngModel)]="cardName" name="cardName" placeholder="Nhập tên chủ thẻ (không dấu)" required
+                       class="w-full border-b-2 border-gray-200 px-1 py-2 text-sm focus:outline-none focus:border-[#005a9e] uppercase transition-colors">
+              </div>
+
+              <div class="mb-8">
+                <label class="block text-xs text-gray-500 mb-1">Ngày phát hành <i class="fas fa-info-circle text-gray-400 cursor-help"></i></label>
+                <input type="text" [(ngModel)]="issueDate" name="issueDate" placeholder="MM/YY" required
+                       class="w-36 border-b-2 border-gray-200 px-1 py-2 text-sm focus:outline-none focus:border-[#005a9e] transition-colors">
+              </div>
+              
+              <div class="border-t border-dashed border-gray-300 py-4 mb-4 flex justify-between items-center">
+                <span class="text-sm text-gray-700 font-bold">Mã khuyến mại</span>
+                <button type="button" class="bg-gray-50 text-gray-600 px-3 py-1.5 text-sm rounded border border-gray-200 hover:bg-gray-100 flex items-center gap-1.5 transition">
+                  <i class="fas fa-ticket-alt text-xs"></i> Chọn hoặc nhập mã
+                </button>
+              </div>
+
+              <div class="mb-6">
+                <a href="#" class="text-[#005a9e] text-sm hover:underline flex items-center gap-1.5">
+                  <i class="far fa-file-alt"></i> Điều kiện sử dụng dịch vụ
+                </a>
+              </div>
+
+              <div class="flex gap-4">
+                <button type="button" (click)="goBack()" class="w-1/2 py-3 bg-[#f8f9fa] text-gray-600 font-medium hover:bg-gray-200 transition rounded">Hủy</button>
+                <button type="submit" class="w-1/2 py-3 bg-[#005a9e] text-white font-medium hover:bg-blue-800 transition rounded shadow-sm">Tiếp tục</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="border-t border-gray-200 p-4 flex justify-between items-center text-sm text-gray-500 mx-4">
+      <div class="flex items-center gap-2">
+        <i class="fas fa-envelope text-gray-400"></i>
+        <a href="mailto:hotrovnpay@vnpay.vn" class="text-[#005a9e] hover:underline text-sm">hotrovnpay&#64;vnpay.vn</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-gray-400 font-bold">VNPAY</span>
+        <span class="text-xs text-gray-300">|</span>
+        <span class="text-xs text-gray-400 font-medium">Secure</span>
+      </div>
+    </div>
+  </div>
+</div>

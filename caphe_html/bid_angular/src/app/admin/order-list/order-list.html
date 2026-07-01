@@ -1,0 +1,59 @@
+<div class="admin-page-card">
+  <div class="admin-page-header">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-800">Quản lý đơn hàng</h2>
+      <p class="text-sm text-gray-400">Theo dõi và cập nhật trạng thái đơn hàng</p>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3 mb-5">
+    <input type="text" [(ngModel)]="search" placeholder="Tìm mã đơn, tên, SĐT..."
+           class="flex-1 min-w-[200px] px-4 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:border-gray-400">
+    <select [(ngModel)]="statusFilter" class="px-4 py-2 border border-gray-200 rounded-lg text-sm">
+      @for (s of statusOptions; track s.value) {
+        <option [value]="s.value">{{ s.label }}</option>
+      }
+    </select>
+    <button (click)="loadOrders()" class="admin-btn-primary"><i class="fas fa-search"></i> Lọc</button>
+  </div>
+
+  @if (loading()) {
+    <p class="text-center py-10 text-gray-400"><i class="fas fa-spinner fa-spin"></i></p>
+  } @else {
+    <div class="overflow-x-auto">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Mã đơn</th>
+            <th>Khách hàng</th>
+            <th>SĐT</th>
+            <th>Địa chỉ</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (o of orders(); track o.id) {
+            <tr>
+              <td class="font-medium">{{ o.order_number }}</td>
+              <td>{{ o.shipping_name }}</td>
+              <td>{{ o.shipping_phone }}</td>
+              <td class="max-w-[180px] truncate">{{ o.shipping_address }}</td>
+              <td class="font-semibold">{{ o.total_amount | number:'1.0-0' }} đ</td>
+              <td>
+                <select [ngModel]="o.status" (ngModelChange)="onStatusChange(o.id, $event)"
+                        class="text-xs border border-gray-200 rounded-lg px-2 py-1">
+                  @for (s of statusOptions.slice(1); track s.value) {
+                    <option [value]="s.value">{{ s.label }}</option>
+                  }
+                </select>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="text-center py-10 text-gray-400">Chưa có đơn hàng</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -1,0 +1,50 @@
+<div class="min-h-screen flex items-center justify-center bg-[#f0f2f5] p-4">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 mx-auto rounded-xl bg-[#2c1a0e] flex items-center justify-center text-2xl text-white shadow-lg mb-4">
+        <i class="fas fa-mug-hot"></i>
+      </div>
+      <h1 class="text-2xl font-bold text-gray-800">KING COFFEE</h1>
+      <p class="text-gray-400 text-sm mt-1">Đăng nhập hệ thống quản trị</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+      <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <div class="mb-5">
+          <label class="block text-sm font-medium text-gray-600 mb-2">Email admin</label>
+          <div class="relative">
+            <i class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="email" name="email" [(ngModel)]="data.email" required
+                   class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-gray-400"
+                   placeholder="admin@gmail.com">
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-600 mb-2">Mật khẩu</label>
+          <div class="relative">
+            <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="password" name="password" [(ngModel)]="data.password" required
+                   class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-gray-400"
+                   placeholder="••••••••">
+          </div>
+        </div>
+
+        @if (thatbai) {
+          <div class="mb-4 p-3 bg-red-50 border border-red-100 text-red-600 rounded-lg text-sm">
+            <i class="fas fa-exclamation-circle mr-1"></i>{{ thatbai }}
+          </div>
+        }
+
+        <button type="submit" [disabled]="f.invalid || dangXuLy"
+                class="w-full py-2.5 bg-[#2c1a0e] text-white font-semibold rounded-lg text-sm hover:bg-[#3d2512] transition disabled:opacity-50">
+          @if (dangXuLy) {
+            <i class="fas fa-spinner fa-spin mr-2"></i>Đang đăng nhập...
+          } @else {
+            Đăng nhập
+          }
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

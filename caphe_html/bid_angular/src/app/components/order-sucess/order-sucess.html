@@ -1,0 +1,165 @@
+<div class="min-h-screen bg-white font-sans flex flex-col md:flex-row border-t-4 border-[#2C1A0E]">
+  
+  <!-- Cột Trái: Thông tin khách hàng & thông báo -->
+  <div class="w-full md:w-7/12 p-6 md:p-12 lg:p-20 bg-white order-2 md:order-1 flex justify-end">
+    <div class="w-full max-w-xl">
+      <!-- Logo -->
+      <a href="/" class="text-3xl font-heading font-bold text-[#2C1A0E] tracking-tighter mb-8 block">
+        KING COFFEE
+      </a>
+
+      <!-- Tiêu đề thành công -->
+      <div class="flex items-start gap-4 mb-8">
+        <div class="w-12 h-12 rounded-full border-2 border-[#1773B0] flex items-center justify-center flex-shrink-0 mt-1">
+          <i class="fas fa-check text-2xl text-[#1773B0]"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900 mb-1">Đặt hàng thành công</h1>
+          <p class="text-gray-600 text-sm">Mã đơn hàng: <span class="font-bold">{{orderNumber}}</span></p>
+          <p class="text-gray-600 text-sm">Cảm ơn bạn đã mua hàng!</p>
+        </div>
+      </div>
+
+      <!-- Lời nhắn -->
+      <div class="text-sm text-gray-600 space-y-4 mb-8 leading-relaxed">
+        <p>Nhân viên bán hàng của KING COFFEE sẽ liên lạc với quý khách sớm bằng số điện thoại để xác nhận đơn hàng! Quý khách vui lòng chú ý điện thoại.</p>
+        <p>Để thuận lợi trong việc giao hàng, Quý Khách chỉ thanh toán sau khi nhận được hàng hoặc đã thanh toán trực tuyến thành công. Mọi thắc mắc vui lòng gọi hotline <strong>0866 676 374</strong> để được hỗ trợ.</p>
+        <p>Rất hân hạnh phục vụ quý khách.</p>
+      </div>
+
+      <!-- Hướng dẫn chuyển khoản SePay -->
+      @if (paymentMethod === 'sepay') {
+        <div class="mb-8 p-6 bg-[#FAF7F3] border border-[#EDE5D8] rounded-xl flex flex-col md:flex-row gap-6 items-center shadow-sm">
+          <div class="flex-shrink-0 text-center">
+            <p class="text-xs text-[#7A6A5A] mb-2 font-medium">Quét mã VietQR để thanh toán</p>
+            <div class="p-2 bg-white rounded-lg border border-[#EDE5D8]">
+              <img [src]="encodeVietQR()" alt="VietQR Payment" class="w-48 h-48 object-contain">
+            </div>
+            <p class="text-[10px] text-gray-400 mt-2">Hỗ trợ tất cả ứng dụng Ngân hàng</p>
+          </div>
+          <div class="flex-grow space-y-3 w-full">
+            <h3 class="font-bold text-[#2C1A0E] text-base border-b border-[#EDE5D8] pb-2">Thông tin chuyển khoản</h3>
+            <div class="text-sm space-y-2">
+              <div class="flex justify-between">
+                <span class="text-gray-500">Ngân hàng:</span>
+                <span class="font-bold text-gray-800">MB Bank (Quân Đội)</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Số tài khoản:</span>
+                <span class="font-bold text-[#C8572C] select-all">0866676374</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Chủ tài khoản:</span>
+                <span class="font-bold text-gray-800">HOANG VAN HOANG ANH</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Số tiền:</span>
+                <span class="font-bold text-[#e3000f]">{{totalAmount | number:'1.0-0':'vi'}}đ</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Nội dung CK:</span>
+                <span class="font-bold text-[#1773B0] select-all">{{orderNumber}}</span>
+              </div>
+            </div>
+            <div class="mt-3 p-3 bg-blue-50 border border-blue-100 rounded text-xs text-blue-700 leading-relaxed">
+              <i class="fas fa-info-circle mr-1"></i> Hệ thống sẽ tự động kích hoạt/xác nhận đơn hàng ngay sau khi nhận được tiền chuyển khoản.
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Thông tin đơn hàng (Box) -->
+      <div class="border border-gray-200 rounded p-6 mb-8">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Thông tin đơn hàng</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Thông tin giao hàng -->
+          <div>
+            <h3 class="font-medium text-gray-900 mb-2">Thông tin giao hàng</h3>
+            <div class="text-sm text-gray-600 space-y-1">
+              <p class="font-medium text-gray-800">{{shippingName}}</p>
+              <p>{{shippingPhone}}</p>
+              <p>{{shippingAddress}}</p>
+            </div>
+          </div>
+
+          <!-- Phương thức thanh toán -->
+          <div>
+            <h3 class="font-medium text-gray-900 mb-2">Phương thức thanh toán</h3>
+            <div class="text-sm text-gray-600 space-y-1">
+              <p>{{getPaymentMethodLabel()}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex flex-col sm:flex-row justify-between items-center mt-10 gap-4">
+        <a href="/contact" class="text-[#1773B0] text-sm hover:underline flex items-center gap-2 order-2 sm:order-1">
+          <i class="far fa-question-circle"></i> Cần hỗ trợ? Liên hệ chúng tôi
+        </a>
+        
+        <a href="/" class="bg-[#1773B0] hover:bg-[#125c8d] text-white px-8 py-3 rounded text-sm font-medium transition w-full sm:w-auto text-center order-1 sm:order-2">
+          Tiếp tục mua hàng
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cột Phải: Danh sách sản phẩm -->
+  <div class="w-full md:w-5/12 bg-gray-50 border-l border-gray-200 p-6 md:p-12 lg:p-20 order-1 md:order-2 shadow-inner min-h-screen">
+    <div class="w-full max-w-md mx-auto md:ml-0">
+      
+      <!-- Danh sách item -->
+      <div class="space-y-4 mb-6">
+        @for(item of items; track item.variant_id) {
+          <div class="flex items-center gap-4">
+            <!-- Hình ảnh sp (có số lượng nhỏ) -->
+            <div class="relative w-16 h-16 border border-gray-200 rounded-lg bg-white p-1 flex-shrink-0">
+              <img [src]="'http://localhost:3000/images/' + item.image" alt="Product" class="w-full h-full object-cover rounded-md">
+              <span class="absolute -top-2 -right-2 bg-gray-500 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold shadow">
+                {{item.quantity}}
+              </span>
+            </div>
+            
+            <!-- Tên & variant -->
+            <div class="flex-grow">
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">{{item.product_name}}</p>
+              @if(item.size || item.color) {
+                <p class="text-xs text-gray-500 mt-1">{{item.color}} / {{item.size}}</p>
+              }
+            </div>
+            
+            <!-- Giá tiền -->
+            <div class="text-sm font-medium text-gray-700 flex-shrink-0">
+              {{(item.unit_price * item.quantity) | number:'1.0-0':'vi'}}đ
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="border-t border-gray-200 pt-4 pb-4 space-y-3">
+        <div class="flex justify-between text-sm text-gray-600">
+          <span>Tạm tính</span>
+          <span class="font-medium">{{totalAmount | number:'1.0-0':'vi'}}đ</span>
+        </div>
+        <div class="flex justify-between text-sm text-gray-600">
+          <span>Phí vận chuyển</span>
+          <span>Miễn phí</span>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-200 pt-4 mt-2">
+        <div class="flex justify-between items-center">
+          <span class="text-base text-gray-700">Tổng cộng</span>
+          <div class="text-right">
+            <span class="text-xs text-gray-500 mr-2">VND</span>
+            <span class="text-2xl font-bold text-gray-900">{{totalAmount | number:'1.0-0':'vi'}}đ</span>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</div>
