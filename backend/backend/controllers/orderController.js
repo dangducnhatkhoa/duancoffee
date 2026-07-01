@@ -2,7 +2,7 @@ const { Order, OrderItem, ProductVariant, Product, ProductImage, Payment, Discou
 const { Op } = require('sequelize');
 
 const Stripe = require('stripe');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 
@@ -309,10 +309,9 @@ exports.checkout_old = async (req, res) => {
     }
 
     //  Tạo order
-    const { v4: uuidv4 } = require('uuid');
     const order = await Order.create(
       {
-        order_number: `ORD-${Date.now()}-${uuidv4().slice(0, 6)}`,
+        order_number: `ORD-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
         buyer_id,
         total_amount: totalAmount,
         shipping_fee: 0,
@@ -442,7 +441,7 @@ exports.checkout = async (req, res) => {
     }
 
     const order = await Order.create({
-      order_number: `ORD-${Date.now()}-${uuidv4().slice(0, 6)}`,
+      order_number: `ORD-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
       buyer_id,
       total_amount: final_amount,
       shipping_fee: 0,
