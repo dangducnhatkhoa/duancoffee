@@ -36,7 +36,7 @@
           <div class="bg-white rounded-lg p-5 flex flex-col sm:flex-row items-start sm:items-center gap-5 border border-[#EDE5D8] shadow-sm">
             <!-- Image -->
             <div class="w-24 h-24 flex-shrink-0 bg-[#FAF7F3] rounded border border-[#EDE5D8] flex justify-center items-center overflow-hidden relative group">
-              <img [src]="item.image_url" [alt]="item.product_name" class="max-w-full max-h-full object-contain">
+              <img [src]="site.formatImageUrl(item.image_url)" [alt]="item.product_name" class="max-w-full max-h-full object-contain">
               <!-- Delete Button -->
               <button (click)="removeItem(item.variant_id)" class="absolute top-1 right-1 text-gray-400 hover:text-red-500 bg-white rounded-full w-6 h-6 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition" title="Xóa">
                 <i class="fas fa-times text-[10px]"></i>
