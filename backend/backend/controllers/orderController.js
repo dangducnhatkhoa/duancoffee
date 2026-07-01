@@ -430,7 +430,7 @@ exports.checkout = async (req, res) => {
           if (discount.max_discount_value && discount_val > parseFloat(discount.max_discount_value)) {
             discount_val = parseFloat(discount.max_discount_value);
           }
-        } else if (discount.discount_type === 'co_dinh') {
+        } else if (discount.discount_type === 'co_dinh' || discount.discount_type === 'tien') {
           discount_val = parseFloat(discount.discount_value);
         }
         

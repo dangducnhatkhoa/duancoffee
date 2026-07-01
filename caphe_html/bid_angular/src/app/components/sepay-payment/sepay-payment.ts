@@ -145,9 +145,9 @@ export class SepayPayment implements OnInit, OnDestroy {
   }
 
   getDynamicQR(): string {
-    const bankId = 'MB';
-    const accountNo = '0866676374';
-    const accountName = encodeURIComponent('HOANG VAN HOANG ANH');
+    const bankId = 'ICB'; // VietinBank
+    const accountNo = '107872550676'; // Sửa lại số tài khoản thật của bạn tại đây để nhận tiền
+    const accountName = encodeURIComponent('DANG DUC NHAT KHOA');
     const amount = this.totalAmount;
     const addInfo = encodeURIComponent(this.orderNumber);
     
