@@ -10,7 +10,7 @@
 
       <!-- VietQR Image Wrapper -->
       <div class="relative p-4 bg-white rounded-xl border border-[#EDE5D9] shadow-sm flex items-center justify-center">
-        <img src="/images/sepay_qr.png" alt="VietQR Payment Code" class="w-64 h-64 sm:w-72 sm:h-72 object-contain">
+        <img [src]="getDynamicQR()" alt="VietQR Payment Code" class="w-64 h-64 sm:w-72 sm:h-72 object-contain">
         
         <!-- Successful Overlay -->
         <div *ngIf="isPaid" class="absolute inset-0 bg-[#A85131]/90 rounded-xl flex flex-col items-center justify-center text-white p-4 animate-fade-in transition-all">
@@ -51,7 +51,7 @@
           <div class="flex justify-between items-center text-sm">
             <span class="text-[#7A6A5A]">Số tài khoản:</span>
             <div class="flex items-center gap-2">
-              <span class="font-bold text-[#A85131] select-all font-mono">107*****676</span>
+              <span class="font-bold text-[#A85131] select-all font-mono">107883120676</span>
             </div>
           </div>
           
