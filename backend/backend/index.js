@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+require('mysql2'); // Force Vercel to bundle mysql2 dialect
 const db = require("./config/database");// kết nối Sequelize
 const routes = require("./routes/index.js") ; // import router tổng
 const session = require('express-session');
