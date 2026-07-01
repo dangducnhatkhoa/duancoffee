@@ -8,17 +8,17 @@ const Payment = db.define('Payment', {
     type: DataTypes.ENUM('bank_transfer', 'momo', 'zalopay', 'vnpay', 'paypal', 'cod'),
     defaultValue: 'cod'
   },
-  payment_amount: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
+  payment_amount: { type: DataTypes.DECIMAL(12, 2), allowNull: false, field: 'amount' },
   transaction_id: { type: DataTypes.STRING(255), allowNull: true },
-  gateway_response: { type: DataTypes.JSON, allowNull: true },
+  gateway_response: { type: DataTypes.VIRTUAL },
   status: {
     type: DataTypes.ENUM('pending', 'completed', 'failed', 'refunded', 'cancelled'),
     defaultValue: 'pending'
   },
-  payment_date: { type: DataTypes.DATE, allowNull: true},
-  refund_date: {  type: DataTypes.DATE, allowNull: true },
-  refund_amount: { type: DataTypes.DECIMAL(12, 2), defaultValue: 0.00 },
-  notes: { type: DataTypes.TEXT, allowNull: true },
+  payment_date: { type: DataTypes.VIRTUAL },
+  refund_date: {  type: DataTypes.VIRTUAL },
+  refund_amount: { type: DataTypes.VIRTUAL },
+  notes: { type: DataTypes.VIRTUAL },
   created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 }, {

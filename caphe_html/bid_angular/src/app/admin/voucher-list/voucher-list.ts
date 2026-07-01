@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +20,8 @@ export class AdminVoucherList implements OnInit {
 
   constructor(
     private adminService: AdminService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
@@ -34,6 +35,7 @@ export class AdminVoucherList implements OnInit {
         this.vouchers = res.data || [];
         this.totalVouchers = res.pagination?.total || 0;
         this.totalPages = res.pagination?.totalPages || 1;
+        this.cdr.detectChanges();
       }
     } catch (error) {
       console.error('Error loading vouchers:', error);

@@ -1,4 +1,4 @@
-const { User, Product, Order, Category, ProductVariant, OrderItem, db } = require('../models');
+const { User, Product, Order, Category, ProductVariant, OrderItem, ProductImage, db } = require('../models');
 const { Op } = require('sequelize');
 
 /** Thống kê tổng quan cho Dashboard admin */
@@ -235,6 +235,42 @@ exports.updateOrderStatus = async (req, res) => {
   } catch (error) {
     console.error('Admin update order error:', error);
     res.status(500).json({ success: false, message: 'Lỗi cập nhật đơn hàng', error: error.message });
+  }
+};
+
+/** Chi tiết đơn hàng cho admin */
+exports.getOrderDetail = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findOne({
+      where: { id },
+      include: [
+        {
+          model: OrderItem, as: 'items',
+          include: [
+            {
+              model: ProductVariant, as: 'variant',
+              include: [
+                {
+                  model: Product, as: 'product',
+                  include: [{ model: ProductImage, as: 'images' }]
+                }
+              ]
+            }
+          ]
+        },
+        { model: User, as: 'buyer', attributes: ['id', 'full_name', 'email', 'phone'] }
+      ]
+    });
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng' });
+    }
+
+    res.json({ success: true, data: order });
+  } catch (error) {
+    console.error('Admin get order detail error:', error);
+    res.status(500).json({ success: false, message: 'Lỗi lấy chi tiết đơn hàng', error: error.message });
   }
 };
 

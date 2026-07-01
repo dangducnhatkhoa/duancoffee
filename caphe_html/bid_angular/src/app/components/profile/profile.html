@@ -237,7 +237,7 @@
               @for(item of selectedOrder.items; track item.id) {
                 <div class="flex gap-4 items-center">
                   <div class="w-12 h-12 bg-[#FAF7F3] border border-[#EDE5D8] rounded flex items-center justify-center p-1 flex-shrink-0">
-                    <img [src]="'http://localhost:3000/images/' + (item.variant?.product?.images?.[0]?.hinh || 'default.jpg')" class="max-w-full max-h-full object-contain rounded" alt="Product">
+                    <img [src]="site.formatImageUrl(item.variant?.product?.images?.[0]?.image_url || item.variant?.product?.hinh_anh)" class="max-w-full max-h-full object-contain rounded" alt="Product">
                   </div>
                   <div class="flex-grow min-w-0">
                     <p class="text-sm font-bold text-[#2C1A0E] truncate">{{item.variant?.product?.ten_san_pham}}</p>

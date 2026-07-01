@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { BASE_API } from '../../cauhinh';
+import { SiteService } from '../../services/site-service';
 
 @Component({
   selector: 'app-profile',
@@ -24,7 +25,9 @@ export class Profile implements OnInit {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    public site: SiteService
   ) {}
 
   async ngOnInit() {
@@ -49,6 +52,7 @@ export class Profile implements OnInit {
       );
       if (res && res.success) {
         this.orders = res.data || [];
+        this.cdr.detectChanges();
       }
     } catch (error) {
       console.error('Error loading order history:', error);
@@ -67,6 +71,7 @@ export class Profile implements OnInit {
       );
       if (res && res.success) {
         this.selectedOrder = res.data;
+        this.cdr.detectChanges();
       }
     } catch (error) {
       console.error('Error loading order detail:', error);

@@ -134,7 +134,7 @@
           @for(item of cartItems(); track item.variant_id) {
           <div class="flex gap-4 items-start">
             <div class="w-16 h-16 bg-white border border-[#EDE5D8] rounded flex items-center justify-center p-1 flex-shrink-0">
-              <img [src]="item.image_url" [alt]="item.product_name" class="max-w-full max-h-full object-contain">
+              <img [src]="site.formatImageUrl(item.image_url)" [alt]="item.product_name" class="max-w-full max-h-full object-contain">
             </div>
             <div class="flex-1 min-w-0">
               <h3 class="text-[#2C1A0E] text-sm font-bold truncate">{{item.product_name}}</h3>

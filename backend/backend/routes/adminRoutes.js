@@ -9,6 +9,7 @@ router.use(adminAuth);
 
 router.get('/dashboard', adminController.getDashboardStats);
 router.get('/orders', adminController.getOrders);
+router.get('/orders/:id', adminController.getOrderDetail);
 router.patch('/orders/:id/status', adminController.updateOrderStatus);
 router.get('/users', adminController.getUsers);
 router.patch('/users/:id/toggle-status', adminController.toggleUserStatus);

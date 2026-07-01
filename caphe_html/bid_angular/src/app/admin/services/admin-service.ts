@@ -23,6 +23,10 @@ export class AdminService {
     return firstValueFrom(this.http.patch<any>(`${this.apiUrl}/orders/${id}/status`, { status }));
   }
 
+  getOrderById(id: number) {
+    return firstValueFrom(this.http.get<any>(`${this.apiUrl}/orders/${id}`));
+  }
+
   getUsers(page = 1, limit = 10, search = '') {
     const params = new HttpParams().set('page', page).set('limit', limit).set('search', search);
     return firstValueFrom(this.http.get<any>(`${this.apiUrl}/users`, { params }));
