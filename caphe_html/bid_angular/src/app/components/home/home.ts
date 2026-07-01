@@ -26,11 +26,6 @@ export class Home {
 
     const resFeatured = await this.site.getFeaturedProducts(8); // {success: true, data: [] }
     this.featured_arr.set(resFeatured.data as IProduct[]);
-
-
-    const resAuction = await this.site.getAuctionProducts(4); // {success: true, data: [] }
-    this.auction_arr.set( await resAuction.data  );
-
   } 
 
   addToCart(product: any) {
