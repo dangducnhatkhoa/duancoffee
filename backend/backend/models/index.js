@@ -10,6 +10,7 @@ const OrderItem = require('./OrderItem');
 const Payment = require('./Payment');
 const Review = require('./Review');
 const Contact = require('./Contact');
+const Discount = require('./Discount');
 
 // Định nghĩa quan hệ giữa các bảng
 
@@ -47,6 +48,10 @@ OrderItem.belongsTo(ProductVariant, { foreignKey: 'variant_id', as: 'variant' })
 Order.hasMany(Payment, { foreignKey: 'order_id', as: 'payments' });
 Payment.belongsTo(Order, { foreignKey: 'order_id', as: 'order' });
 
+// Order - Discount
+Discount.hasMany(Order, { foreignKey: 'id_ma_giam_gia', as: 'orders' });
+Order.belongsTo(Discount, { foreignKey: 'id_ma_giam_gia', as: 'discount' });
+
 // OrderItem - Review
 OrderItem.hasOne(Review, { foreignKey: 'order_item_id', as: 'review' });
 Review.belongsTo(OrderItem, { foreignKey: 'order_item_id', as: 'orderItem' });
@@ -67,5 +72,6 @@ module.exports = {
   OrderItem,
   Payment,
   Review,
-  Contact
+  Contact,
+  Discount
 };

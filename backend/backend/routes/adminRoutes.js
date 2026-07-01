@@ -26,4 +26,12 @@ router.delete('/products/:id/force', adminProductController.forceDelete);
 router.delete('/products/:productId/images/:imageId', adminProductController.deleteImage);
 router.patch('/products/:productId/images/:imageId/primary', adminProductController.setPrimaryImage);
 
+// Quản lý voucher admin
+const voucherController = require('../controllers/voucherController');
+router.get('/vouchers', voucherController.getVouchers);
+router.get('/vouchers/:id', voucherController.getVoucherById);
+router.post('/vouchers', voucherController.createVoucher);
+router.put('/vouchers/:id', voucherController.updateVoucher);
+router.delete('/vouchers/:id', voucherController.deleteVoucher);
+
 module.exports = router;

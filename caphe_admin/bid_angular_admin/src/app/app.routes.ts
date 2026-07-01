@@ -8,6 +8,8 @@ import { ProductList } from './product-list/product-list';
 import { ProductForm } from './product-form/product-form';
 import { OrderList } from './order-list/order-list';
 import { UserList } from './user-list/user-list';
+import { VoucherList } from './voucher-list/voucher-list';
+import { VoucherForm } from './voucher-form/voucher-form';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -29,6 +31,9 @@ export const routes: Routes = [
 
       { path: 'orders', component: OrderList, title: 'Đơn hàng' },
       { path: 'users', component: UserList, title: 'Người dùng' },
+      { path: 'vouchers', component: VoucherList, title: 'Mã giảm giá' },
+      { path: 'vouchers/add', component: VoucherForm, title: 'Thêm mã giảm giá' },
+      { path: 'vouchers/edit/:id', component: VoucherForm, title: 'Sửa mã giảm giá' },
     ],
   },
 ];

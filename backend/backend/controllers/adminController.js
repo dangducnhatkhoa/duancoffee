@@ -189,6 +189,47 @@ exports.updateOrderStatus = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng' });
     }
 
+    // Kiểm soát trạng thái đơn hàng không được nhảy bước hay lùi bước
+    const statusSteps = {
+      'pending': 0, 'cho_xac_nhan': 0,
+      'processing': 1, 'dang_xu_ly': 1,
+      'shipping': 2, 'dang_giao': 2,
+      'completed': 3, 'hoan_thanh': 3,
+      'cancelled': -1, 'da_huy': -1
+    };
+
+    const currentStatus = order.status;
+    const currentStep = statusSteps[currentStatus];
+    const targetStep = statusSteps[status];
+
+    if (currentStep === undefined || targetStep === undefined) {
+      return res.status(400).json({ success: false, message: 'Lỗi đối chiếu trạng thái đơn hàng' });
+    }
+
+    // Nếu đơn hàng đã hoàn thành hoặc đã hủy thì không được đổi nữa
+    if (currentStep === 3) {
+      return res.status(400).json({ success: false, message: 'Đơn hàng đã hoàn thành, không thể thay đổi trạng thái' });
+    }
+    if (currentStep === -1) {
+      return res.status(400).json({ success: false, message: 'Đơn hàng đã hủy, không thể thay đổi trạng thái' });
+    }
+
+    // Nếu muốn hủy đơn hàng
+    if (targetStep === -1) {
+      // Chỉ cho phép hủy khi đang ở pending/cho_xac_nhan
+      if (currentStep !== 0) {
+        return res.status(400).json({ success: false, message: 'Chỉ có thể hủy đơn hàng ở trạng thái chờ xác nhận' });
+      }
+    } else {
+      // Đi tới phải đúng 1 bước (ví dụ: pending -> processing -> shipping -> completed)
+      if (targetStep !== currentStep + 1) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Trạng thái đơn hàng phải đi theo trình tự (Chờ xác nhận -> Đang xử lý -> Đang giao -> Hoàn thành) và không được nhảy bước hoặc lùi bước' 
+        });
+      }
+    }
+
     await order.update({ status, updated_at: new Date() });
     res.json({ success: true, message: 'Cập nhật trạng thái thành công', data: order });
   } catch (error) {
