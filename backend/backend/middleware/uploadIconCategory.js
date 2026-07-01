@@ -4,8 +4,12 @@ const fs = require('fs');
 
 // Tạo thư mục nếu chưa tồn tại
 const uploadDir = 'public/images/category';
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (e) {
+  console.log("Could not create upload directory:", e.message);
 }
 
 // Cấu hình storage
