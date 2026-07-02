@@ -58,7 +58,7 @@ exports.register = async (req, res) => {
         <h2 style="color:#C8572C;">Kích hoạt tài khoản</h2>
         <p>Xin chào <strong>${full_name}</strong>,</p>
         <p>Cảm ơn bạn đã đăng ký! Vui lòng click vào nút dưới đây để kích hoạt tài khoản:</p>
-        <a href="http://localhost:4200/users/activate/${activation_token}" 
+        <a href="${process.env.FRONTEND_URL || 'http://localhost:4200'}/users/activate/${activation_token}" 
            style="display:inline-block; padding:14px 28px; background:#C8572C; color:#fff; font-weight:700; border-radius:8px; text-decoration:none; font-size:0.95rem; margin:16px 0;">
           Kích Hoạt Tài Khoản
         </a>
