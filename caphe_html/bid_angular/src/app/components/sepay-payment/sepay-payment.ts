@@ -149,7 +149,7 @@ export class SepayPayment implements OnInit, OnDestroy {
     const accountNo = '107883120676'; // Tài khoản thật của bạn đã được giải mã từ QR gốc
     const accountName = encodeURIComponent('DANG DUC NHAT KHOA');
     const amount = this.totalAmount;
-    const addInfo = encodeURIComponent(this.orderNumber);
+    const addInfo = encodeURIComponent('SEVQR ' + this.orderNumber);
     
     return `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${amount}&addInfo=${addInfo}&accountName=${accountName}`;
   }
