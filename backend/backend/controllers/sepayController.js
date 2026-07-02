@@ -29,9 +29,12 @@ exports.handleWebhook = async (req, res) => {
       transactionDate,
       transferType,
       transferAmount,
+      content,
       transactionContent,
       referenceCode
     } = req.body;
+
+    const actualContent = content || transactionContent || '';
 
     console.log('Received SePay Webhook:', req.body);
 
@@ -47,7 +50,7 @@ exports.handleWebhook = async (req, res) => {
     // 2. Parse Order Number from transactionContent
     // Matches ORD-xxxxxxxxxxxxx-xxxxxx or DHxxxxxxxxxxxxx
     const regex = /(ORD-\d+-[a-zA-Z0-9]+|DH\d+)/i;
-    const match = String(transactionContent || '').match(regex);
+    const match = String(actualContent || '').match(regex);
     const order_number = match ? match[1] : null;
 
     if (!order_number) {
@@ -100,7 +103,7 @@ exports.handleWebhook = async (req, res) => {
       gateway_response: req.body,
       status: 'completed',
       payment_date: new Date(transactionDate || Date.now()),
-      notes: `SePay transaction ${id} via ${gateway || 'Bank'}. Content: "${transactionContent}"`
+      notes: `SePay transaction ${id} via ${gateway || 'Bank'}. Content: "${actualContent}"`
     }, { transaction: t });
 
     await t.commit();
