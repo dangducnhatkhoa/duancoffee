@@ -48,10 +48,21 @@ exports.handleWebhook = async (req, res) => {
     }
 
     // 2. Parse Order Number from transactionContent
-    // Matches ORD-xxxxxxxxxxxxx-xxxxxx or DHxxxxxxxxxxxxx
-    const regex = /(ORD-\d+-[a-zA-Z0-9]+|DH\d+)/i;
+    // Matches ORD-xxxxxxxxxxxxx-xxxxxx or ORDxxxxxxxxxxxxxxxxxxxx or DHxxxxxxxxxxxxx
+    const regex = /(ORD-?\d+-?[a-zA-Z0-9]{6}|DH\d+)/i;
     const match = String(actualContent || '').match(regex);
-    const order_number = match ? match[1] : null;
+    let order_number = match ? match[1] : null;
+
+    if (order_number && order_number.toUpperCase().startsWith('ORD')) {
+      // Loại bỏ tất cả dấu gạch ngang để chuẩn hóa chuỗi
+      const clean = order_number.replace(/-/g, '');
+      const prefix = clean.substring(0, 3).toUpperCase(); // ORD
+      const timestamp = clean.substring(3, 16); // 13 ký số của Date.now()
+      const suffix = clean.substring(16); // 6 ký tự hex
+      
+      // Tái cấu trúc về định dạng chuẩn lưu trong DB: ORD-timestamp-suffix
+      order_number = `${prefix}-${timestamp}-${suffix}`;
+    }
 
     if (!order_number) {
       await t.rollback();
