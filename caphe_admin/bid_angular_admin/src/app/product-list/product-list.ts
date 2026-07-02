@@ -56,9 +56,9 @@ export class ProductList implements OnInit {
     const img = p.images?.[0]?.image_url || p.hinh_anh || p.image;
     if (!img) return 'https://placehold.co/60x60/6F4E37/FFFFFF?text=Coffee';
     if (img.startsWith('http')) return img;
-    if (img.startsWith('/images/')) return `http://localhost:3000${img}`;
-    if (img.startsWith('images/')) return `http://localhost:3000/${img}`;
-    return `http://localhost:3000/images/products/${img}`;
+    if (img.startsWith('/images/')) return `https://duancoffee-bcu2.vercel.app${img}`;
+    if (img.startsWith('images/')) return `https://duancoffee-bcu2.vercel.app/${img}`;
+    return `https://duancoffee-bcu2.vercel.app/images/products/${img}`;
   }
 
   tempSearch = '';

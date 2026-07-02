@@ -3,11 +3,13 @@ import { Injectable } from '@angular/core';
 import { ICategory } from '../data.model';
 import { firstValueFrom } from 'rxjs';
 
+import { BASE_API } from '../cauhinh';
+
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  private apiUrl = 'http://localhost:3000/api/categories';
+  private apiUrl = `${BASE_API}categories`;
   constructor(private http: HttpClient) {}
 
   getAll(page=1, limit=1, sort='newest'): Promise<ICategory[]> { 

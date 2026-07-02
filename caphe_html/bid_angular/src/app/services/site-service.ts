@@ -34,12 +34,12 @@ export class SiteService {
             return url;
         }
         if (url.startsWith('/images/')) {
-            return `http://localhost:3000${url}`;
+            return `https://duancoffee-bcu2.vercel.app${url}`;
         }
         if (url.startsWith('images/')) {
-            return `http://localhost:3000/${url}`;
+            return `https://duancoffee-bcu2.vercel.app/${url}`;
         }
-        return `http://localhost:3000/images/products/${url}`;
+        return `https://duancoffee-bcu2.vercel.app/images/products/${url}`;
     }
 
     // Lấy ảnh chính của sản phẩm

@@ -52,9 +52,9 @@ export class ProductForm implements OnInit {
         const formatImg = (url: string) => {
           if (!url) return '';
           if (url.startsWith('http')) return url;
-          if (url.startsWith('/images/')) return `http://localhost:3000${url}`;
-          if (url.startsWith('images/')) return `http://localhost:3000/${url}`;
-          return `http://localhost:3000/images/products/${url}`;
+          if (url.startsWith('/images/')) return `https://duancoffee-bcu2.vercel.app${url}`;
+          if (url.startsWith('images/')) return `https://duancoffee-bcu2.vercel.app/${url}`;
+          return `https://duancoffee-bcu2.vercel.app/images/products/${url}`;
         };
         if (res.data.images && res.data.images.length > 0) {
           const urls = res.data.images.map((img: any) => formatImg(img.image_url));

@@ -21,8 +21,10 @@ app.use(
   })
 );
 
-// Public folder (nơi chứa các file tĩnh images, css...)
+const path = require("path");
 app.use(express.static("public"));
+app.use('/image_cts', express.static(path.join(__dirname, 'public/images/products')));
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 // Gắn router chính
 app.use("/api", routes);

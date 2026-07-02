@@ -39,7 +39,7 @@ export class CategoryForm {
       // Hiển thị icon cũ nếu có
       if (this.category().icon) {
         if (this.category().icon?.startsWith("http")==true) this.previewUrl.set(this.category().icon || '');
-        else  this.previewUrl.set(`http://localhost:3000/${this.category().icon}`);
+        else  this.previewUrl.set(`https://duancoffee-bcu2.vercel.app/${this.category().icon}`);
         (document.getElementById('iconPreview') as HTMLDivElement).innerHTML = 
           `<img src="${this.previewUrl()}" class="w-full h-full object-cover">`;
       }
