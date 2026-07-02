@@ -21,6 +21,7 @@ export class Checkout {
   totalPrice = signal(0);  //tổng tiền giỏ hàng (tạm tính)
   shippingFee = signal(0);
   totalAmount = signal(0);
+  discountAmount = signal(0);
   cartItems = signal<any[]>([]); //các dòng dữ liệu sp sẽ hiện trong giỏ hàng
   token:string ="" ;
   paymentMethod: 'cod' | 'vnpay' | 'momo' | 'sepay' = 'cod';
@@ -57,7 +58,7 @@ export class Checkout {
     const subTotal = this.cart.totalPrice(this.cartItems());
     this.totalPrice.set(subTotal);
     
-    const shipping = (subTotal >= 1500000 || subTotal === 0) ? 0 : 30000;
+    const shipping = (subTotal >= 1500000 || subTotal === 0) ? 0 : 35000;
     this.shippingFee.set(shipping);
 
     // Apply voucher discount in UI if available
@@ -81,6 +82,7 @@ export class Checkout {
       }
     }
     
+    this.discountAmount.set(discountVal);
     this.totalAmount.set(Math.max(0, subTotal + shipping - discountVal));
   }
 

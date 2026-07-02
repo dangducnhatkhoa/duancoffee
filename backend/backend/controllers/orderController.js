@@ -417,8 +417,11 @@ exports.checkout = async (req, res) => {
       });
     }
 
+    // Process shipping fee
+    const shipping_fee = (total_amount >= 1500000 || total_amount === 0) ? 0 : 35000;
+
     // Process discount
-    let final_amount = total_amount;
+    let final_amount = total_amount + shipping_fee;
     let applied_discount_id = null;
     if (id_ma_giam_gia) {
       const discount = await Discount.findByPk(id_ma_giam_gia, { transaction: t });
@@ -433,7 +436,7 @@ exports.checkout = async (req, res) => {
           discount_val = parseFloat(discount.discount_value);
         }
         
-        final_amount = Math.max(0, total_amount - discount_val);
+        final_amount = Math.max(0, total_amount + shipping_fee - discount_val);
         applied_discount_id = discount.id;
         // decrement voucher stock
         await discount.decrement('quantity', { by: 1, transaction: t });
@@ -444,7 +447,7 @@ exports.checkout = async (req, res) => {
       order_number: `ORD-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
       buyer_id,
       total_amount: final_amount,
-      shipping_fee: 0,
+      shipping_fee: shipping_fee,
       shipping_name,
       shipping_phone,
       shipping_address,
