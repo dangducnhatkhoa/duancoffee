@@ -16,10 +16,10 @@ const db = new Sequelize(
     logging: false,            // 🔹 Tắt log câu lệnh SQL (để console sạch hơn)
     timezone: '+07:00',        // 🔹 Múi giờ của server (GMT+7 cho Việt Nam)
     pool: {
-      max: 2,
+      max: 1,
       min: 0,
       acquire: 30000,
-      idle: 10000
+      idle: 1000
     }
   }
 );
