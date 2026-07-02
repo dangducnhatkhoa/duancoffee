@@ -10,8 +10,8 @@ router.post('/createOrder', authMiddleware, orderController.createOrder);
 // Lấy lịch sử đơn hàng
 router.get('/getOrderHistory',authMiddleware, orderController.getOrderHistory);
 
-// Lấy chi tiết 1 đơn hàng
 router.get('/getOrderDetail/:orderId', authMiddleware,orderController.getOrderDetail);
+router.get('/check-status/:orderId', authMiddleware, orderController.checkOrderStatus);
 
 // Hủy đơn hàng
 router.post('/cancelOrder/:orderId', authMiddleware, orderController.cancelOrder);

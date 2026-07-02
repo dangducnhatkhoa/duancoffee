@@ -91,7 +91,7 @@ export class SepayPayment implements OnInit, OnDestroy {
       if (this.orderId === 0) return;
       try {
         const res: any = await firstValueFrom(
-          this.http.get(`${BASE_API}orders/getOrderDetail/${this.orderId}`, { headers })
+          this.http.get(`${BASE_API}orders/check-status/${this.orderId}`, { headers })
         );
         
         // Kiểm tra xem đơn hàng đã được cập nhật thanh toán chưa

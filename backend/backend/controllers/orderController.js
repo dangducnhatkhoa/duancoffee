@@ -536,3 +536,26 @@ exports.getStripeSessionStatus = async (req, res) => {
     });
   }
 };
+
+exports.checkOrderStatus = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { orderId } = req.params;
+    const order = await Order.findOne({
+      where: { id: orderId, buyer_id: userId },
+      attributes: ['id', 'status', 'payment_date']
+    });
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Không thấy đơn hàng' });
+    }
+    return res.json({ success: true, data: order });
+  } catch (error) {
+    console.error('Error checking order status:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Lỗi kiểm tra trạng thái đơn hàng',
+      error: error.message
+    });
+  }
+};
+
