@@ -1,0 +1,57 @@
+<!-- Breadcrumb -->
+<div class="bg-white border-b border-[#EDE5D8]">
+  <div class="container mx-auto px-6 py-3" style="max-width:1200px;">
+    <nav class="flex text-sm" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <a routerLink="/" class="text-[#7A6A5A] hover:text-[#C8572C] transition font-medium">Trang chủ</a>
+        </li>
+        <li aria-current="page">
+          <div class="flex items-center">
+            <i class="fas fa-chevron-right text-[#D1C4B0] mx-2 text-[10px]"></i>
+            <span class="text-[#2C1A0E] font-semibold">Tin tức & Cộng đồng</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<section style="background:#FAF7F3; min-height:80vh; padding:60px 0;">
+  <div class="container mx-auto px-6" style="max-width:1200px;">
+    <h1 style="font-family:'Playfair Display',serif; font-size:2.5rem; font-weight:700; color:#2C1A0E; margin-bottom:10px; text-align:center;">
+      Tin tức & Cộng đồng
+    </h1>
+    <p style="text-align:center; color:#7A6A5A; margin-bottom:40px;">Cập nhật những thông tin mới nhất về King Coffee và thế giới cà phê.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      @for (article of articles; track article.id) {
+        <a [routerLink]="['/news', article.id]" class="block bg-white rounded-lg overflow-hidden transition shadow-sm hover:shadow-md" style="border:1px solid #EDE5D8;">
+          <div style="height:220px; overflow:hidden; background:#F5F0EA; display:flex; align-items:center; justify-content:center;">
+            @if (article.hinh) {
+              <img [src]="article.hinh" alt="News Image" style="width:100%; height:100%; object-fit:cover;" />
+            } @else {
+              <i class="fas fa-image text-4xl text-[#C8572C] opacity-30"></i>
+            }
+          </div>
+          <div class="p-6">
+            <div style="font-size:0.75rem; color:#C8572C; font-weight:700; text-transform:uppercase; margin-bottom:8px; letter-spacing:0.5px;">
+              {{article.ngay_dang | date:'dd/MM/yyyy'}}
+            </div>
+            <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:#2C1A0E; line-height:1.4; margin-bottom:12px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+              {{article.tieu_de}}
+            </h3>
+            <div style="color:#7A6A5A; font-size:0.9rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;" [innerHTML]="article.noi_dung">
+            </div>
+          </div>
+        </a>
+      }
+    </div>
+
+    @if (articles.length === 0) {
+      <div style="text-align:center; padding:40px; color:#7A6A5A;">
+        Chưa có tin tức nào.
+      </div>
+    }
+  </div>
+</section>

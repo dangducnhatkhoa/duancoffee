@@ -1,0 +1,10 @@
+/* Register page responsive */
+.register-hero {
+  display: flex !important;
+}
+
+@media (max-width: 768px) {
+  .register-hero {
+    display: none !important;
+  }
+}

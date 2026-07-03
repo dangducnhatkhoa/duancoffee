@@ -1,0 +1,14 @@
+@keyframes scaleIn {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes drawCheck {
+  0% { stroke-dasharray: 50; stroke-dashoffset: 50; }
+  100% { stroke-dasharray: 50; stroke-dashoffset: 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}

@@ -1,0 +1,55 @@
+@import '../admin-styles.css';
+
+.account-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.account-stat-card {
+  flex: 1 1 220px;
+  min-width: 220px;
+  padding: 1rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.account-stat-card h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.account-stat-card .count {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.account-stat-card .label {
+  margin-top: 0.4rem;
+  color: #6b7280;
+  font-size: 0.92rem;
+}
+
+.account-stat-card:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+
+.account-stat-card.active {
+  border-color: #c8572c;
+  background: #fff8f6;
+  box-shadow: 0 0 0 3px rgba(200, 87, 44, 0.1);
+}
+
+.account-stat-card.active h3 {
+  color: #c8572c;
+}
+

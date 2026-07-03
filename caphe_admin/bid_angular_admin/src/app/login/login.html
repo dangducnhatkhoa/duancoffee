@@ -1,0 +1,54 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#3E2723] via-[#6F4E37] to-[#8B5A2B] p-4">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 mx-auto rounded-full bg-[#D4A574] flex items-center justify-center text-3xl text-[#3E2723] shadow-lg mb-4">
+        <i class="fas fa-mug-hot"></i>
+      </div>
+      <h1 class="text-3xl font-bold text-white">Coffee Admin</h1>
+      <p class="text-white/70 mt-2">Đăng nhập hệ thống quản trị</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-2xl p-8">
+      <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Email admin</label>
+          <div class="relative">
+            <i class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="email" name="email" [(ngModel)]="data.email" required
+                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#6F4E37] focus:border-transparent outline-none"
+                   placeholder="admin@example.com">
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Mật khẩu</label>
+          <div class="relative">
+            <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="password" name="password" [(ngModel)]="data.password" required
+                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#6F4E37] focus:border-transparent outline-none"
+                   placeholder="••••••••">
+          </div>
+        </div>
+
+        @if (thatbai) {
+          <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+            <i class="fas fa-exclamation-circle mr-2"></i>{{ thatbai }}
+          </div>
+        }
+
+        <button type="submit" [disabled]="f.invalid || dangXuLy"
+                class="w-full py-3 bg-gradient-to-r from-[#6F4E37] to-[#8B5A2B] text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50">
+          @if (dangXuLy) {
+            <i class="fas fa-spinner fa-spin mr-2"></i>Đang đăng nhập...
+          } @else {
+            <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập Admin
+          }
+        </button>
+      </form>
+
+      <p class="text-center text-xs text-gray-400 mt-6">
+        Chỉ tài khoản có vai trò <strong>admin</strong> mới đăng nhập được
+      </p>
+    </div>
+  </div>
+</div>

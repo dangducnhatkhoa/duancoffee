@@ -1,0 +1,73 @@
+<div class="admin-page-card">
+  <div class="admin-page-header">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-800">Quản lý tài khoản</h2>
+      <p class="text-sm text-gray-400">Danh sách tài khoản</p>
+    </div>
+  </div>
+
+  <div class="account-stats">
+    <div class="account-stat-card" [class.active]="filterType() === 'user'" (click)="setFilter('user')" style="cursor: pointer;">
+      <h3>Tài khoản user</h3>
+      <div class="count">{{ userAccountCount }}</div>
+      <div class="label">Số lượng tài khoản khách hàng</div>
+    </div>
+    <div class="account-stat-card" [class.active]="filterType() === 'admin'" (click)="setFilter('admin')" style="cursor: pointer;">
+      <h3>Tài khoản admin</h3>
+      <div class="count">{{ adminAccountCount }}</div>
+      <div class="label">Số lượng tài khoản quản trị</div>
+    </div>
+    @if (filterType() !== 'all') {
+      <button (click)="setFilter('all')" class="admin-btn-secondary" style="align-self: flex-end;">
+        <i class="fas fa-times"></i> Xóa bộ lọc
+      </button>
+    }
+  </div>
+
+  <div class="flex gap-3 mb-5">
+    <input type="text" [(ngModel)]="search" placeholder="Tìm tên, email, SĐT..."
+           class="flex-1 px-4 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:border-gray-400">
+    <button (click)="loadUsers()" class="admin-btn-primary"><i class="fas fa-search"></i> Tìm</button>
+  </div>
+
+  @if (loading()) {
+    <p class="text-center py-10 text-gray-400"><i class="fas fa-spinner fa-spin"></i></p>
+  } @else {
+    <div class="overflow-x-auto">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>SĐT</th>
+            <th>Vai trò</th>
+            <th>Ngày đăng ký</th>
+            <th>Trạng thái</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (u of filteredUsers; track u.id) {
+            <tr>
+              <td>#{{ u.id }}</td>
+              <td class="font-medium">{{ u.full_name }}</td>
+              <td>{{ u.email }}</td>
+              <td>{{ u.phone || '-' }}</td>
+              <td><span class="badge" [class]="u.user_type === 'admin' ? 'badge-blue' : 'badge-green'">{{ roleLabel(u.user_type) }}</span></td>
+              <td>{{ u.created_at | date:'dd/MM/yyyy' }}</td>
+              <td><span class="badge" [class]="u.status === 'active' ? 'badge-green' : 'badge-red'">{{ u.status === 'active' ? 'Hoạt động' : 'Đã khóa' }}</span></td>
+              <td>
+                @if (u.user_type !== 'admin') {
+                  <button (click)="toggleStatus(u.id)" class="text-xs text-orange-600 hover:underline">
+                    {{ u.status === 'active' ? 'Khóa' : 'Mở khóa' }}
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

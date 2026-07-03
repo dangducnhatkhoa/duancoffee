@@ -1,0 +1,480 @@
+<!-- Breadcrumb -->
+<div class="bg-white border-b border-[#EDE5D8]">
+  <div class="container mx-auto px-6 py-3" style="max-width:1200px;">
+    <nav class="flex text-sm" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <a routerLink="/" class="text-[#7A6A5A] hover:text-[#C8572C] transition font-medium">Trang chủ</a>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <i class="fas fa-chevron-right text-[#D1C4B0] mx-2 text-[10px]"></i>
+            <a routerLink="/" class="text-[#7A6A5A] hover:text-[#C8572C] transition font-medium">Sản phẩm</a>
+          </div>
+        </li>
+        <li aria-current="page">
+          <div class="flex items-center">
+            <i class="fas fa-chevron-right text-[#D1C4B0] mx-2 text-[10px]"></i>
+            <span class="text-[#2C1A0E] font-semibold">{{product()?.name}}</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<!-- ===== SECTION 1: Product Hero ===== -->
+<section class="bg-white">
+  <div class="container mx-auto px-6 py-10" style="max-width:1200px;">
+    <div class="flex flex-col lg:flex-row gap-10">
+
+      <!-- LEFT: Image Gallery -->
+      <div class="w-full lg:w-1/2">
+        <!-- Main Image -->
+        <div style="background:#FAF7F3; border:1px solid #EDE5D8; border-radius:8px; height:420px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; overflow:hidden;">
+          @if (mainImage()) {
+            <img [src]="mainImage()" [alt]="product()?.name" style="max-height:100%; max-width:100%; object-fit:contain;" />
+          } @else {
+            <i class="fas fa-coffee text-8xl text-[#C8572C] opacity-30"></i>
+          }
+        </div>
+        <!-- Thumbnails -->
+        <div class="flex gap-3">
+          @for (img of getAllImages(); track $index) {
+            <button 
+              (click)="changeImage($index)"
+              class="flex-shrink-0 rounded overflow-hidden transition"
+              [style.border]="selectedThumbIndex() === $index ? '2px solid #C8572C' : '2px solid #EDE5D8'"
+              [style.opacity]="selectedThumbIndex() === $index ? '1' : '0.6'"
+              style="width:80px; height:80px; background:#FAF7F3; display:flex; align-items:center; justify-content:center;">
+              <img [src]="img" alt="thumb" style="max-height:100%; max-width:100%; object-fit:cover;" />
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- RIGHT: Product Info -->
+      <div class="w-full lg:w-1/2">
+        <!-- Title -->
+        <h1 class="font-heading" style="font-size:1.75rem; font-weight:700; color:#2C1A0E; line-height:1.3; margin-bottom:12px;">
+          {{product()?.name}}
+        </h1>
+
+        <!-- Rating -->
+        <button type="button" (click)="scrollToReviews()" class="flex items-center gap-2 mb-4 hover:opacity-80 transition text-left">
+          <div class="flex text-[#F59E0B] text-sm">
+            @for (star of getStars(); track star) {
+              @if (getStarType(star, product()?.avgRating || 0) === 'full') {
+                <i class="fas fa-star"></i>
+              } @else if (getStarType(star, product()?.avgRating || 0) === 'half') {
+                <i class="fas fa-star-half-alt"></i>
+              } @else {
+                <i class="far fa-star"></i>
+              }
+            }
+          </div>
+          @if ((product()?.totalReviews || 0) > 0) {
+            <span class="text-[#2C1A0E] text-sm font-semibold">{{ product()?.avgRating }}</span>
+          }
+          <span class="text-[#7A6A5A] text-sm">({{ product()?.totalReviews || 0 }} đánh giá)</span>
+        </button>
+
+        <!-- Price Range (Global) -->
+        <div class="flex items-center gap-3 mb-5">
+          <span style="font-size:1.5rem; font-weight:700; color:#e3000f;">
+            @if (selectedVariantIndex() !== -1) {
+              {{currentPrice() | number:'1.0-0':'vi'}} đ
+            } @else {
+              {{minPrice() | number:'1.0-0':'vi'}} đ @if(minPrice() !== maxPrice()) { - {{maxPrice() | number:'1.0-0':'vi'}} đ }
+            }
+          </span>
+        </div>
+
+        <!-- Status -->
+        <div class="flex items-center gap-2 mb-5">
+          <i class="fas fa-check-circle text-green-600"></i>
+          <span style="color:#16A34A; font-weight:500; font-size:0.9rem;">Còn hàng</span>
+        </div>
+
+        <!-- Variants Selection -->
+        @if (product()?.variants && product().variants.length > 0) {
+        <div class="mb-5">
+          <div class="text-[#7A6A5A] text-sm mb-4 font-medium flex items-center">
+            Quy cách:@if(selectedVariantIndex() !== -1) { <span class="text-[#2C1A0E] ml-1">{{currentVariant()?.strap_color || currentVariant()?.case_size}}</span> }
+          </div>
+          <div class="flex gap-4">
+            @for (variant of product().variants; track variant.id; let i = $index) {
+              <div class="relative">
+                <!-- Floating badge (only when selected) -->
+                @if (selectedVariantIndex() === i) {
+                  <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#e3000f] text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10 whitespace-nowrap">
+                    {{variant.strap_color || variant.case_size}}
+                  </div>
+                }
+                <button 
+                  (click)="selectVariant(i)"
+                  class="relative rounded-full overflow-hidden transition"
+                  [style.border]="selectedVariantIndex() === i ? '2px solid #e3000f' : '1px solid #EDE5D8'"
+                  [style.opacity]="selectedVariantIndex() === i || selectedVariantIndex() === -1 ? '1' : '0.6'"
+                  style="width:50px; height:50px; background:#fff; display:flex; align-items:center; justify-content:center; padding: 2px;">
+                  <!-- Using mainImage as variant thumbnail -->
+                  <img [src]="mainImage()" [alt]="variant.strap_color" style="max-height:100%; max-width:100%; object-fit:contain; border-radius:50%;" />
+                  
+                  @if (selectedVariantIndex() === i) {
+                    <div class="absolute top-0 right-0 bg-black rounded-full text-white flex items-center justify-center border border-white" style="width:14px; height:14px; font-size:8px;">
+                      <i class="fas fa-check"></i>
+                    </div>
+                  }
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+        }
+
+        <!-- Short description -->
+        <p style="color:#7A6A5A; font-size:0.9rem; line-height:1.7; margin-bottom:24px;">
+          {{product()?.description?.substring(0, 200)}}{{(product()?.description?.length || 0) > 200 ? '...' : ''}}
+        </p>
+
+        <!-- Quantity + Add to Cart -->
+        <div class="flex items-center gap-4 mb-6">
+          <div class="flex items-center">
+            <button (click)="decreaseQty()" class="qty-btn" style="border-radius:4px 0 0 4px;">−</button>
+            <div class="qty-input">{{quantity()}}</div>
+            <button (click)="increaseQty()" class="qty-btn" style="border-radius:0 4px 4px 0;">+</button>
+          </div>
+          <button (click)="addToCart()" class="btn-primary flex-1 justify-center" style="padding:12px 24px; font-size:0.85rem;">
+            <i class="fas fa-shopping-bag mr-2"></i> THÊM VÀO GIỎ HÀNG
+          </button>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="flex items-center gap-6 pt-5" style="border-top:1px solid #EDE5D8;">
+          <div class="flex items-center gap-2 text-sm text-[#7A6A5A]">
+            <i class="fas fa-shipping-fast text-[#C8572C]"></i>
+            <span>Giao hàng nhanh</span>
+          </div>
+          <div class="flex items-center gap-2 text-sm text-[#7A6A5A]">
+            <i class="fas fa-shield-alt text-[#C8572C]"></i>
+            <span>100% Chính hãng</span>
+          </div>
+          <div class="flex items-center gap-2 text-sm text-[#7A6A5A]">
+            <i class="fas fa-undo text-[#C8572C]"></i>
+            <span>Đổi trả 7 ngày</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2: Description + Specs (side-by-side) ===== -->
+<section style="background:#F5F0EA;">
+  <div class="container mx-auto px-6 py-12" style="max-width:1200px;">
+    <div class="flex flex-col lg:flex-row gap-8">
+
+      <!-- Left: Mô tả sản phẩm -->
+      <div class="w-full lg:w-1/2 bg-white rounded-lg p-8" style="border:1px solid #EDE5D8;">
+        <h2 class="flex items-center gap-2 mb-6" style="font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; color:#2C1A0E;">
+          <span style="display:inline-block; width:4px; height:24px; background:#C8572C; border-radius:2px;"></span>
+          Mô tả sản phẩm
+        </h2>
+        <div style="color:#5A4A3A; font-size:0.9rem; line-height:1.8;">
+          <p>{{product()?.description}}</p>
+        </div>
+      </div>
+
+      <!-- Right: Thông số kỹ thuật -->
+      <div class="w-full lg:w-1/2 bg-white rounded-lg p-8" style="border:1px solid #EDE5D8;">
+        <h2 class="flex items-center gap-2 mb-6" style="font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; color:#2C1A0E;">
+          <span style="display:inline-block; width:4px; height:24px; background:#C8572C; border-radius:2px;"></span>
+          Thông số kỹ thuật
+        </h2>
+        <table style="width:100%; font-size:0.9rem;">
+          <tbody>
+            <tr style="border-bottom:1px solid #EDE5D8;">
+              <td style="padding:10px 0; color:#7A6A5A; width:40%;">Nhà sản xuất</td>
+              <td style="padding:10px 0; color:#2C1A0E; font-weight:600;">{{product()?.brand?.name || 'Đang cập nhật'}}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #EDE5D8;">
+              <td style="padding:10px 0; color:#7A6A5A;">Thành phần</td>
+              <td style="padding:10px 0; color:#2C1A0E; font-weight:600;">Arabica, Robusta, Excelsa, Catimor</td>
+            </tr>
+            <tr style="border-bottom:1px solid #EDE5D8;">
+              <td style="padding:10px 0; color:#7A6A5A;">Hạn sử dụng</td>
+              <td style="padding:10px 0; color:#2C1A0E; font-weight:600;">2 Năm</td>
+            </tr>
+            <tr style="border-bottom:1px solid #EDE5D8;">
+              <td style="padding:10px 0; color:#7A6A5A;">Xuất xứ</td>
+              <td style="padding:10px 0; color:#2C1A0E; font-weight:600;">Việt Nam</td>
+            </tr>
+            <tr style="border-bottom:1px solid #EDE5D8;">
+              <td style="padding:10px 0; color:#7A6A5A;">Danh mục</td>
+              <td style="padding:10px 0; color:#2C1A0E; font-weight:600;">{{product()?.category?.name || 'Đang cập nhật'}}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0; color:#7A6A5A;">Tiêu chuẩn</td>
+              <td style="padding:10px 0; color:#2C1A0E; font-weight:600;">ISO 9001, GMP</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2.5: Đánh giá khách hàng ===== -->
+<section id="product-reviews" class="bg-white border-t border-[#EDE5D8]">
+  <div class="container mx-auto px-6 py-12" style="max-width:1200px;">
+    <h2 class="flex items-center gap-2 mb-8" style="font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; color:#2C1A0E;">
+      <span style="display:inline-block; width:4px; height:24px; background:#C8572C; border-radius:2px;"></span>
+      Đánh giá khách hàng
+    </h2>
+
+    <div class="flex flex-col lg:flex-row gap-10 mb-10">
+      <!-- Tổng quan điểm -->
+      <div class="w-full lg:w-1/3">
+        <div class="bg-[#FAF7F3] rounded-lg p-6 text-center" style="border:1px solid #EDE5D8;">
+          <div style="font-size:3rem; font-weight:700; color:#2C1A0E; line-height:1;">
+            {{ product()?.avgRating || '0.0' }}
+          </div>
+          <div class="flex justify-center text-[#F59E0B] text-lg my-2">
+            @for (star of getStars(); track star) {
+              @if (getStarType(star, product()?.avgRating || 0) === 'full') {
+                <i class="fas fa-star"></i>
+              } @else if (getStarType(star, product()?.avgRating || 0) === 'half') {
+                <i class="fas fa-star-half-alt"></i>
+              } @else {
+                <i class="far fa-star"></i>
+              }
+            }
+          </div>
+          <p class="text-[#7A6A5A] text-sm">{{ product()?.totalReviews || 0 }} nhận xét</p>
+        </div>
+      </div>
+
+      <!-- Phân bố sao -->
+      <div class="w-full lg:w-2/3 flex flex-col justify-center gap-2">
+        @for (item of getRatingBreakdown(); track item.star) {
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-[#7A6A5A] w-12 shrink-0">{{ item.star }} sao</span>
+            <div class="flex-1 h-2 rounded-full overflow-hidden" style="background:#EDE5D8;">
+              <div class="h-full rounded-full transition-all" style="background:#F59E0B;" [style.width.%]="item.percent"></div>
+            </div>
+            <span class="text-sm text-[#7A6A5A] w-8 text-right shrink-0">{{ item.count }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Form viết đánh giá -->
+    <div class="mb-10 rounded-lg p-6" style="background:#FAF7F3; border:1px solid #EDE5D8;">
+      <h3 class="font-semibold text-[#2C1A0E] mb-4">Viết đánh giá của bạn</h3>
+
+      @if (!isLoggedIn()) {
+        <div class="text-center py-6">
+          <i class="fas fa-lock text-2xl text-[#C8572C] mb-3"></i>
+          <p class="text-[#5A4A3A] text-sm mb-4">Bạn cần đăng nhập để viết nhận xét và đánh giá sản phẩm.</p>
+          <button type="button" (click)="goToLogin()" class="btn-primary" style="padding:10px 24px; font-size:0.85rem;">
+            <i class="fas fa-sign-in-alt mr-2"></i> Đăng nhập để đánh giá
+          </button>
+        </div>
+      } @else if (alreadyReviewed()) {
+        <div class="text-center py-4">
+          <i class="fas fa-check-circle text-2xl text-green-600 mb-2"></i>
+          <p class="text-[#5A4A3A] text-sm">Bạn đã đánh giá sản phẩm này. Cảm ơn bạn!</p>
+        </div>
+      } @else {
+        @if (reviewMessage()) {
+          <div class="mb-4 px-4 py-3 rounded text-sm"
+            [style.background]="reviewError() ? '#FEE2E2' : '#DCFCE7'"
+            [style.color]="reviewError() ? '#B91C1C' : '#166534'"
+            [style.border]="reviewError() ? '1px solid #FECACA' : '1px solid #BBF7D0'">
+            {{ reviewMessage() }}
+          </div>
+        }
+
+        <div class="mb-4">
+          <label class="block text-sm text-[#7A6A5A] mb-2">Chọn số sao <span class="text-[#C8572C]">*</span></label>
+          <div class="flex gap-1 text-2xl">
+            @for (star of getStars(); track star) {
+              <button type="button" (click)="setReviewRating(star)" class="transition hover:scale-110"
+                [class.text-[#F59E0B]]="isReviewStarFilled(star)"
+                [class.text-[#D1C4B0]]="!isReviewStarFilled(star)">
+                <i class="fas fa-star"></i>
+              </button>
+            }
+            <span class="text-sm text-[#7A6A5A] ml-2 self-center">{{ reviewRating() }}/5</span>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm text-[#7A6A5A] mb-2">Nhận xét của bạn</label>
+          <textarea
+            rows="4"
+            placeholder="Chia sẻ trải nghiệm về sản phẩm..."
+            class="w-full rounded px-3 py-2 text-sm resize-none"
+            style="border:1px solid #EDE5D8; background:white; color:#2C1A0E;"
+            [ngModel]="reviewText()"
+            (ngModelChange)="reviewText.set($event)"></textarea>
+        </div>
+
+        <button type="button" (click)="submitReview()" [disabled]="submittingReview()"
+          class="btn-primary" style="padding:10px 24px; font-size:0.85rem;"
+          [style.opacity]="submittingReview() ? '0.7' : '1'">
+          @if (submittingReview()) {
+            <i class="fas fa-spinner fa-spin mr-2"></i> Đang gửi...
+          } @else {
+            <i class="fas fa-paper-plane mr-2"></i> Gửi đánh giá
+          }
+        </button>
+      }
+    </div>
+
+    <!-- Danh sách nhận xét -->
+    @if (product()?.reviews?.length > 0) {
+      <div class="space-y-0">
+        @for (review of product().reviews; track review.id) {
+          <div class="flex gap-4 py-6" style="border-bottom:1px solid #EDE5D8;">
+            <!-- Avatar -->
+            <div class="shrink-0">
+              @if (review.reviewer?.avatar_url) {
+                <img [src]="getAvatarUrl(review.reviewer.avatar_url)" [alt]="getReviewerName(review)"
+                  class="rounded-full object-cover" style="width:48px; height:48px; border:1px solid #EDE5D8;" />
+              } @else {
+                <div class="rounded-full flex items-center justify-center font-semibold text-sm"
+                  style="width:48px; height:48px; background:#C8572C; color:white;">
+                  {{ getReviewerInitials(review) }}
+                </div>
+              }
+            </div>
+
+            <!-- Nội dung -->
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2 mb-1">
+                <span class="font-semibold text-[#2C1A0E]">{{ getReviewerName(review) }}</span>
+                @if (review.created_at) {
+                  <span class="text-xs text-[#7A6A5A]">{{ review.created_at | date:'dd/MM/yyyy' }}</span>
+                }
+              </div>
+              <div class="flex text-[#F59E0B] text-xs mb-2">
+                @for (star of getStars(); track star) {
+                  @if (getStarType(star, review.rating) === 'full') {
+                    <i class="fas fa-star"></i>
+                  } @else if (getStarType(star, review.rating) === 'half') {
+                    <i class="fas fa-star-half-alt"></i>
+                  } @else {
+                    <i class="far fa-star"></i>
+                  }
+                }
+              </div>
+              @if (review.review_text) {
+                <p class="text-[#5A4A3A] text-sm leading-relaxed">{{ review.review_text }}</p>
+              } @else {
+                <p class="text-[#7A6A5A] text-sm italic">Khách hàng đã đánh giá sản phẩm.</p>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="text-center py-12 rounded-lg" style="background:#FAF7F3; border:1px solid #EDE5D8;">
+        <i class="far fa-comment-dots text-4xl text-[#D1C4B0] mb-3"></i>
+        <p class="text-[#7A6A5A] text-sm">Chưa có đánh giá nào cho sản phẩm này.</p>
+        <p class="text-[#7A6A5A] text-xs mt-1">Hãy là người đầu tiên chia sẻ trải nghiệm sau khi mua hàng!</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ===== SECTION 3: Brewing Guide (Dark banner) ===== -->
+<section class="banner-dark">
+  <div class="container mx-auto px-6 py-14" style="max-width:1200px; text-align:center;">
+    <h2 class="font-heading" style="font-size:1.5rem; font-weight:700; color:white; margin-bottom:8px;">
+      Hướng dẫn pha chế Phin truyền thống
+    </h2>
+    <p style="color:#D1C4B0; font-size:0.85rem; margin-bottom:40px;">Trải nghiệm cà phê đúng cách với 4 bước đơn giản</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Step 1 -->
+      <div style="text-align:center;">
+        <div style="width:48px; height:48px; border-radius:50%; background:#C8572C; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-weight:700; color:white; font-size:0.85rem;">
+          BƯỚC 1
+        </div>
+        <p style="color:#EDE5D8; font-size:0.8rem; line-height:1.6;">
+          Cho 3 muỗng (khoảng 25g) cà phê vào phin, nén vừa phải.
+        </p>
+      </div>
+      <!-- Step 2 -->
+      <div style="text-align:center;">
+        <div style="width:48px; height:48px; border-radius:50%; background:#C8572C; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-weight:700; color:white; font-size:0.85rem;">
+          BƯỚC 2
+        </div>
+        <p style="color:#EDE5D8; font-size:0.8rem; line-height:1.6;">
+          Làm ẩm cà phê với một ít nước nóng, đợi khoảng 30 giây.
+        </p>
+      </div>
+      <!-- Step 3 -->
+      <div style="text-align:center;">
+        <div style="width:48px; height:48px; border-radius:50%; background:#C8572C; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-weight:700; color:white; font-size:0.85rem;">
+          BƯỚC 3
+        </div>
+        <p style="color:#EDE5D8; font-size:0.8rem; line-height:1.6;">
+          Đổng thêm nước nóng 90-95°C, nhấn nhẹ phin, chờ 5 phút để nhỏ giọt.
+        </p>
+      </div>
+      <!-- Step 4 -->
+      <div style="text-align:center;">
+        <div style="width:48px; height:48px; border-radius:50%; background:#C8572C; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-weight:700; color:white; font-size:0.85rem;">
+          BƯỚC 4
+        </div>
+        <p style="color:#EDE5D8; font-size:0.8rem; line-height:1.6;">
+          Thêm sữa đặc hoặc đường, khuấy đều. Thưởng thức nóng hoặc thêm đá.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 4: Related Products ===== -->
+<section style="background:#F5F0EA;">
+  <div class="container mx-auto px-6 py-12" style="max-width:1200px;">
+
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="font-heading" style="font-size:1.4rem; font-weight:700; color:#2C1A0E;">Sản phẩm liên quan</h2>
+      @if (product()?.category?.id) {
+        <a [routerLink]="['/category', product()?.category?.id]" class="text-sm text-[#C8572C] hover:underline font-medium">
+          Xem tất cả <i class="fas fa-arrow-right ml-1 text-xs"></i>
+        </a>
+      }
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      @for (p of products_related(); track p.id) {
+        <a [routerLink]="['/product', p.id]" class="product-card block border border-[#EDE5D8]">
+          <!-- Image -->
+          <div style="background:white; padding:20px; text-align:center; height:200px; display:flex; align-items:center; justify-content:center;">
+            @if (p.images?.length > 0) {
+              <img [src]="site.getPrimaryImage(p)" [alt]="p.name" style="max-height:100%; max-width:100%; object-fit:contain;" />
+            } @else {
+              <div style="width:100%; height:100%; background:#FAF7F3; display:flex; align-items:center; justify-content:center; border-radius:4px;">
+                <i class="fas fa-coffee text-4xl text-[#C8572C] opacity-40"></i>
+              </div>
+            }
+          </div>
+          <!-- Info -->
+          <div class="p-4" style="background:#FAF7F3; border-top:1px solid #EDE5D8;">
+            <h3 style="font-size:0.85rem; font-weight:600; color:#2C1A0E; line-height:1.4; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.5em;">
+              {{p.name}}
+            </h3>
+            <span class="price-new">{{p.fixed_price | number:'1.0-0':'vi'}} VNĐ</span>
+          </div>
+        </a>
+      }
+    </div>
+
+  </div>
+</section>

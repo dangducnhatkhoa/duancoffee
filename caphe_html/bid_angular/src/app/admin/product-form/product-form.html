@@ -1,0 +1,204 @@
+@if (loading()) {
+  <p class="text-center py-20 text-gray-400"><i class="fas fa-spinner fa-spin"></i></p>
+} @else {
+<div class="admin-page-card">
+  <div class="admin-page-header">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-800">{{ isEdit ? 'Sửa sản phẩm' : 'Thêm sản phẩm' }}</h2>
+      <a routerLink="/admin/product" class="text-sm text-blue-600 hover:underline">← Quay lại danh sách</a>
+    </div>
+  </div>
+
+  @if (submitted() && formError()) {
+    <div class="form-error-banner">
+      <i class="fas fa-exclamation-circle"></i> {{ formError() }}
+    </div>
+  }
+
+  <form (ngSubmit)="onSubmit()" class="prod-form-grid" novalidate>
+  <!-- Cột trái -->
+  <div class="space-y-4">
+    <div class="prod-form-section">
+      <h3>Thông tin cơ bản</h3>
+      <label class="prod-label">Tên sản phẩm *</label>
+      <input class="prod-input" [class.input-invalid]="errors()['name']" [(ngModel)]="form.name" name="name" maxlength="255" (input)="clearError('name')" required>
+      @if (errors()['name']) {
+        <p class="form-error">{{ errors()['name'] }}</p>
+      }
+
+      <label class="prod-label">Mã sản phẩm</label>
+      <input class="prod-input" [class.input-invalid]="errors()['product_code']" [(ngModel)]="form.product_code" name="product_code" maxlength="50" placeholder="Tự sinh nếu để trống" (input)="clearError('product_code')">
+      @if (errors()['product_code']) {
+        <p class="form-error">{{ errors()['product_code'] }}</p>
+      }
+
+      <label class="prod-label">Mô tả ngắn</label>
+      <input class="prod-input" [class.input-invalid]="errors()['short_description']" [(ngModel)]="form.short_description" name="short_description" maxlength="500" (input)="clearError('short_description')">
+      <p class="form-hint">{{ (form.short_description || '').length }}/500 ký tự</p>
+      @if (errors()['short_description']) {
+        <p class="form-error">{{ errors()['short_description'] }}</p>
+      }
+
+      <label class="prod-label">Mô tả chi tiết</label>
+      <textarea class="prod-input" [class.input-invalid]="errors()['description']" rows="5" [(ngModel)]="form.description" name="description" maxlength="10000" (input)="clearError('description')"></textarea>
+      <p class="form-hint">{{ (form.description || '').length }}/10000 ký tự</p>
+      @if (errors()['description']) {
+        <p class="form-error">{{ errors()['description'] }}</p>
+      }
+    </div>
+
+    <div class="prod-form-section">
+      <h3>Giá & Khuyến mãi</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="prod-label">Giá bán (đ) *</label>
+          <input type="number" class="prod-input" [class.input-invalid]="errors()['fixed_price']" [(ngModel)]="form.fixed_price" name="fixed_price" min="1" step="1" required (input)="clearError('fixed_price')">
+          @if (errors()['fixed_price']) {
+            <p class="form-error">{{ errors()['fixed_price'] }}</p>
+          }
+        </div>
+        <div>
+          <label class="prod-label">Giá khuyến mãi (đ)</label>
+          <input type="number" class="prod-input" [class.input-invalid]="errors()['sale_price']" [(ngModel)]="form.sale_price" name="sale_price" min="0" step="1" (input)="clearError('sale_price')">
+          @if (errors()['sale_price']) {
+            <p class="form-error">{{ errors()['sale_price'] }}</p>
+          }
+        </div>
+      </div>
+      @if (discountPercent() > 0) {
+        <p class="text-sm text-red-600 mt-2">Giảm {{ discountPercent() }}%</p>
+      }
+      <div class="grid grid-cols-2 gap-3 mt-3">
+        <div>
+          <label class="prod-label">KM bắt đầu</label>
+          <input type="datetime-local" class="prod-input" [class.input-invalid]="errors()['promo_start']" [(ngModel)]="form.promo_start" name="promo_start" (input)="clearError('promo_start')">
+          @if (errors()['promo_start']) {
+            <p class="form-error">{{ errors()['promo_start'] }}</p>
+          }
+        </div>
+        <div>
+          <label class="prod-label">KM kết thúc</label>
+          <input type="datetime-local" class="prod-input" [class.input-invalid]="errors()['promo_end']" [(ngModel)]="form.promo_end" name="promo_end" (input)="clearError('promo_end')">
+          @if (errors()['promo_end']) {
+            <p class="form-error">{{ errors()['promo_end'] }}</p>
+          }
+        </div>
+      </div>
+      <p class="form-hint">Nếu nhập giá khuyến mãi, cần nhập đầy đủ thời gian khuyến mãi.</p>
+    </div>
+
+    <div class="prod-form-section">
+      <h3>Hình ảnh *</h3>
+      <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple (change)="onFilesSelected($event)" class="prod-input" [class.input-invalid]="errors()['images']">
+      <p class="form-hint">Chọn nhiều ảnh (JPEG, PNG, WebP, GIF — tối đa 5MB/ảnh, tối đa 10 ảnh)</p>
+      @if (errors()['images']) {
+        <p class="form-error">{{ errors()['images'] }}</p>
+      }
+
+      @if (isEdit && existingImages().length) {
+        <div class="prod-image-grid mt-3">
+          @for (img of existingImages(); track img.id) {
+            <div class="prod-image-item" [class.primary]="img.display_order === 1">
+              <img [src]="imageUrl(img.image_url)" alt="">
+              <div class="prod-image-actions">
+                @if (img.display_order !== 1) {
+                  <button type="button" (click)="setPrimary(img.id)" title="Đặt ảnh đại diện"><i class="fas fa-star"></i></button>
+                } @else {
+                  <span class="text-yellow-500 text-xs"><i class="fas fa-star"></i></span>
+                }
+                <button type="button" class="text-red-500" (click)="deleteImage(img.id)"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      @if (newPreviews().length) {
+        <div class="prod-image-grid mt-3">
+          @for (preview of newPreviews(); track $index) {
+            <div class="prod-image-item new">
+              <img [src]="preview" alt="">
+              <button type="button" class="prod-remove-new" (click)="removeNewFile($index)"><i class="fas fa-times"></i></button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Cột phải -->
+  <div class="space-y-4">
+    <div class="prod-form-section">
+      <h3>Phân loại</h3>
+      <label class="prod-label">Danh mục *</label>
+      <select class="prod-input" [class.input-invalid]="errors()['category_id']" [(ngModel)]="form.category_id" name="category_id" required (change)="clearError('category_id')">
+        <option value="">-- Chọn danh mục --</option>
+        @for (c of categories(); track c.id) {
+          <option [value]="c.id">{{ c.name }}</option>
+        }
+      </select>
+      @if (errors()['category_id']) {
+        <p class="form-error">{{ errors()['category_id'] }}</p>
+      }
+
+      <label class="prod-label">Thương hiệu</label>
+      <select class="prod-input" [class.input-invalid]="errors()['brand_id']" [(ngModel)]="form.brand_id" name="brand_id" (change)="clearError('brand_id')">
+        <option value="">-- Không chọn --</option>
+        @for (b of brands(); track b.id) {
+          <option [value]="b.id">{{ b.name }}</option>
+        }
+      </select>
+      @if (errors()['brand_id']) {
+        <p class="form-error">{{ errors()['brand_id'] }}</p>
+      }
+    </div>
+
+    <div class="prod-form-section">
+      <h3>Tồn kho</h3>
+      <label class="prod-label">Số lượng tồn kho</label>
+      <input type="number" class="prod-input" [class.input-invalid]="errors()['stock']" [(ngModel)]="form.stock" name="stock" min="0" step="1" (input)="clearError('stock')">
+      @if (errors()['stock']) {
+        <p class="form-error">{{ errors()['stock'] }}</p>
+      }
+      @if (form.stock <= 10 && form.stock > 0) {
+        <p class="text-xs text-yellow-600 mt-1"><i class="fas fa-exclamation-triangle"></i> Sắp hết hàng</p>
+      }
+      @if (form.stock === 0) {
+        <p class="text-xs text-red-600 mt-1">Hết hàng</p>
+      }
+    </div>
+
+    <div class="prod-form-section">
+      <h3>Trạng thái</h3>
+      <label class="prod-label">Trạng thái kinh doanh</label>
+      <select class="prod-input" [class.input-invalid]="errors()['status']" [(ngModel)]="form.status" name="status" (change)="clearError('status')">
+        @for (s of statusOptions; track s.value) {
+          <option [value]="s.value">{{ s.label }}</option>
+        }
+      </select>
+      @if (errors()['status']) {
+        <p class="form-error">{{ errors()['status'] }}</p>
+      }
+
+      <label class="prod-label mt-3">Hiển thị trên shop</label>
+      <div class="flex gap-4 mt-1">
+        <label class="flex items-center gap-2">
+          <input type="radio" name="featured" [value]="true" [(ngModel)]="form.featured"> Hiển thị
+        </label>
+        <label class="flex items-center gap-2">
+          <input type="radio" name="featured" [value]="false" [(ngModel)]="form.featured"> Ẩn
+        </label>
+      </div>
+    </div>
+
+    <div class="flex gap-3 pt-4">
+      <button type="submit" class="admin-btn-primary flex-1" [disabled]="saving()">
+        @if (saving()) { <i class="fas fa-spinner fa-spin"></i> } @else { <i class="fas fa-save"></i> }
+        {{ isEdit ? 'Cập nhật' : 'Thêm sản phẩm' }}
+      </button>
+      <a routerLink="/admin/product" class="px-4 py-2 border rounded-lg text-center">Hủy</a>
+    </div>
+  </div>
+  </form>
+</div>
+}

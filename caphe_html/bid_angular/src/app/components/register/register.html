@@ -1,0 +1,129 @@
+<!-- ===== REGISTER PAGE - KING COFFEE ===== -->
+<section class="register-page" style="min-height:100vh; background:#FAF7F3; display:flex; align-items:center; justify-content:center; padding:60px 20px;">
+
+  <div style="max-width:960px; width:100%; background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 8px 40px rgba(44,26,14,0.08); display:flex; min-height:580px;">
+
+    <!-- LEFT: Hero Image -->
+    <div style="width:40%; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end;" class="register-hero">
+      <!-- Background image -->
+      <div style="position:absolute; inset:0; background: linear-gradient(135deg, #8B4513 0%, #C8572C 50%, #A0522D 100%); z-index:0;"></div>
+      <!-- Overlay pattern -->
+      <div style="position:absolute; inset:0; background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22><circle cx=%2230%22 cy=%2230%22 r=%221%22 fill=%22rgba(255,255,255,0.05)%22/></svg>') repeat; z-index:1;"></div>
+      <!-- Content -->
+      <div style="position:relative; z-index:2; padding:40px 30px;">
+        <h2 style="font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:#fff; line-height:1.2; margin-bottom:16px;">
+          Gia nhập Vương quốc
+        </h2>
+        <p style="color:rgba(255,255,255,0.8); font-size:0.875rem; line-height:1.6; margin-bottom:24px;">
+          Trở thành thành viên của King Coffee để nhận được những ưu đãi đặc biệt và trải nghiệm hương vị di sản mỗi ngày.
+        </p>
+        <div style="display:flex; gap:12px;">
+          <div style="width:36px; height:36px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+            <i class="fas fa-crown" style="color:#FFD700; font-size:14px;"></i>
+          </div>
+          <div style="width:36px; height:36px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+            <i class="fas fa-coffee" style="color:#FFD700; font-size:14px;"></i>
+          </div>
+          <div style="width:36px; height:36px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+            <i class="fas fa-gift" style="color:#FFD700; font-size:14px;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Form -->
+    <div style="flex:1; padding:40px 48px; display:flex; flex-direction:column; justify-content:center;">
+      <h1 style="font-family:'Playfair Display',serif; font-size:1.75rem; font-weight:700; color:#2C1A0E; margin-bottom:8px;">
+        Tạo tài khoản mới
+      </h1>
+      <p style="color:#7A6A5A; font-size:0.85rem; margin-bottom:28px;">
+        Bắt đầu hành trình cà phê của bạn với chúng tôi ngay hôm nay.
+      </p>
+
+      <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+
+        <!-- Row: Name & Phone -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+          <div>
+            <label style="display:block; font-size:0.7rem; font-weight:600; color:#5A4A3A; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">HỌ VÀ TÊN</label>
+            <input type="text" name="full_name" [(ngModel)]="data.full_name" #full_name="ngModel" required minlength="6"
+              placeholder="Nguyễn Văn A"
+              style="width:100%; padding:12px 16px; border:1px solid #EDE5D8; border-radius:8px; font-size:0.875rem; color:#2C1A0E; background:#FAF7F3; outline:none; transition:border 0.2s;"
+              onfocus="this.style.borderColor='#C8572C'" onblur="this.style.borderColor='#EDE5D8'">
+            <div *ngIf="full_name.invalid && full_name.touched" style="color:#e3000f; font-size:0.7rem; margin-top:4px;">
+              <span *ngIf="full_name.errors?.['required']">Vui lòng nhập họ và tên.</span>
+              <span *ngIf="full_name.errors?.['minlength']">Tối thiểu 6 ký tự.</span>
+            </div>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.7rem; font-weight:600; color:#5A4A3A; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">SỐ ĐIỆN THOẠI</label>
+            <input type="tel" name="phone" [(ngModel)]="data.phone" #phone="ngModel"
+              placeholder="+84 123 456 789"
+              style="width:100%; padding:12px 16px; border:1px solid #EDE5D8; border-radius:8px; font-size:0.875rem; color:#2C1A0E; background:#FAF7F3; outline:none; transition:border 0.2s;"
+              onfocus="this.style.borderColor='#C8572C'" onblur="this.style.borderColor='#EDE5D8'">
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div style="margin-bottom:16px;">
+          <label style="display:block; font-size:0.7rem; font-weight:600; color:#5A4A3A; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">ĐỊA CHỈ EMAIL</label>
+          <input type="email" name="email" [(ngModel)]="data.email" #email="ngModel" required
+            placeholder="john@example.com"
+            style="width:100%; padding:12px 16px; border:1px solid #EDE5D8; border-radius:8px; font-size:0.875rem; color:#2C1A0E; background:#FAF7F3; outline:none; transition:border 0.2s;"
+            onfocus="this.style.borderColor='#C8572C'" onblur="this.style.borderColor='#EDE5D8'">
+          <div *ngIf="email.invalid && email.touched" style="color:#e3000f; font-size:0.7rem; margin-top:4px;">
+            Vui lòng nhập email hợp lệ.
+          </div>
+        </div>
+
+        <!-- Row: Password & Confirm -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+          <div>
+            <label style="display:block; font-size:0.7rem; font-weight:600; color:#5A4A3A; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">MẬT KHẨU</label>
+            <input type="password" id="password" name="password" [(ngModel)]="data.password" #password="ngModel" required
+              placeholder="••••••••"
+              style="width:100%; padding:12px 16px; border:1px solid #EDE5D8; border-radius:8px; font-size:0.875rem; color:#2C1A0E; background:#FAF7F3; outline:none; transition:border 0.2s;"
+              onfocus="this.style.borderColor='#C8572C'" onblur="this.style.borderColor='#EDE5D8'">
+            <div *ngIf="password.invalid && password.touched" style="color:#e3000f; font-size:0.7rem; margin-top:4px;">
+              Vui lòng nhập mật khẩu.
+            </div>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.7rem; font-weight:600; color:#5A4A3A; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">XÁC NHẬN MẬT KHẨU</label>
+            <input type="password" id="confirm_password" name="confirm_password" [(ngModel)]="data.confirm_password" #confirmPassword="ngModel" required
+              placeholder="••••••••"
+              style="width:100%; padding:12px 16px; border:1px solid #EDE5D8; border-radius:8px; font-size:0.875rem; color:#2C1A0E; background:#FAF7F3; outline:none; transition:border 0.2s;"
+              onfocus="this.style.borderColor='#C8572C'" onblur="this.style.borderColor='#EDE5D8'">
+            <div *ngIf="data.confirm_password && data.confirm_password !== data.password" style="color:#e3000f; font-size:0.7rem; margin-top:4px;">
+              Mật khẩu không khớp.
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:24px;">
+          <input type="checkbox" id="terms" style="width:16px; height:16px; accent-color:#C8572C; cursor:pointer;">
+          <label for="terms" style="font-size:0.8rem; color:#5A4A3A; cursor:pointer;">
+            Tôi đồng ý với các <a routerLink="/" style="color:#C8572C; font-weight:600; text-decoration:none;">Điều khoản & Chính sách</a> của King Coffee.
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit"
+          [disabled]="registerForm.invalid || data.confirm_password !== data.password"
+          style="width:100%; padding:14px; background:#C8572C; color:#fff; font-weight:700; font-size:0.9rem; border:none; border-radius:8px; cursor:pointer; transition:all 0.3s; letter-spacing:0.5px;"
+          onmouseover="this.style.background='#A85131'" onmouseout="this.style.background='#C8572C'"
+          class="disabled:opacity-60 disabled:cursor-not-allowed">
+          Tạo tài khoản ngay
+        </button>
+      </form>
+
+      <!-- Link to login -->
+      <p style="text-align:center; margin-top:24px; font-size:0.85rem; color:#7A6A5A;">
+        Đã có tài khoản? <a routerLink="/users/login" style="color:#C8572C; font-weight:700; text-decoration:none;">Đăng nhập ngay</a>
+      </p>
+    </div>
+
+  </div>
+
+</section>

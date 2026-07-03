@@ -1,0 +1,65 @@
+@import '../admin-styles.css';
+
+.prod-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.prod-stat-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid #eee;
+}
+
+.prod-stat-card .label { font-size: 12px; color: #888; margin-bottom: 4px; }
+.prod-stat-card .value { font-size: 22px; font-weight: 700; color: #1a1a1a; }
+.prod-stat-card.warn .value { color: #d97706; }
+.prod-stat-card.danger .value { color: #dc2626; }
+
+.prod-tab {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.prod-tab.active { background: #2c1a0e; color: #fff; }
+
+.prod-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.prod-filter-input, .prod-filter-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  min-width: 140px;
+}
+
+.badge { padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+.badge-green { background: #dcfce7; color: #166534; }
+.badge-red { background: #fee2e2; color: #991b1b; }
+.badge-yellow { background: #fef3c7; color: #92400e; }
+.badge-gray { background: #f3f4f6; color: #6b7280; }
+
+.row-low-stock { background: #fffbeb; }
+.row-out-stock { background: #fef2f2; }
+
+.prod-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+
+.prod-modal {
+  background: #fff; border-radius: 12px; padding: 24px;
+  width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
