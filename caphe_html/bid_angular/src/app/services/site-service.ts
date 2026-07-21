@@ -22,6 +22,11 @@ export class SiteService {
         return await firstValueFrom(this.http.get(`${BASE_API}products/featured?limit=${limit}`));
     }
 
+    // Lấy danh sách sản phẩm xem nhiều nhất (phổ biến)
+    async getPopularProducts(limit = 5): Promise<any> {
+        return await firstValueFrom(this.http.get(`${BASE_API}products?sort=popular&limit=${limit}`));
+    }
+
     // Lấy danh sách sản phẩm đang đấu giá
     async getAuctionProducts( limit= 6): Promise<any> {
         return await firstValueFrom(this.http.get(`${BASE_API}products/auction?limit=${limit}`));

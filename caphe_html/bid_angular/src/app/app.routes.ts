@@ -24,7 +24,6 @@ import { MomoPaymentComponent } from './components/momo-payment/momo-payment';
 import { SepayPayment } from './components/sepay-payment/sepay-payment';
 import { adminRoutes } from './admin/admin.routes';
 
-import { newsDetailGuard } from './news-detail.guard'; // wait, no need for guard
 import { SupportComponent } from './components/support/support';
 
 export const routes: Routes = [

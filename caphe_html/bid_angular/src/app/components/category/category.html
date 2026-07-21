@@ -33,6 +33,11 @@
     <!-- Sidebar / Filters -->
     <aside class="w-full lg:w-1/4">
       
+      <div class="flex items-center justify-between mb-6 pb-2 border-b border-[#EDE5D8]">
+        <span class="font-bold text-[#2C1A0E] text-sm tracking-wider uppercase">Bộ lọc tìm kiếm</span>
+        <button (click)="clearFilters()" *ngIf="selectedBrands().length > 0 || selectedCategories().length > 0 || selectedPrice() !== '' || selectedRating() !== null" class="text-xs text-[#C8572C] hover:underline font-semibold cursor-pointer">Xóa tất cả</button>
+      </div>
+
       <!-- Filter: Danh mục -->
       <div class="filter-group">
         <h3 class="filter-title">Lọc theo danh mục</h3>
@@ -169,14 +174,14 @@
           <ul class="flex items-center space-x-2">
             <!-- First/Prev -->
             <li>
-              <a [routerLink]="['/category', category().id]" [queryParams]="{ page: 1 }"
+              <a [routerLink]="['/category', category().id]" [queryParams]="{ page: 1 }" queryParamsHandling="merge"
                  class="w-8 h-8 flex items-center justify-center rounded border border-[#D1C4B0] text-[#7A6A5A] hover:border-[#C8572C] hover:text-[#C8572C] transition"
                  [class.opacity-50]="page() === 1" [class.pointer-events-none]="page() === 1">
                 <i class="fas fa-angle-double-left text-xs"></i>
               </a>
             </li>
             <li>
-              <a [routerLink]="['/category', category().id]" [queryParams]="{ page: page() - 1 }"
+              <a [routerLink]="['/category', category().id]" [queryParams]="{ page: page() - 1 }" queryParamsHandling="merge"
                  class="w-8 h-8 flex items-center justify-center rounded border border-[#D1C4B0] text-[#7A6A5A] hover:border-[#C8572C] hover:text-[#C8572C] transition"
                  [class.opacity-50]="page() === 1" [class.pointer-events-none]="page() === 1">
                 <i class="fas fa-angle-left text-xs"></i>
@@ -186,7 +191,7 @@
             <!-- Numbers -->
             @for (p of pagesToShow(); track p) {
               <li>
-                <a [routerLink]="['/category', category().id]" [queryParams]="{ page: p }"
+                <a [routerLink]="['/category', category().id]" [queryParams]="{ page: p }" queryParamsHandling="merge"
                    class="w-8 h-8 flex items-center justify-center rounded font-medium text-sm transition"
                    [ngClass]="p === page() ? 'bg-[#C8572C] text-white border border-[#C8572C]' : 'bg-white text-[#2C1A0E] border border-[#D1C4B0] hover:border-[#C8572C] hover:text-[#C8572C]'">
                   {{p}}
@@ -196,14 +201,14 @@
             
             <!-- Next/Last -->
             <li>
-              <a [routerLink]="['/category', category().id]" [queryParams]="{ page: page() + 1 }"
+              <a [routerLink]="['/category', category().id]" [queryParams]="{ page: page() + 1 }" queryParamsHandling="merge"
                  class="w-8 h-8 flex items-center justify-center rounded border border-[#D1C4B0] text-[#7A6A5A] hover:border-[#C8572C] hover:text-[#C8572C] transition"
                  [class.opacity-50]="page() === totalPages()" [class.pointer-events-none]="page() === totalPages()">
                 <i class="fas fa-angle-right text-xs"></i>
               </a>
             </li>
             <li>
-              <a [routerLink]="['/category', category().id]" [queryParams]="{ page: totalPages() }"
+              <a [routerLink]="['/category', category().id]" [queryParams]="{ page: totalPages() }" queryParamsHandling="merge"
                  class="w-8 h-8 flex items-center justify-center rounded border border-[#D1C4B0] text-[#7A6A5A] hover:border-[#C8572C] hover:text-[#C8572C] transition"
                  [class.opacity-50]="page() === totalPages()" [class.pointer-events-none]="page() === totalPages()">
                 <i class="fas fa-angle-double-right text-xs"></i>

@@ -66,7 +66,7 @@ export class Category {
 
       this.route.queryParamMap.subscribe( params => {
         this.page.set(Number(params.get('page')) || 1);
-        this.sort = params.get('sort') || 'default';
+        this.sort = params.get('sort') || 'newest';
         
         const brandsParam = params.get('brands');
         this.selectedBrands.set(brandsParam ? brandsParam.split(',').map(Number) : []);
@@ -96,6 +96,43 @@ export class Category {
       }
   }
 
+  async navigateWithFilters() {
+    const queryParams: any = {
+      page: this.page(),
+      sort: this.sort
+    };
+    
+    if (this.selectedBrands().length > 0) {
+      queryParams.brands = this.selectedBrands().join(',');
+    } else {
+      queryParams.brands = null;
+    }
+    
+    if (this.selectedCategories().length > 0) {
+      queryParams.categories = this.selectedCategories().join(',');
+    } else {
+      queryParams.categories = null;
+    }
+    
+    if (this.selectedPrice()) {
+      queryParams.price = this.selectedPrice();
+    } else {
+      queryParams.price = null;
+    }
+    
+    if (this.selectedRating() !== null) {
+      queryParams.rating = this.selectedRating();
+    } else {
+      queryParams.rating = null;
+    }
+    
+    await this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge'
+    });
+  }
+
   toggleBrand(id: number) {
     const current = this.selectedBrands();
     if (current.includes(id)) {
@@ -104,7 +141,7 @@ export class Category {
       this.selectedBrands.set([...current, id]);
     }
     this.page.set(1);
-    this.loadProducts(); // Gọi trực tiếp, không qua router
+    this.navigateWithFilters();
   }
 
   toggleCategory(id: number) {
@@ -115,13 +152,21 @@ export class Category {
       this.selectedCategories.set([...current, id]);
     }
     this.page.set(1);
-    this.loadProducts(); // Gọi trực tiếp, không qua router
+    this.navigateWithFilters();
   }
 
   updateFilters() {
-    // Dùng cho giá, đánh giá, sắp xếp — vẫn cập nhật URL để pagination giữ đúng filter
     this.page.set(1);
-    this.loadProducts();
+    this.navigateWithFilters();
+  }
+
+  clearFilters() {
+    this.selectedBrands.set([]);
+    this.selectedCategories.set([]);
+    this.selectedPrice.set('');
+    this.selectedRating.set(null);
+    this.page.set(1);
+    this.navigateWithFilters();
   }
 
   pagesToShow() {

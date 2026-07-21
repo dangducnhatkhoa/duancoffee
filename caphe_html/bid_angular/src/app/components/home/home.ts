@@ -22,6 +22,7 @@ export class Home {
 
   category_arr = signal<ICategory[]>([]);
   featured_arr = signal<IProduct[]>([]);
+  popular_arr = signal<IProduct[]>([]);
   auction_arr = signal<any[]>([]);
   articles_arr = signal<any[]>([]);
 
@@ -63,6 +64,14 @@ export class Home {
 
     const resFeatured = await this.site.getFeaturedProducts(8);
     this.featured_arr.set((resFeatured.data || []) as IProduct[]);
+
+    // Tải danh sách sản phẩm xem nhiều nhất
+    try {
+      const resPopular = await this.site.getPopularProducts(5);
+      this.popular_arr.set((resPopular.data || []) as IProduct[]);
+    } catch (e) {
+      console.error('Error loading popular products:', e);
+    }
 
     // Load bài viết từ API
     try {
