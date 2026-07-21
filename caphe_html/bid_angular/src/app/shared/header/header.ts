@@ -41,10 +41,9 @@ export class Header {
 
 
   onSearch() {
-    if (this.keyword.trim()) {
-      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-        this.router.navigate(['/search'], { queryParams: { keyword: this.keyword } });
-      });
+    const q = this.keyword.trim();
+    if (q) {
+      this.router.navigate(['/search'], { queryParams: { keyword: q } });
     }
   } 
 
