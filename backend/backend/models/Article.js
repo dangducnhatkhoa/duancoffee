@@ -32,6 +32,14 @@ const Article = db.define('Article', {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },
+  luot_thich: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  luot_chia_se: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
   ngay_dang: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW

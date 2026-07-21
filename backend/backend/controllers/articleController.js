@@ -92,7 +92,7 @@ exports.adminGetArticleById = async (req, res) => {
 // Admin: Tạo mới bài viết
 exports.adminCreateArticle = async (req, res) => {
   try {
-    const { tieu_de, noi_dung, an_hien, id_loai_bai_viet } = req.body;
+    const { tieu_de, noi_dung, an_hien, id_loai_bai_viet, luot_xem, luot_thich, luot_chia_se } = req.body;
     let hinh = req.file ? req.file.filename : null;
 
     if (!tieu_de || !noi_dung) {
@@ -115,6 +115,9 @@ exports.adminCreateArticle = async (req, res) => {
       hinh,
       slug,
       id_loai_bai_viet: id_loai_bai_viet || null,
+      luot_xem: luot_xem !== undefined ? parseInt(luot_xem) : 0,
+      luot_thich: luot_thich !== undefined ? parseInt(luot_thich) : 0,
+      luot_chia_se: luot_chia_se !== undefined ? parseInt(luot_chia_se) : 0,
       an_hien: an_hien !== undefined ? (an_hien == 'true' || an_hien === true || an_hien == 1 ? 1 : 0) : 1,
       ngay_dang: new Date()
     });
@@ -130,7 +133,7 @@ exports.adminCreateArticle = async (req, res) => {
 exports.adminUpdateArticle = async (req, res) => {
   try {
     const { id } = req.params;
-    const { tieu_de, noi_dung, an_hien, id_loai_bai_viet } = req.body;
+    const { tieu_de, noi_dung, an_hien, id_loai_bai_viet, luot_xem, luot_thich, luot_chia_se } = req.body;
     
     const article = await Article.findByPk(id);
     if (!article) {
@@ -161,6 +164,9 @@ exports.adminUpdateArticle = async (req, res) => {
       hinh,
       slug,
       id_loai_bai_viet: id_loai_bai_viet !== undefined ? id_loai_bai_viet : article.id_loai_bai_viet,
+      luot_xem: luot_xem !== undefined ? parseInt(luot_xem) : article.luot_xem,
+      luot_thich: luot_thich !== undefined ? parseInt(luot_thich) : article.luot_thich,
+      luot_chia_se: luot_chia_se !== undefined ? parseInt(luot_chia_se) : article.luot_chia_se,
       an_hien: an_hien !== undefined ? (an_hien == 'true' || an_hien === true || an_hien == 1 ? 1 : 0) : article.an_hien
     });
 

@@ -1,0 +1,214 @@
+<div class="p-8">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-[#3E2723]">Quản Lý Bài Viết Trang Chủ</h1>
+      <p class="text-sm text-gray-500 mt-1">Danh sách tin tức và bài viết hiển thị trên trang chủ cửa hàng</p>
+    </div>
+    <a [routerLink]="['/articles/add']" class="bg-[#8D5B4C] text-white px-5 py-2.5 rounded-lg hover:bg-[#6D3E32] transition flex items-center gap-2 font-medium shadow-sm">
+      <i class="fas fa-plus"></i> Thêm Bài Viết Mới
+    </a>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-[#EDE5D8] flex items-center gap-4">
+      <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xl">
+        <i class="fas fa-newspaper"></i>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Tổng số bài viết</p>
+        <h3 class="text-2xl font-bold text-[#3E2723] mt-1">{{ totalArticles }}</h3>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-[#EDE5D8] flex items-center gap-4">
+      <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center text-xl">
+        <i class="fas fa-eye"></i>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Tổng lượt xem</p>
+        <h3 class="text-2xl font-bold text-[#3E2723] mt-1">{{ totalViews | number }}</h3>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-[#EDE5D8] flex items-center gap-4">
+      <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-lg flex items-center justify-center text-xl">
+        <i class="fas fa-fire"></i>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Xem nhiều nhất</p>
+        <h3 class="text-sm font-bold text-[#3E2723] mt-1 truncate" [title]="mostViewedArticleTitle">
+          {{ mostViewedArticleTitle }}
+        </h3>
+        <p class="text-xs text-gray-400 mt-0.5">{{ mostViewedArticleCount }} lượt xem</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="flex border-b border-[#EDE5D8] mb-6">
+    <button (click)="activeTab = 'list'" 
+            [class]="activeTab === 'list' ? 'border-[#8D5B4C] text-[#8D5B4C] font-bold border-b-2' : 'text-gray-500 hover:text-[#8D5B4C]'"
+            class="px-6 py-3 text-sm font-medium focus:outline-none transition">
+      <i class="fas fa-list mr-2"></i> Danh sách bài viết
+    </button>
+    <button (click)="activeTab = 'interactions'" 
+            [class]="activeTab === 'interactions' ? 'border-[#8D5B4C] text-[#8D5B4C] font-bold border-b-2' : 'text-gray-500 hover:text-[#8D5B4C]'"
+            class="px-6 py-3 text-sm font-medium focus:outline-none transition">
+      <i class="fas fa-chart-line mr-2"></i> Quản lý tương tác bài viết
+    </button>
+  </div>
+
+  <!-- Search & Filter Bar -->
+  <div class="bg-white p-4 rounded-xl shadow-sm border border-[#EDE5D8] mb-6 flex flex-wrap gap-4 items-center justify-between">
+    <div class="relative flex-1 max-w-md">
+      <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+      <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="search()" 
+             class="w-full pl-10 pr-4 py-2 bg-[#FAF7F3] border border-[#EDE5D8] rounded-lg text-sm focus:outline-none focus:border-[#8D5B4C]"
+             placeholder="Tìm bài viết theo tiêu đề hoặc nội dung...">
+    </div>
+    <button (click)="search()" class="bg-[#8D5B4C] text-white text-sm font-semibold px-6 py-2 rounded-lg hover:bg-[#6D3E32] transition">
+      Tìm kiếm
+    </button>
+  </div>
+
+  <!-- Tab 1: Danh sách bài viết -->
+  <div *ngIf="activeTab === 'list'" class="bg-white rounded-xl shadow-sm border border-[#EDE5D8] overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-[#FAF7F3] text-[#3E2723] font-semibold border-b border-[#EDE5D8]">
+          <tr>
+            <th class="px-6 py-4">Hình ảnh</th>
+            <th class="px-6 py-4">Tiêu đề bài viết</th>
+            <th class="px-6 py-4">Ngày đăng</th>
+            <th class="px-6 py-4 text-center">Lượt xem</th>
+            <th class="px-6 py-4 text-center">Trạng thái</th>
+            <th class="px-6 py-4 text-right">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#EDE5D8]">
+          <tr *ngFor="let article of articles" class="hover:bg-[#FAF7F3]/50 transition">
+            <td class="px-6 py-4">
+              <img [src]="getImageUrl(article.hinh)" [alt]="article.tieu_de" class="w-16 h-12 object-cover rounded border border-gray-200">
+            </td>
+            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+              <div class="line-clamp-2">{{ article.tieu_de }}</div>
+              <div class="text-xs text-gray-400 mt-1">Slug: {{ article.slug }}</div>
+            </td>
+            <td class="px-6 py-4 text-gray-600">
+              {{ article.ngay_dang | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+            <td class="px-6 py-4 text-center font-semibold text-gray-700">
+              {{ article.luot_xem || 0 }}
+            </td>
+            <td class="px-6 py-4 text-center">
+              <span [class]="article.an_hien ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                    class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                {{ article.an_hien ? 'Hiển thị' : 'Ẩn' }}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-2">
+                <a [routerLink]="['/articles/edit', article.id]" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Sửa bài viết">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <button (click)="deleteArticle(article.id)" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition" title="Xóa bài viết">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="articles.length === 0">
+            <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+              <i class="fas fa-newspaper text-4xl text-gray-300 mb-3 block"></i>
+              Chưa có bài viết nào. Bấm "Thêm Bài Viết Mới" để đăng bài hiển thị lên trang chủ!
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="p-4 border-t border-[#EDE5D8] flex items-center justify-between bg-[#FAF7F3]">
+      <span class="text-sm text-gray-600">Tổng cộng {{ totalArticles }} bài viết</span>
+      <div class="flex items-center gap-2">
+        <button (click)="prevPage()" [disabled]="page === 1" 
+                class="px-3 py-1.5 border border-[#EDE5D8] rounded text-sm disabled:opacity-50 hover:bg-white transition">
+          Trang trước
+        </button>
+        <span class="text-sm font-semibold px-2">Trang {{ page }} / {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="page >= totalPages" 
+                class="px-3 py-1.5 border border-[#EDE5D8] rounded text-sm disabled:opacity-50 hover:bg-white transition">
+          Trang sau
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Quản lý tương tác bài viết -->
+  <div *ngIf="activeTab === 'interactions'" class="bg-white rounded-xl shadow-sm border border-[#EDE5D8] overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-[#FAF7F3] text-[#3E2723] font-semibold border-b border-[#EDE5D8]">
+          <tr>
+            <th class="px-6 py-4">Hình ảnh</th>
+            <th class="px-6 py-4">Tiêu đề bài viết</th>
+            <th class="px-6 py-4 text-center" style="width: 130px;">Lượt xem</th>
+            <th class="px-6 py-4 text-center" style="width: 130px;">Lượt thích</th>
+            <th class="px-6 py-4 text-center" style="width: 130px;">Lượt chia sẻ</th>
+            <th class="px-6 py-4 text-right">Hành động</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#EDE5D8]">
+          <tr *ngFor="let article of articles" class="hover:bg-[#FAF7F3]/50 transition">
+            <td class="px-6 py-4">
+              <img [src]="getImageUrl(article.hinh)" [alt]="article.tieu_de" class="w-16 h-12 object-cover rounded border border-gray-200">
+            </td>
+            <td class="px-6 py-4 font-medium text-gray-900 max-w-xs">
+              <div class="line-clamp-2">{{ article.tieu_de }}</div>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <input type="number" [(ngModel)]="article.luot_xem" min="0"
+                     class="w-24 text-center px-2 py-1 bg-[#FAF7F3] border border-[#EDE5D8] rounded focus:outline-none focus:border-[#8D5B4C] text-sm">
+            </td>
+            <td class="px-6 py-4 text-center">
+              <input type="number" [(ngModel)]="article.luot_thich" min="0"
+                     class="w-24 text-center px-2 py-1 bg-[#FAF7F3] border border-[#EDE5D8] rounded focus:outline-none focus:border-[#8D5B4C] text-sm">
+            </td>
+            <td class="px-6 py-4 text-center">
+              <input type="number" [(ngModel)]="article.luot_chia_se" min="0"
+                     class="w-24 text-center px-2 py-1 bg-[#FAF7F3] border border-[#EDE5D8] rounded focus:outline-none focus:border-[#8D5B4C] text-sm">
+            </td>
+            <td class="px-6 py-4 text-right">
+              <button (click)="updateEngagement(article)" class="bg-[#8D5B4C] hover:bg-[#6D3E32] text-white text-xs px-3.5 py-2 rounded font-semibold transition flex items-center gap-1.5 ml-auto">
+                <i class="fas fa-save"></i> Cập nhật
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="articles.length === 0">
+            <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+              Chưa có bài viết nào để quản lý tương tác.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="p-4 border-t border-[#EDE5D8] flex items-center justify-between bg-[#FAF7F3]">
+      <span class="text-sm text-gray-600">Tổng cộng {{ totalArticles }} bài viết</span>
+      <div class="flex items-center gap-2">
+        <button (click)="prevPage()" [disabled]="page === 1" 
+                class="px-3 py-1.5 border border-[#EDE5D8] rounded text-sm disabled:opacity-50 hover:bg-white transition">
+          Trang trước
+        </button>
+        <span class="text-sm font-semibold px-2">Trang {{ page }} / {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="page >= totalPages" 
+                class="px-3 py-1.5 border border-[#EDE5D8] rounded text-sm disabled:opacity-50 hover:bg-white transition">
+          Trang sau
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,49 +1,51 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { AdminService } from '../services/admin-service';
+import { firstValueFrom } from 'rxjs';
+import { BASE_API } from '../cauhinh';
 
 @Component({
-  selector: 'app-admin-article-list',
+  selector: 'app-article-list',
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './article-list.html',
 })
-export class AdminArticleList implements OnInit {
+export class ArticleList implements OnInit {
   articles: any[] = [];
   searchQuery: string = '';
   page: number = 1;
   limit: number = 10;
   totalPages: number = 1;
   totalArticles: number = 0;
-
-  activeTab: 'list' | 'interactions' = 'list';
   totalViews: number = 0;
   mostViewedArticleTitle: string = 'N/A';
   mostViewedArticleCount: number = 0;
 
-  constructor(
-    private adminService: AdminService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(private http: HttpClient) {}
 
   async ngOnInit() {
     await this.loadArticles();
   }
 
   async loadArticles() {
+    const token = localStorage.getItem('token') || '';
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
     try {
-      const res = await this.adminService.getArticles(this.page, this.limit, this.searchQuery);
+      const res: any = await firstValueFrom(
+        this.http.get(`${BASE_API}admin/articles?search=${encodeURIComponent(this.searchQuery)}&page=${this.page}&limit=${this.limit}`, { headers })
+      );
       if (res && res.success) {
         this.articles = res.data || [];
         this.totalArticles = res.pagination?.total || 0;
         this.totalPages = res.pagination?.totalPages || 1;
         
-        // Calculate statistics
+        // Tính toán lượt xem và tương tác
         this.calculateStats();
-        this.cdr.detectChanges();
       }
     } catch (error) {
       console.error('Error loading articles:', error);
@@ -64,12 +66,19 @@ export class AdminArticleList implements OnInit {
   }
 
   async deleteArticle(id: number) {
-    if (!confirm('Bạn có chắc chắn muốn xóa bài viết này?')) {
+    if (!confirm('Bạn có chắc chắn muốn xóa bài viết này khỏi trang chủ?')) {
       return;
     }
 
+    const token = localStorage.getItem('token') || '';
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
     try {
-      const res = await this.adminService.deleteArticle(id);
+      const res: any = await firstValueFrom(
+        this.http.delete(`${BASE_API}admin/articles/${id}`, { headers })
+      );
       if (res && res.success) {
         alert('Xóa bài viết thành công');
         await this.loadArticles();
@@ -80,24 +89,29 @@ export class AdminArticleList implements OnInit {
     }
   }
 
+  activeTab: 'list' | 'interactions' = 'list';
+
   getImageUrl(hinh: string): string {
     if (!hinh) return 'https://placehold.co/100x70/F5F0EA/C8572C?text=No+Image';
     if (hinh.startsWith('http')) return hinh;
-    return `http://localhost:3000/images/products/${hinh}`;
+    return `https://duancoffee-bcu2.vercel.app/images/${hinh}`;
   }
 
   async updateEngagement(article: any) {
-    // We can call updateArticle using a FormData
-    const formData = new FormData();
-    formData.append('tieu_de', article.tieu_de);
-    formData.append('noi_dung', article.noi_dung);
-    formData.append('luot_xem', String(article.luot_xem || 0));
-    formData.append('luot_thich', String(article.luot_thich || 0));
-    formData.append('luot_chia_se', String(article.luot_chia_se || 0));
-    formData.append('an_hien', String(article.an_hien ? 1 : 0));
+    const token = localStorage.getItem('token') || '';
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    const bodyFormData = new FormData();
+    bodyFormData.append('luot_xem', String(article.luot_xem || 0));
+    bodyFormData.append('luot_thich', String(article.luot_thich || 0));
+    bodyFormData.append('luot_chia_se', String(article.luot_chia_se || 0));
 
     try {
-      const res = await this.adminService.updateArticle(article.id, formData);
+      const res: any = await firstValueFrom(
+        this.http.put(`${BASE_API}admin/articles/${article.id}`, bodyFormData, { headers })
+      );
       if (res && res.success) {
         alert(`Cập nhật tương tác bài viết "${article.tieu_de}" thành công!`);
         await this.loadArticles();

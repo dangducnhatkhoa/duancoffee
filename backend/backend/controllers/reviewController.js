@@ -1,5 +1,32 @@
-const { Review, Product, User, db } = require('../models');
+const { Review, Product, User, Order, OrderItem, ProductVariant, db } = require('../models');
 const { findUserProductReview } = require('../utils/reviewSchema');
+const { Op } = require('sequelize');
+
+// Helper to check if user has purchased the product
+async function checkUserHasPurchased(userId, productId) {
+  // Find all variants for this product
+  const variants = await ProductVariant.findAll({ where: { product_id: productId } });
+  if (variants.length === 0) return false;
+  
+  const variantIds = variants.map(v => v.id);
+
+  // Check if user has a paid or delivered or processing order with any of these variants
+  const hasBought = await Order.findOne({
+    where: {
+      buyer_id: userId,
+      status: { [Op.ne]: 'cancelled' }
+    },
+    include: [{
+      model: OrderItem,
+      as: 'items',
+      where: {
+        variant_id: { [Op.in]: variantIds }
+      }
+    }]
+  });
+
+  return !!hasBought;
+}
 
 exports.getMyReviewStatus = async (req, res) => {
   try {
@@ -7,10 +34,14 @@ exports.getMyReviewStatus = async (req, res) => {
     const productId = parseInt(req.params.productId, 10);
 
     const existing = await findUserProductReview(db, userId, productId);
+    const hasBought = await checkUserHasPurchased(userId, productId);
 
     res.json({
       success: true,
-      data: { alreadyReviewed: !!existing }
+      data: { 
+        alreadyReviewed: !!existing,
+        hasBought: hasBought
+      }
     });
   } catch (error) {
     console.error('Error checking review status:', error);
@@ -40,6 +71,15 @@ exports.createReview = async (req, res) => {
     const product = await Product.findByPk(productId, { attributes: ['id', 'name'] });
     if (!product) {
       return res.status(404).json({ success: false, message: 'Không tìm thấy sản phẩm' });
+    }
+
+    // Check if the user has purchased the product
+    const hasBought = await checkUserHasPurchased(userId, product.id);
+    if (!hasBought) {
+      return res.status(403).json({
+        success: false,
+        message: 'Bạn chỉ được đánh giá sản phẩm này sau khi mua hàng.'
+      });
     }
 
     const existing = await findUserProductReview(db, userId, product.id);

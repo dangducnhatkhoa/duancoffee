@@ -56,6 +56,25 @@
         </select>
       </div>
 
+      <!-- Engagement stats inputs -->
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Số lượt xem</label>
+          <input type="number" name="luot_xem" [(ngModel)]="article.luot_xem" min="0"
+                 class="w-full bg-[#FAF7F3] border border-[#EDE5D8] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#8D5B4C] text-[#3E2723]">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Số lượt thích</label>
+          <input type="number" name="luot_thich" [(ngModel)]="article.luot_thich" min="0"
+                 class="w-full bg-[#FAF7F3] border border-[#EDE5D8] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#8D5B4C] text-[#3E2723]">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Số lượt chia sẻ</label>
+          <input type="number" name="luot_chia_se" [(ngModel)]="article.luot_chia_se" min="0"
+                 class="w-full bg-[#FAF7F3] border border-[#EDE5D8] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#8D5B4C] text-[#3E2723]">
+        </div>
+      </div>
+
       <!-- Article Content -->
       <div>
         <label class="block text-sm font-semibold text-gray-700 mb-2">Nội dung bài viết *</label>

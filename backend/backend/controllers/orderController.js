@@ -438,8 +438,9 @@ exports.checkout = async (req, res) => {
         
         final_amount = Math.max(0, total_amount + shipping_fee - discount_val);
         applied_discount_id = discount.id;
-        // decrement voucher stock
-        await discount.decrement('quantity', { by: 1, transaction: t });
+        // Giảm số lần sử dụng của voucher
+        discount.quantity = Math.max(0, discount.quantity - 1);
+        await discount.save({ transaction: t });
       }
     }
 

@@ -33,6 +33,7 @@ export class ProductDetail {
 
   isLoggedIn = signal(false);
   alreadyReviewed = signal(false);
+  hasBought = signal(false);
   reviewRating = signal(5);
   reviewText = signal('');
   submittingReview = signal(false);
@@ -82,12 +83,14 @@ export class ProductDetail {
   async loadReviewStatus() {
     this.isLoggedIn.set(this.site.isLoggedIn());
     this.alreadyReviewed.set(false);
+    this.hasBought.set(false);
 
     if (!this.isLoggedIn()) return;
 
     try {
       const res = await this.site.getMyReviewStatus(this.id);
       this.alreadyReviewed.set(!!res.data?.alreadyReviewed);
+      this.hasBought.set(!!res.data?.hasBought);
     } catch (e: any) {
       if (e?.status === 404) {
         this.reviewError.set(true);

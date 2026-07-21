@@ -10,6 +10,56 @@
     </a>
   </div>
 
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-[#EDE5D8] flex items-center gap-4">
+      <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xl">
+        <i class="fas fa-newspaper"></i>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Tổng số bài viết</p>
+        <h3 class="text-2xl font-bold text-[#3E2723] mt-1">{{ totalArticles }}</h3>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-[#EDE5D8] flex items-center gap-4">
+      <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center text-xl">
+        <i class="fas fa-eye"></i>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Tổng lượt xem</p>
+        <h3 class="text-2xl font-bold text-[#3E2723] mt-1">{{ totalViews | number }}</h3>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-[#EDE5D8] flex items-center gap-4">
+      <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-lg flex items-center justify-center text-xl">
+        <i class="fas fa-fire"></i>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Xem nhiều nhất</p>
+        <h3 class="text-sm font-bold text-[#3E2723] mt-1 truncate" [title]="mostViewedArticleTitle">
+          {{ mostViewedArticleTitle }}
+        </h3>
+        <p class="text-xs text-gray-400 mt-0.5">{{ mostViewedArticleCount }} lượt xem</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="flex border-b border-[#EDE5D8]">
+    <button (click)="activeTab = 'list'" 
+            [class]="activeTab === 'list' ? 'border-[#8D5B4C] text-[#8D5B4C] font-bold border-b-2' : 'text-gray-500 hover:text-[#8D5B4C]'"
+            class="px-6 py-3 text-sm font-medium focus:outline-none transition">
+      <i class="fas fa-list mr-2"></i> Danh sách bài viết
+    </button>
+    <button (click)="activeTab = 'interactions'" 
+            [class]="activeTab === 'interactions' ? 'border-[#8D5B4C] text-[#8D5B4C] font-bold border-b-2' : 'text-gray-500 hover:text-[#8D5B4C]'"
+            class="px-6 py-3 text-sm font-medium focus:outline-none transition">
+      <i class="fas fa-chart-line mr-2"></i> Quản lý tương tác bài viết
+    </button>
+  </div>
+
   <!-- Search & Filter -->
   <div class="bg-white p-4 rounded-xl border border-[#EDE5D8] flex gap-4">
     <div class="flex-1 relative">
@@ -23,8 +73,8 @@
     </button>
   </div>
 
-  <!-- Articles Table -->
-  <div class="bg-white rounded-xl border border-[#EDE5D8] shadow-sm overflow-hidden">
+  <!-- Tab 1: Danh sách bài viết -->
+  <div *ngIf="activeTab === 'list'" class="bg-white rounded-xl border border-[#EDE5D8] shadow-sm overflow-hidden">
     <table class="w-full text-left border-collapse text-sm">
       <thead>
         <tr class="bg-[#FAF7F3] border-b border-[#EDE5D8] text-[#3E2723] uppercase text-[11px] tracking-wider font-bold">
@@ -50,7 +100,7 @@
               <td class="py-3 px-6">
                 <div class="w-16 h-12 bg-gray-100 border border-[#EDE5D8] rounded overflow-hidden flex items-center justify-center">
                   @if (article.hinh) {
-                    <img [src]="'http://localhost:3000/images/products/' + article.hinh" class="w-full h-full object-cover" alt="Image">
+                    <img [src]="getImageUrl(article.hinh)" class="w-full h-full object-cover" alt="Image">
                   } @else {
                     <i class="far fa-image text-gray-400"></i>
                   }
@@ -84,6 +134,78 @@
         }
       </tbody>
     </table>
+
+    <!-- Pagination -->
+    @if (totalPages > 1) {
+      <div class="bg-[#FAF7F3] border-t border-[#EDE5D8] px-6 py-4 flex justify-between items-center text-sm text-gray-500">
+        <span>Hiển thị trang {{ page }}/{{ totalPages }} (Tổng {{ totalArticles }} bài viết)</span>
+        <div class="flex gap-2">
+          <button (click)="prevPage()" [disabled]="page === 1" class="px-3 py-1.5 border border-[#EDE5D8] rounded bg-white hover:bg-gray-50 disabled:opacity-50 transition">Trước</button>
+          <button (click)="nextPage()" [disabled]="page === totalPages" class="px-3 py-1.5 border border-[#EDE5D8] rounded bg-white hover:bg-gray-50 disabled:opacity-50 transition">Sau</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Tab 2: Quản lý tương tác bài viết -->
+  <div *ngIf="activeTab === 'interactions'" class="bg-white rounded-xl border border-[#EDE5D8] shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr class="bg-[#FAF7F3] border-b border-[#EDE5D8] text-[#3E2723] uppercase text-[11px] tracking-wider font-bold">
+            <th class="py-4 px-6" style="width: 100px;">Hình ảnh</th>
+            <th class="py-4 px-6">Tiêu đề bài viết</th>
+            <th class="py-4 px-6 text-center" style="width: 130px;">Lượt xem</th>
+            <th class="py-4 px-6 text-center" style="width: 130px;">Lượt thích</th>
+            <th class="py-4 px-6 text-center" style="width: 130px;">Chia sẻ</th>
+            <th class="py-4 px-6 text-right">Hành động</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#F0EAE1]">
+          @if (articles.length === 0) {
+            <tr>
+              <td colspan="6" class="text-center py-10 text-gray-400">
+                Chưa có bài viết nào để quản lý tương tác.
+              </td>
+            </tr>
+          } @else {
+            @for (article of articles; track article.id) {
+              <tr class="hover:bg-[#FAF7F3]/50 transition-colors">
+                <td class="py-3 px-6">
+                  <div class="w-16 h-12 bg-gray-100 border border-[#EDE5D8] rounded overflow-hidden flex items-center justify-center">
+                    @if (article.hinh) {
+                      <img [src]="getImageUrl(article.hinh)" class="w-full h-full object-cover" alt="Image">
+                    } @else {
+                      <i class="far fa-image text-gray-400"></i>
+                    }
+                  </div>
+                </td>
+                <td class="py-4 px-6 font-semibold text-gray-800 max-w-xs">
+                  <div class="line-clamp-2">{{ article.tieu_de }}</div>
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <input type="number" [(ngModel)]="article.luot_xem" min="0"
+                         class="w-24 text-center px-2 py-1 bg-[#FAF7F3] border border-[#EDE5D8] rounded focus:outline-none focus:border-[#8D5B4C] text-sm">
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <input type="number" [(ngModel)]="article.luot_thich" min="0"
+                         class="w-24 text-center px-2 py-1 bg-[#FAF7F3] border border-[#EDE5D8] rounded focus:outline-none focus:border-[#8D5B4C] text-sm">
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <input type="number" [(ngModel)]="article.luot_chia_se" min="0"
+                         class="w-24 text-center px-2 py-1 bg-[#FAF7F3] border border-[#EDE5D8] rounded focus:outline-none focus:border-[#8D5B4C] text-sm">
+                </td>
+                <td class="py-4 px-6 text-right">
+                  <button (click)="updateEngagement(article)" class="bg-[#8D5B4C] hover:bg-[#6D3E32] text-white text-xs px-3.5 py-2 rounded font-semibold transition flex items-center gap-1.5 ml-auto">
+                    <i class="fas fa-save"></i> Cập nhật
+                  </button>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
 
     <!-- Pagination -->
     @if (totalPages > 1) {

@@ -11,6 +11,9 @@ import { UserList } from './user-list/user-list';
 import { VoucherList } from './voucher-list/voucher-list';
 import { VoucherForm } from './voucher-form/voucher-form';
 
+import { ArticleList } from './article-list/article-list';
+import { ArticleForm } from './article-form/article-form';
+
 export const routes: Routes = [
   { path: 'login', component: Login },
 
@@ -34,6 +37,10 @@ export const routes: Routes = [
       { path: 'vouchers', component: VoucherList, title: 'Mã giảm giá' },
       { path: 'vouchers/add', component: VoucherForm, title: 'Thêm mã giảm giá' },
       { path: 'vouchers/edit/:id', component: VoucherForm, title: 'Sửa mã giảm giá' },
+
+      { path: 'articles', component: ArticleList, title: 'Bài viết' },
+      { path: 'articles/add', component: ArticleForm, title: 'Thêm bài viết' },
+      { path: 'articles/edit/:id', component: ArticleForm, title: 'Sửa bài viết' },
     ],
   },
 ];

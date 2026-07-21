@@ -19,7 +19,10 @@ export class AdminArticleForm implements OnInit {
     tieu_de: '',
     noi_dung: '',
     id_loai_bai_viet: null,
-    an_hien: 1
+    an_hien: 1,
+    luot_xem: 0,
+    luot_thich: 0,
+    luot_chia_se: 0
   };
 
   selectedFile: File | null = null;
@@ -46,7 +49,7 @@ export class AdminArticleForm implements OnInit {
       if (res && res.success && res.data) {
         this.article = res.data;
         if (this.article.hinh) {
-          this.imagePreview = `http://localhost:3000/images/products/${this.article.hinh}`;
+          this.imagePreview = this.article.hinh.startsWith('http') ? this.article.hinh : `http://localhost:3000/images/products/${this.article.hinh}`;
         }
       }
     } catch (error) {
@@ -81,6 +84,9 @@ export class AdminArticleForm implements OnInit {
     formData.append('tieu_de', this.article.tieu_de);
     formData.append('noi_dung', this.article.noi_dung);
     formData.append('an_hien', String(this.article.an_hien));
+    formData.append('luot_xem', String(this.article.luot_xem || 0));
+    formData.append('luot_thich', String(this.article.luot_thich || 0));
+    formData.append('luot_chia_se', String(this.article.luot_chia_se || 0));
     if (this.article.id_loai_bai_viet !== null) {
       formData.append('id_loai_bai_viet', String(this.article.id_loai_bai_viet));
     }

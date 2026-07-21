@@ -282,6 +282,11 @@
             <i class="fas fa-sign-in-alt mr-2"></i> Đăng nhập để đánh giá
           </button>
         </div>
+      } @else if (!hasBought()) {
+        <div class="text-center py-6">
+          <i class="fas fa-shopping-bag text-2xl text-[#C8572C] mb-3"></i>
+          <p class="text-[#5A4A3A] text-sm">Bạn cần mua sản phẩm này rồi mới được phép gửi nhận xét, đánh giá.</p>
+        </div>
       } @else if (alreadyReviewed()) {
         <div class="text-center py-4">
           <i class="fas fa-check-circle text-2xl text-green-600 mb-2"></i>

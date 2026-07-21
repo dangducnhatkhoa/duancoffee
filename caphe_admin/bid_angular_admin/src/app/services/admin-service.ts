@@ -41,4 +41,29 @@ export class AdminService {
       this.http.patch<any>(`${this.apiUrl}/users/${id}/toggle-status`, {})
     );
   }
+
+  // Quản lý bài viết (Articles)
+  getArticles(page = 1, limit = 10, search = '') {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('limit', limit)
+      .set('search', search);
+    return firstValueFrom(this.http.get<any>(`${this.apiUrl}/articles`, { params }));
+  }
+
+  getArticle(id: number) {
+    return firstValueFrom(this.http.get<any>(`${this.apiUrl}/articles/${id}`));
+  }
+
+  createArticle(formData: FormData) {
+    return firstValueFrom(this.http.post<any>(`${this.apiUrl}/articles`, formData));
+  }
+
+  updateArticle(id: number, formData: FormData) {
+    return firstValueFrom(this.http.put<any>(`${this.apiUrl}/articles/${id}`, formData));
+  }
+
+  deleteArticle(id: number) {
+    return firstValueFrom(this.http.delete<any>(`${this.apiUrl}/articles/${id}`));
+  }
 }
