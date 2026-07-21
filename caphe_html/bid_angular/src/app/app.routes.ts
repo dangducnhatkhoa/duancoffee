@@ -24,6 +24,9 @@ import { MomoPaymentComponent } from './components/momo-payment/momo-payment';
 import { SepayPayment } from './components/sepay-payment/sepay-payment';
 import { adminRoutes } from './admin/admin.routes';
 
+import { newsDetailGuard } from './news-detail.guard'; // wait, no need for guard
+import { SupportComponent } from './components/support/support';
+
 export const routes: Routes = [
     { path: '', component: Home },
     { path: 'category/:id_category', component: Category, title: 'Sản phẩm trong loại' },
@@ -48,6 +51,7 @@ export const routes: Routes = [
     { path: 'order-success', component: OrderSucess, title: 'Thanh toán thành công' },
     { path: 'news', component: NewsComponent, title: 'Tin tức & Cộng đồng' },
     { path: 'news/:id', component: NewsDetailComponent, title: 'Chi tiết tin tức' },
+    { path: 'support/:slug', component: SupportComponent, title: 'Trung tâm hỗ trợ' },
 
     // Khu vực quản trị: http://localhost:4200/admin
     { path: 'admin', children: adminRoutes },

@@ -1,0 +1,111 @@
+<!-- Breadcrumb -->
+<div class="bg-white border-b border-[#EDE5D8]">
+  <div class="container mx-auto px-6 py-3" style="max-width:1200px;">
+    <nav class="flex text-sm" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <a routerLink="/" class="text-[#7A6A5A] hover:text-[#C8572C] transition font-medium">Trang chủ</a>
+        </li>
+        <li aria-current="page">
+          <div class="flex items-center">
+            <i class="fas fa-chevron-right text-[#D1C4B0] mx-2 text-[10px]"></i>
+            <span class="text-[#2C1A0E] font-semibold">Trung tâm hỗ trợ</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<section style="background:#FAF7F3; min-height:85vh; padding:50px 0;">
+  <div class="container mx-auto px-6" style="max-width:1200px;">
+    
+    <!-- Title Area -->
+    <div class="mb-10 text-center md:text-left">
+      <span class="text-xs font-bold text-[#C8572C] uppercase tracking-wider bg-[#F5F0EA] px-3 py-1.5 rounded-full">
+        {{ currentPage?.category }}
+      </span>
+      <h1 style="font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; color:#2C1A0E; margin-top:12px;">
+        {{ currentPage?.title }}
+      </h1>
+      <p class="text-[#7A6A5A] text-sm mt-2">Tra cứu điều khoản sử dụng và cẩm nang hỗ trợ khách hàng của King Coffee</p>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="flex flex-col lg:flex-row gap-8">
+      
+      <!-- Left Sidebar: Menu -->
+      <aside class="w-full lg:w-1/4 shrink-0">
+        <div class="bg-white rounded-lg border border-[#EDE5D8] p-5 space-y-6 shadow-sm sticky top-6">
+          
+          <!-- Nhóm 1 -->
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-[#C8572C] mb-3 pb-2 border-b border-[#F5F0EA]">
+              Chính Sách & Quy Định
+            </h4>
+            <div class="flex flex-col gap-1">
+              <a [routerLink]="['/support', 'the-le-dieu-kien']" 
+                 [class]="currentSlug === 'the-le-dieu-kien' ? 'bg-[#FAF7F3] text-[#C8572C] font-semibold border-l-4 border-[#C8572C] pl-2' : 'text-[#7A6A5A] hover:text-[#C8572C] pl-3'"
+                 class="py-2 text-sm transition-all rounded">
+                Thể lệ và điều kiện
+              </a>
+              <a [routerLink]="['/support', 'chinh-sach-bao-mat']" 
+                 [class]="currentSlug === 'chinh-sach-bao-mat' ? 'bg-[#FAF7F3] text-[#C8572C] font-semibold border-l-4 border-[#C8572C] pl-2' : 'text-[#7A6A5A] hover:text-[#C8572C] pl-3'"
+                 class="py-2 text-sm transition-all rounded">
+                Chính sách bảo mật
+              </a>
+              <a [routerLink]="['/support', 'chinh-sach-doi-tra']" 
+                 [class]="currentSlug === 'chinh-sach-doi-tra' ? 'bg-[#FAF7F3] text-[#C8572C] font-semibold border-l-4 border-[#C8572C] pl-2' : 'text-[#7A6A5A] hover:text-[#C8572C] pl-3'"
+                 class="py-2 text-sm transition-all rounded">
+                Chính sách đổi trả
+              </a>
+              <a [routerLink]="['/support', 'chinh-sach-giao-hang']" 
+                 [class]="currentSlug === 'chinh-sach-giao-hang' ? 'bg-[#FAF7F3] text-[#C8572C] font-semibold border-l-4 border-[#C8572C] pl-2' : 'text-[#7A6A5A] hover:text-[#C8572C] pl-3'"
+                 class="py-2 text-sm transition-all rounded">
+                Chính sách giao hàng
+              </a>
+            </div>
+          </div>
+
+          <!-- Nhóm 2 -->
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-[#C8572C] mb-3 pb-2 border-b border-[#F5F0EA]">
+              Hỗ Trợ Khách Hàng
+            </h4>
+            <div class="flex flex-col gap-1">
+              <a [routerLink]="['/support', 'faq']" 
+                 [class]="currentSlug === 'faq' ? 'bg-[#FAF7F3] text-[#C8572C] font-semibold border-l-4 border-[#C8572C] pl-2' : 'text-[#7A6A5A] hover:text-[#C8572C] pl-3'"
+                 class="py-2 text-sm transition-all rounded">
+                Câu hỏi thường gặp (FAQ)
+              </a>
+              <a [routerLink]="['/support', 'huong-dan-dat-hang']" 
+                 [class]="currentSlug === 'huong-dan-dat-hang' ? 'bg-[#FAF7F3] text-[#C8572C] font-semibold border-l-4 border-[#C8572C] pl-2' : 'text-[#7A6A5A] hover:text-[#C8572C] pl-3'"
+                 class="py-2 text-sm transition-all rounded">
+                Hướng dẫn đặt hàng
+              </a>
+              <a [routerLink]="['/support', 'theo-doi-don-hang']" 
+                 [class]="currentSlug === 'theo-doi-don-hang' ? 'bg-[#FAF7F3] text-[#C8572C] font-semibold border-l-4 border-[#C8572C] pl-2' : 'text-[#7A6A5A] hover:text-[#C8572C] pl-3'"
+                 class="py-2 text-sm transition-all rounded">
+                Cách theo dõi đơn hàng
+              </a>
+              <a [routerLink]="['/support', 'lien-he-ho-tro']" 
+                 [class]="currentSlug === 'lien-he-ho-tro' ? 'bg-[#FAF7F3] text-[#C8572C] font-semibold border-l-4 border-[#C8572C] pl-2' : 'text-[#7A6A5A] hover:text-[#C8572C] pl-3'"
+                 class="py-2 text-sm transition-all rounded">
+                Liên hệ hỗ trợ
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- Right: Detailed Content Area -->
+      <article class="w-full lg:w-3/4 bg-white rounded-lg border border-[#EDE5D8] p-8 shadow-sm">
+        <div class="prose max-w-none text-[#5A4A3A] leading-relaxed text-sm" [innerHTML]="currentPage?.content">
+        </div>
+      </article>
+
+    </div>
+
+  </div>
+</section>
