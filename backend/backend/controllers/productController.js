@@ -463,8 +463,8 @@ exports.searchProducts = async (req, res) => {
               { description: { [Op.like]: `%${cleanKeyword}%` } },
               { short_description: { [Op.like]: `%${cleanKeyword}%` } },
               { product_code: { [Op.like]: `%${cleanKeyword}%` } },
-              { '$brand.name$': { [Op.like]: `%${cleanKeyword}%` } },
-              { '$category.name$': { [Op.like]: `%${cleanKeyword}%` } }
+              db.literal(`brand.ten_thuong_hieu LIKE '%${cleanKeyword.replace(/'/g, "''")}%'`),
+              db.literal(`category.ten_danh_muc LIKE '%${cleanKeyword.replace(/'/g, "''")}%'`)
             ]
           },
           { deleted_at: null }
