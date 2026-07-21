@@ -4,6 +4,7 @@ const cors = require("cors");
 require('mysql2'); // Force Vercel to bundle mysql2 dialect
 const db = require("./config/database");// kết nối Sequelize
 const routes = require("./routes/index.js") ; // import router tổng
+const { ensureReviewSchema } = require('./utils/reviewSchema');
 const session = require('express-session');
 dotenv.config();
 
@@ -31,9 +32,12 @@ app.use("/api", routes);
 
 
 
-// Kiểm tra kết nối DB
+// Kiểm tra kết nối DB + chuẩn bị bảng đánh giá
 db.authenticate()
-  .then(() => console.log("Database connected."))
+  .then(async () => {
+    console.log("Database connected.");
+    await ensureReviewSchema(db);
+  })
   .catch(err => console.error("Database connection error:", err));
 
 // Chạy server nếu không chạy ở môi trường serverless (Vercel)

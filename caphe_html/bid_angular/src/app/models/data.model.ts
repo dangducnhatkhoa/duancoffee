@@ -131,9 +131,15 @@ export interface IPayment {
 }
 export interface IReview {
   id: number;
-  order_item_id: number;
+  order_item_id?: number;
+  product_id?: number;
   reviewer_id: number;
   rating: number;
   review_text?: string;
   created_at?: string;
+  reviewer?: {
+    id: number;
+    full_name: string;
+    avatar_url?: string;
+  };
 }

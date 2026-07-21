@@ -253,40 +253,57 @@ exports.getProductDetail = async (req, res) => {
     // Tăng lượt xem
     await product.increment('view_count');
 
-    // Lấy đánh giá sản phẩm
-    const reviews = await Review.findAll({
-      include: [
-        {
-          model: OrderItem,  as: 'orderItem',
-          required: true,
-          include: [
-            {
-              model: ProductVariant,  as: 'variant',   required: true,
-              where: { product_id: product.id  }
-            }
-          ]
-        },
-        {
-          model: User, as: 'reviewer',
-          attributes: ['id', 'full_name', 'avatar_url']
-        }
-      ],
-      order: [['created_at', 'DESC']],
-      limit: 10
+    const reviewRows = await db.query(`
+      SELECT dg.id, dg.sao AS rating, dg.noi_dung AS review_text, dg.thoi_gian AS created_at,
+             dg.id_nguoi_dung AS reviewer_id,
+             u.ho_ten AS full_name, u.anh_dai_dien AS avatar_url
+      FROM danh_gia dg
+      JOIN nguoi_dung u ON dg.id_nguoi_dung = u.id
+      LEFT JOIN chi_tiet_don_hang ct ON dg.id_chi_tiet_don_hang = ct.id
+      LEFT JOIN bien_the bt ON ct.id_bien_the = bt.id
+      WHERE (dg.id_san_pham = :productId OR bt.id_san_pham = :productId)
+        AND (dg.an_hien IS NULL OR dg.an_hien = 1)
+      ORDER BY dg.thoi_gian DESC
+      LIMIT 10
+    `, {
+      replacements: { productId: product.id },
+      type: db.QueryTypes.SELECT
     });
 
-    // Tính rating trung bình
-    const avgRating = reviews.length > 0
-      ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
-      : 0;
+    const reviews = reviewRows.map((row) => ({
+      id: row.id,
+      rating: row.rating,
+      review_text: row.review_text,
+      created_at: row.created_at,
+      reviewer: {
+        id: row.reviewer_id,
+        full_name: row.full_name,
+        avatar_url: row.avatar_url
+      }
+    }));
+
+    const [stats] = await db.query(`
+      SELECT AVG(dg.sao) AS avgRating, COUNT(dg.id) AS totalReviews
+      FROM danh_gia dg
+      LEFT JOIN chi_tiet_don_hang ct ON dg.id_chi_tiet_don_hang = ct.id
+      LEFT JOIN bien_the bt ON ct.id_bien_the = bt.id
+      WHERE (dg.id_san_pham = :productId OR bt.id_san_pham = :productId)
+        AND (dg.an_hien IS NULL OR dg.an_hien = 1)
+    `, {
+      replacements: { productId: product.id },
+      type: db.QueryTypes.SELECT
+    });
+
+    const totalReviews = Number(stats?.totalReviews) || 0;
+    const avgRating = totalReviews > 0 ? Number(stats.avgRating) : 0;
 
     res.json({
       success: true,
       data: {
         ...product.toJSON(),
-        reviews: reviews,
+        reviews,
         avgRating: avgRating.toFixed(1),
-        totalReviews: reviews.length
+        totalReviews
       }
     });
   } catch (error) {

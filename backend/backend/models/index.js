@@ -60,6 +60,10 @@ Review.belongsTo(OrderItem, { foreignKey: 'order_item_id', as: 'orderItem' });
 User.hasMany(Review, { foreignKey: 'reviewer_id', as: 'reviews' });
 Review.belongsTo(User, { foreignKey: 'reviewer_id', as: 'reviewer' });
 
+// Product - Review
+Product.hasMany(Review, { foreignKey: 'product_id', as: 'reviews' });
+Review.belongsTo(Product, { foreignKey: 'product_id', as: 'product' });
+
 module.exports = {
   db,
   User,

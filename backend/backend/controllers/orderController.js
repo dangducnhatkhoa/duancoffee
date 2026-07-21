@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 
 const Stripe = require('stripe');
 const crypto = require('crypto');
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const getStripe = () => process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null;
 
 
 // Tạo đơn hàng
@@ -508,6 +508,10 @@ exports.getStripeSessionStatus = async (req, res) => {
       });
     }
 
+    const stripe = getStripe();
+    if (!stripe) {
+      return res.status(503).json({ success: false, message: 'Stripe chưa được cấu hình' });
+    }
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     // Nếu đã thanh toán mà DB chưa cập nhật thì cập nhật luôn tại đây

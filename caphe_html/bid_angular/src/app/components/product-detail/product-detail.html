@@ -61,12 +61,23 @@
         </h1>
 
         <!-- Rating -->
-        <div class="flex items-center gap-2 mb-4">
-          <div class="flex text-[#F59E0B]">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+        <button type="button" (click)="scrollToReviews()" class="flex items-center gap-2 mb-4 hover:opacity-80 transition text-left">
+          <div class="flex text-[#F59E0B] text-sm">
+            @for (star of getStars(); track star) {
+              @if (getStarType(star, product()?.avgRating || 0) === 'full') {
+                <i class="fas fa-star"></i>
+              } @else if (getStarType(star, product()?.avgRating || 0) === 'half') {
+                <i class="fas fa-star-half-alt"></i>
+              } @else {
+                <i class="far fa-star"></i>
+              }
+            }
           </div>
-          <span class="text-[#7A6A5A] text-sm">({{product()?.totalReviews || 0}} đánh giá)</span>
-        </div>
+          @if ((product()?.totalReviews || 0) > 0) {
+            <span class="text-[#2C1A0E] text-sm font-semibold">{{ product()?.avgRating }}</span>
+          }
+          <span class="text-[#7A6A5A] text-sm">({{ product()?.totalReviews || 0 }} đánh giá)</span>
+        </button>
 
         <!-- Price Range (Global) -->
         <div class="flex items-center gap-3 mb-5">
@@ -212,6 +223,170 @@
       </div>
 
     </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2.5: Đánh giá khách hàng ===== -->
+<section id="product-reviews" class="bg-white border-t border-[#EDE5D8]">
+  <div class="container mx-auto px-6 py-12" style="max-width:1200px;">
+    <h2 class="flex items-center gap-2 mb-8" style="font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; color:#2C1A0E;">
+      <span style="display:inline-block; width:4px; height:24px; background:#C8572C; border-radius:2px;"></span>
+      Đánh giá khách hàng
+    </h2>
+
+    <div class="flex flex-col lg:flex-row gap-10 mb-10">
+      <!-- Tổng quan điểm -->
+      <div class="w-full lg:w-1/3">
+        <div class="bg-[#FAF7F3] rounded-lg p-6 text-center" style="border:1px solid #EDE5D8;">
+          <div style="font-size:3rem; font-weight:700; color:#2C1A0E; line-height:1;">
+            {{ product()?.avgRating || '0.0' }}
+          </div>
+          <div class="flex justify-center text-[#F59E0B] text-lg my-2">
+            @for (star of getStars(); track star) {
+              @if (getStarType(star, product()?.avgRating || 0) === 'full') {
+                <i class="fas fa-star"></i>
+              } @else if (getStarType(star, product()?.avgRating || 0) === 'half') {
+                <i class="fas fa-star-half-alt"></i>
+              } @else {
+                <i class="far fa-star"></i>
+              }
+            }
+          </div>
+          <p class="text-[#7A6A5A] text-sm">{{ product()?.totalReviews || 0 }} nhận xét</p>
+        </div>
+      </div>
+
+      <!-- Phân bố sao -->
+      <div class="w-full lg:w-2/3 flex flex-col justify-center gap-2">
+        @for (item of getRatingBreakdown(); track item.star) {
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-[#7A6A5A] w-12 shrink-0">{{ item.star }} sao</span>
+            <div class="flex-1 h-2 rounded-full overflow-hidden" style="background:#EDE5D8;">
+              <div class="h-full rounded-full transition-all" style="background:#F59E0B;" [style.width.%]="item.percent"></div>
+            </div>
+            <span class="text-sm text-[#7A6A5A] w-8 text-right shrink-0">{{ item.count }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Form viết đánh giá -->
+    <div class="mb-10 rounded-lg p-6" style="background:#FAF7F3; border:1px solid #EDE5D8;">
+      <h3 class="font-semibold text-[#2C1A0E] mb-4">Viết đánh giá của bạn</h3>
+
+      @if (!isLoggedIn()) {
+        <div class="text-center py-6">
+          <i class="fas fa-lock text-2xl text-[#C8572C] mb-3"></i>
+          <p class="text-[#5A4A3A] text-sm mb-4">Bạn cần đăng nhập để viết nhận xét và đánh giá sản phẩm.</p>
+          <button type="button" (click)="goToLogin()" class="btn-primary" style="padding:10px 24px; font-size:0.85rem;">
+            <i class="fas fa-sign-in-alt mr-2"></i> Đăng nhập để đánh giá
+          </button>
+        </div>
+      } @else if (alreadyReviewed()) {
+        <div class="text-center py-4">
+          <i class="fas fa-check-circle text-2xl text-green-600 mb-2"></i>
+          <p class="text-[#5A4A3A] text-sm">Bạn đã đánh giá sản phẩm này. Cảm ơn bạn!</p>
+        </div>
+      } @else {
+        @if (reviewMessage()) {
+          <div class="mb-4 px-4 py-3 rounded text-sm"
+            [style.background]="reviewError() ? '#FEE2E2' : '#DCFCE7'"
+            [style.color]="reviewError() ? '#B91C1C' : '#166534'"
+            [style.border]="reviewError() ? '1px solid #FECACA' : '1px solid #BBF7D0'">
+            {{ reviewMessage() }}
+          </div>
+        }
+
+        <div class="mb-4">
+          <label class="block text-sm text-[#7A6A5A] mb-2">Chọn số sao <span class="text-[#C8572C]">*</span></label>
+          <div class="flex gap-1 text-2xl">
+            @for (star of getStars(); track star) {
+              <button type="button" (click)="setReviewRating(star)" class="transition hover:scale-110"
+                [class.text-[#F59E0B]]="isReviewStarFilled(star)"
+                [class.text-[#D1C4B0]]="!isReviewStarFilled(star)">
+                <i class="fas fa-star"></i>
+              </button>
+            }
+            <span class="text-sm text-[#7A6A5A] ml-2 self-center">{{ reviewRating() }}/5</span>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm text-[#7A6A5A] mb-2">Nhận xét của bạn</label>
+          <textarea
+            rows="4"
+            placeholder="Chia sẻ trải nghiệm về sản phẩm..."
+            class="w-full rounded px-3 py-2 text-sm resize-none"
+            style="border:1px solid #EDE5D8; background:white; color:#2C1A0E;"
+            [ngModel]="reviewText()"
+            (ngModelChange)="reviewText.set($event)"></textarea>
+        </div>
+
+        <button type="button" (click)="submitReview()" [disabled]="submittingReview()"
+          class="btn-primary" style="padding:10px 24px; font-size:0.85rem;"
+          [style.opacity]="submittingReview() ? '0.7' : '1'">
+          @if (submittingReview()) {
+            <i class="fas fa-spinner fa-spin mr-2"></i> Đang gửi...
+          } @else {
+            <i class="fas fa-paper-plane mr-2"></i> Gửi đánh giá
+          }
+        </button>
+      }
+    </div>
+
+    <!-- Danh sách nhận xét -->
+    @if (product()?.reviews?.length > 0) {
+      <div class="space-y-0">
+        @for (review of product().reviews; track review.id) {
+          <div class="flex gap-4 py-6" style="border-bottom:1px solid #EDE5D8;">
+            <!-- Avatar -->
+            <div class="shrink-0">
+              @if (review.reviewer?.avatar_url) {
+                <img [src]="getAvatarUrl(review.reviewer.avatar_url)" [alt]="getReviewerName(review)"
+                  class="rounded-full object-cover" style="width:48px; height:48px; border:1px solid #EDE5D8;" />
+              } @else {
+                <div class="rounded-full flex items-center justify-center font-semibold text-sm"
+                  style="width:48px; height:48px; background:#C8572C; color:white;">
+                  {{ getReviewerInitials(review) }}
+                </div>
+              }
+            </div>
+
+            <!-- Nội dung -->
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2 mb-1">
+                <span class="font-semibold text-[#2C1A0E]">{{ getReviewerName(review) }}</span>
+                @if (review.created_at) {
+                  <span class="text-xs text-[#7A6A5A]">{{ review.created_at | date:'dd/MM/yyyy' }}</span>
+                }
+              </div>
+              <div class="flex text-[#F59E0B] text-xs mb-2">
+                @for (star of getStars(); track star) {
+                  @if (getStarType(star, review.rating) === 'full') {
+                    <i class="fas fa-star"></i>
+                  } @else if (getStarType(star, review.rating) === 'half') {
+                    <i class="fas fa-star-half-alt"></i>
+                  } @else {
+                    <i class="far fa-star"></i>
+                  }
+                }
+              </div>
+              @if (review.review_text) {
+                <p class="text-[#5A4A3A] text-sm leading-relaxed">{{ review.review_text }}</p>
+              } @else {
+                <p class="text-[#7A6A5A] text-sm italic">Khách hàng đã đánh giá sản phẩm.</p>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="text-center py-12 rounded-lg" style="background:#FAF7F3; border:1px solid #EDE5D8;">
+        <i class="far fa-comment-dots text-4xl text-[#D1C4B0] mb-3"></i>
+        <p class="text-[#7A6A5A] text-sm">Chưa có đánh giá nào cho sản phẩm này.</p>
+        <p class="text-[#7A6A5A] text-xs mt-1">Hãy là người đầu tiên chia sẻ trải nghiệm sau khi mua hàng!</p>
+      </div>
+    }
   </div>
 </section>
 

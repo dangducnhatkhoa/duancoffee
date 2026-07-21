@@ -102,6 +102,27 @@ export class SiteService {
         return await firstValueFrom(this.http.post(url, formData ,  { headers} ));
     }
 
+    isLoggedIn(): boolean {
+        return !!sessionStorage.getItem('token');
+    }
+
+    private authHeaders() {
+        const token = sessionStorage.getItem('token') || '';
+        return { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+    }
+
+    async getMyReviewStatus(productId: number): Promise<any> {
+        return await firstValueFrom(
+            this.http.get(`${BASE_API}reviews/status/${productId}`, { headers: this.authHeaders() })
+        );
+    }
+
+    async submitReview(data: { product_id: number; rating: number; review_text?: string }): Promise<any> {
+        return await firstValueFrom(
+            this.http.post(`${BASE_API}reviews`, data, { headers: this.authHeaders() })
+        );
+    }
+
 
 
     // Lấy chi tiết 1 sản phẩm theo id 

@@ -2,17 +2,19 @@
 <div class="container mx-auto px-6 py-10" style="max-width:1200px;">
 
   <!-- Hero Banner with Integrated Search -->
-  <div class="mb-12 relative w-full rounded-2xl overflow-hidden shadow-lg border border-[#EDE5D8]" style="min-height:360px; background: linear-gradient(135deg, #2C1A0E 0%, #4A2E1B 100%);">
+  <div class="mb-12 relative w-full rounded-2xl overflow-hidden shadow-lg border border-[#EDE5D8]" style="min-height:400px; background:linear-gradient(120deg, #2C1A0E 0%, #6A3D22 55%, #C8572C 100%);">
+    <img src="/images/bean-brew-logo.png" alt="Bean & Brew Coffee" style="position:absolute; top:20px; left:20px; width:90px; height:90px; object-fit:contain; background:white; border-radius:50%; padding:6px; box-shadow:0 8px 24px rgba(0,0,0,0.25); z-index:20;" onerror="this.style.display='none'">
+    
     <!-- Background Image Overlay -->
-    <div class="absolute inset-0 opacity-40">
+    <div class="absolute inset-0 opacity-30">
       <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1600&q=80" alt="Coffee background" class="w-full h-full object-cover">
     </div>
 
     <!-- Content & Search Bar Overlay -->
-    <div class="relative z-10 p-8 md:p-12 flex flex-col items-center justify-center text-center h-full min-h-[360px]">
-      <span class="text-[#D1C4B0] text-xs uppercase tracking-widest font-semibold mb-2">Thưởng Thức Cà Phê Thượng Hạng</span>
-      <h1 class="font-heading text-white text-3xl md:text-5xl font-bold mb-4 leading-tight">Khám Phá Hương Vị Đậm Đà</h1>
-      <p class="text-[#E0D5C3] text-sm md:text-base max-w-xl mb-8">Tìm kiếm dòng cà phê yêu thích của bạn từ những thương hiệu hàng đầu Việt Nam</p>
+    <div class="relative z-10 p-8 md:p-12 flex flex-col items-center justify-center text-center h-full min-h-[400px]">
+      <span class="text-[#D1C4B0] text-xs uppercase tracking-widest font-semibold mb-2">Bean & Brew Coffee</span>
+      <h1 class="font-heading text-white text-3xl md:text-5xl font-bold mb-3 leading-tight">Đậm Vị Nguyên Bản, Trọn Hương Mỗi Ngày</h1>
+      <p class="text-[#E0D5C3] text-sm md:text-base max-w-xl mb-6">Khám phá những dòng cà phê chất lượng cao, rang xay chuẩn gu Việt</p>
 
       <!-- Search Input Container -->
       <div class="w-full max-w-2xl relative">
@@ -53,7 +55,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                       <h4 class="text-sm font-semibold text-[#2C1A0E] group-hover:text-[#C8572C] truncate transition">{{item.name}}</h4>
-                      <p class="text-xs text-[#7A6A5A]">{{item.brand?.name || 'King Coffee'}}</p>
+                      <p class="text-xs text-[#7A6A5A]">{{item.brand?.name || 'Bean & Brew'}}</p>
                     </div>
                     <span class="text-sm font-bold text-[#C8572C] flex-shrink-0">{{item.fixed_price | number:'1.0-0':'vi'}}đ</span>
                   </a>
@@ -106,7 +108,7 @@
           <!-- Content -->
           <div class="p-5 flex flex-col flex-1" style="background:#FAF7F3; border-top:1px solid #EDE5D8;">
             <p style="font-size:0.7rem; color:#A89070; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;">
-              {{sp.brand?.name || 'KING COFFEE'}}
+              {{sp.brand?.name || 'BEAN & BREW COFFEE'}}
             </p>
             <a [routerLink]="['/product', sp.id]" style="font-size:0.95rem; font-weight:600; color:#2C1A0E; line-height:1.4; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-decoration:none;" class="hover:text-[#C8572C] transition">
               {{sp.name}}
@@ -201,45 +203,67 @@
       <div>
         <h2 class="section-title">Tin tức & Cộng đồng</h2>
       </div>
-      <a href="/news" style="color:#C8572C; font-weight:600; font-size:0.85rem; text-decoration:none;">XEM TẤT CẢ <i class="fas fa-angle-right ml-1"></i></a>
+      <a routerLink="/news" style="color:#C8572C; font-weight:600; font-size:0.85rem; text-decoration:none;">XEM TẤT CẢ <i class="fas fa-angle-right ml-1"></i></a>
     </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Article 1 -->
-      <div class="bg-white rounded-lg overflow-hidden border border-[#EDE5D8] hover:shadow-lg transition">
-        <div style="height:200px; overflow:hidden;">
-          <img src="https://images.unsplash.com/photo-1495474472202-4affb9442b08?auto=format&fit=crop&w=600&q=80" alt="News" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" class="hover:scale-105">
-        </div>
-        <div class="p-5">
-          <span style="color:#C8572C; font-size:0.75rem; font-weight:700; text-transform:uppercase;">Kiến thức</span>
-          <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:600; color:#2C1A0E; margin:10px 0; line-height:1.4;">Bí quyết pha cà phê phin ngon chuẩn vị truyền thống</h3>
-          <p style="color:#7A6A5A; font-size:0.85rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">Nước pha cà phê phải sôi ở 95-100 độ C. Tráng phin bằng nước nóng trước khi pha sẽ giúp cà phê nở đều và chiết xuất tốt hơn...</p>
-        </div>
+
+    <!-- Hiển thị bài viết từ API nếu có -->
+    @if (articles_arr().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @for (art of articles_arr(); track art.id) {
+          <a [routerLink]="['/news', art.id]" style="text-decoration:none;" class="bg-white rounded-lg overflow-hidden border border-[#EDE5D8] hover:shadow-lg transition block">
+            <div style="height:200px; overflow:hidden;">
+              @if (art.hinh) {
+                <img [src]="art.hinh" [alt]="art.tieu_de" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" class="hover:scale-105">
+              } @else {
+                <div style="width:100%; height:100%; background:#F5F0EA; display:flex; align-items:center; justify-content:center;">
+                  <i class="fas fa-newspaper text-4xl" style="color:#C8572C; opacity:0.4;"></i>
+                </div>
+              }
+            </div>
+            <div class="p-5">
+              <span style="color:#C8572C; font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
+                {{art.ngay_dang | date:'dd/MM/yyyy'}}
+              </span>
+              <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:600; color:#2C1A0E; margin:10px 0; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                {{art.tieu_de}}
+              </h3>
+              <p style="color:#7A6A5A; font-size:0.85rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
+                {{getExcerpt(art.noi_dung)}}
+              </p>
+              <div style="margin-top:14px;">
+                <span style="color:#C8572C; font-size:0.8rem; font-weight:600;">Đọc thêm <i class="fas fa-arrow-right ml-1" style="font-size:0.7rem;"></i></span>
+              </div>
+            </div>
+          </a>
+        }
       </div>
-      <!-- Article 2 -->
-      <div class="bg-white rounded-lg overflow-hidden border border-[#EDE5D8] hover:shadow-lg transition">
-        <div style="height:200px; overflow:hidden;">
-          <img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?auto=format&fit=crop&w=600&q=80" alt="News" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" class="hover:scale-105">
-        </div>
-        <div class="p-5">
-          <span style="color:#C8572C; font-size:0.75rem; font-weight:700; text-transform:uppercase;">Sức khỏe</span>
-          <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:600; color:#2C1A0E; margin:10px 0; line-height:1.4;">Uống 1 ly cà phê mỗi ngày mang lại lợi ích gì?</h3>
-          <p style="color:#7A6A5A; font-size:0.85rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">Cà phê không chỉ giúp tỉnh táo mà còn chứa nhiều chất chống oxy hóa, hỗ trợ quá trình trao đổi chất và bảo vệ sức khỏe tim mạch...</p>
-        </div>
+
+    } @else {
+      <!-- Fallback tĩnh khi API chưa có dữ liệu -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @for (art of fallback_articles; track art.tieu_de) {
+          <a routerLink="/news" style="text-decoration:none;" class="bg-white rounded-lg overflow-hidden border border-[#EDE5D8] hover:shadow-lg transition block">
+            <div style="height:200px; overflow:hidden;">
+              <img [src]="art.hinh" [alt]="art.tieu_de" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" class="hover:scale-105">
+            </div>
+            <div class="p-5">
+              <span style="color:#C8572C; font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
+                {{art.loai}}
+              </span>
+              <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:600; color:#2C1A0E; margin:10px 0; line-height:1.4;">
+                {{art.tieu_de}}
+              </h3>
+              <p style="color:#7A6A5A; font-size:0.85rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
+                {{art.mo_ta}}
+              </p>
+              <div style="margin-top:14px;">
+                <span style="color:#C8572C; font-size:0.8rem; font-weight:600;">Đọc thêm <i class="fas fa-arrow-right ml-1" style="font-size:0.7rem;"></i></span>
+              </div>
+            </div>
+          </a>
+        }
       </div>
-      <!-- Article 3 -->
-      <div class="bg-white rounded-lg overflow-hidden border border-[#EDE5D8] hover:shadow-lg transition">
-        <div style="height:200px; overflow:hidden;">
-          <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=600&q=80" alt="News" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" class="hover:scale-105">
-        </div>
-        <div class="p-5">
-          <span style="color:#C8572C; font-size:0.75rem; font-weight:700; text-transform:uppercase;">Cộng đồng</span>
-          <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:600; color:#2C1A0E; margin:10px 0; line-height:1.4;">King Coffee đồng hành cùng người nông dân Buôn Ma Thuột</h3>
-          <p style="color:#7A6A5A; font-size:0.85rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">Dự án hỗ trợ phát triển nông nghiệp bền vững, mang lại sinh kế ổn định cho các hộ gia đình trồng cà phê tại vùng Tây Nguyên...</p>
-        </div>
-      </div>
-    </div>
+    }
   </section>
 
 </div>
-
