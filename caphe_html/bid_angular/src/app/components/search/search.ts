@@ -31,15 +31,16 @@ export class Search {
     this.keyword = query_params.get('keyword') || "asdasdsadasd"; 
 
     this.route.queryParamMap.subscribe( async params => {
+      this.keyword = params.get('keyword') || '';
       this.page.set(Number(params.get('page')) || 1);
       this.sort.set(params.get('sort') || 'default');
       
       const resProducts:any  = await this.site.getProductsWithKeyword(this.keyword, this.page(), this.limit(), this.sort() );
-      this.total.set(resProducts.pagination.total || 0);
-      this.limit.set(resProducts.pagination.limit || 0);
-      this.totalPages.set(Math.ceil(this.total() / this.limit()));
-      this.page.set(resProducts.pagination.page || 1);
-      this.product_arr.set(resProducts.data as IProduct[]);
+      this.total.set(resProducts.pagination?.total || 0);
+      this.limit.set(resProducts.pagination?.limit || 4);
+      this.totalPages.set(Math.ceil(this.total() / (this.limit() || 1)));
+      this.page.set(resProducts.pagination?.page || 1);
+      this.product_arr.set((resProducts.data || []) as IProduct[]);
     });
   }
 
