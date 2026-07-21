@@ -433,6 +433,8 @@ exports.searchProducts = async (req, res) => {
       });
     }
 
+    const cleanKeyword = keyword.trim();
+
     // Xác định thứ tự sắp xếp
     let order = [];
     switch (sort) {
@@ -457,20 +459,15 @@ exports.searchProducts = async (req, res) => {
         [Op.and]: [
           {
             [Op.or]: [
-              { name: { [Op.like]: `%${keyword}%` } },
-              { description: { [Op.like]: `%${keyword}%` } },
-              { model_number: { [Op.like]: `%${keyword}%` } },
-              db.literal(`EXISTS (
-                SELECT 1 FROM thuong_hieu 
-                WHERE thuong_hieu.id = san_pham.id_thuong_hieu AND thuong_hieu.ten_thuong_hieu LIKE '%${keyword}%'
-              )`),
-              db.literal(`EXISTS (
-                SELECT 1 FROM danh_muc 
-                WHERE danh_muc.id = san_pham.id_danh_muc AND danh_muc.ten_danh_muc LIKE '%${keyword}%'
-              )`)
+              { name: { [Op.like]: `%${cleanKeyword}%` } },
+              { description: { [Op.like]: `%${cleanKeyword}%` } },
+              { short_description: { [Op.like]: `%${cleanKeyword}%` } },
+              { product_code: { [Op.like]: `%${cleanKeyword}%` } },
+              { '$brand.name$': { [Op.like]: `%${cleanKeyword}%` } },
+              { '$category.name$': { [Op.like]: `%${cleanKeyword}%` } }
             ]
           },
-          { deleted_at: null, status: 'con_hang' }
+          { deleted_at: null }
         ]
       },
       include: [
@@ -505,7 +502,7 @@ exports.searchProducts = async (req, res) => {
 
     res.json({
       success: true,
-      keyword: keyword,
+      keyword: cleanKeyword,
       data: products,
       pagination: {
         total: count,
